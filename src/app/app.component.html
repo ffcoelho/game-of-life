@@ -6,19 +6,4 @@
   <button (click)="startLoop()">START</button>
   <button (click)="stopLoop()">STOP</button>
 </div>
-<div class="nbs">
-  <div>
-    <div style="font-family:'Courier New', Courier, monospace; font-size: 10px; display: inline-block;" *ngFor="let x of nGrid">
-      <p *ngFor="let y of x">
-        {{ y }}&nbsp;
-      </p>
-    </div>
-  </div>
-  <!-- <div>
-    <div style="font-family:'Courier New', Courier, monospace; font-size: 10px; display: inline-block;" *ngFor="let x of nGrid2">
-      <span *ngFor="let y of x">
-        {{ y }}
-      </span>
-    </div>
-  </div> -->
-</div>
+<p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 10px;">ticks: {{ ticks }}</p>

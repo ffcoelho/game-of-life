@@ -10,93 +10,73 @@ export class AppComponent implements OnInit {
   time: number;
   start: number;
 
-  grid: boolean[][];
-  gridNext: boolean[][];
+  grid: number[][];
+  gridNext: number[][];
   quadrants: boolean[][];
 
   ticker: any;
+  ticks = 0;
 
-  nGrid = Array.from({length: 40}).map(value => Array.from({length: 40}).map(v => 0));
-  nGrid2 = Array.from({length: 40}).map(value => Array.from({length: 40}).map(v => 0));
+  nGrid = Array.from({length: 400}).map(value => Array.from({length: 400}).map(v => 0));
+  nGrid2 = Array.from({length: 400}).map(value => Array.from({length: 400}).map(v => 0));
 
   constructor() { }
 
   ngOnInit(): void {
-    this.start = new Date().getTime();
-    this.grid = this.newGrid(40, 40);
-    this.gridNext = this.newGrid(40, 40);
-    this.gliderTest();
+    this.grid = this.newGrid(400, 400);
+    this.gridNext = this.newGrid(400, 400);
+    this.chaosTest();
     this.drawGrid();
-    this.checkGrid();
-    this.drawGridNext();
+    // this.gliderTest();
     // this.quadrants = this.newQuadrants(this.grid);
   }
 
-  gliderTest(): void {
-    // const glider = [[false, false, true], [true, false, true], [false, true, true]];
-    const glider = [[true, true, true]];
-    // const glider = [[false, true, false], [false, true, false], [false, true, false]];
-    const posX = 3;
-    const posY = 2;
-    glider.forEach((xG, xGi) => {
-      xG.forEach((yG, yGi) => {
-        this.grid[posX + xGi][posY + yGi] = yG;
-      });
-    });
-  }
-
-  // newRandomGrid(x: number, y: number): boolean[][] {
-  //   const grid = [];
-  //   for (let i = 0; i < x; i++) {
-  //     grid[i] = Array.from({length: y}).map(value => Math.round(Math.random()) === 1 ? true : false);
-  //   }
-  //   return grid;
-  // }
-
-  newGrid(x: number, y: number): boolean[][] {
+  newGrid(x: number, y: number): number[][] {
     const grid = [];
     for (let i = 0; i < x; i++) {
-      grid[i] = Array.from({length: y}).map(value => false);
+      grid[i] = Array.from({length: y}).map(value => 0);
     }
     return grid;
   }
 
   checkGrid(): void {
+    this.gridNext.forEach(x => x.forEach(y => y = 0));
     this.nGrid.forEach(x => x.forEach(y => y = 0));
     this.grid.forEach((xG, xGi) => {
       xG.forEach((yG, yGi) => {
         this.gridNext[xGi][yGi] = this.checkPoint(xGi, yGi, yG);
       });
     });
-    const oldGrid = this.gridNext;
-    this.grid = oldGrid;
+    this.gridNext.forEach((gX, gXi) => {
+      this.grid[gXi] = Array.from(gX);
+    });
   }
 
-  checkPoint(xGi: number, yGi: number, state: boolean): boolean {
-    if (xGi < 1 || xGi > 38 || yGi < 1 || yGi > 38) {
-      return false;
+  checkPoint(xGi: number, yGi: number, state: number): number {
+    if (xGi < 1 || xGi > 398 || yGi < 1 || yGi > 398) {
+      return 0;
     }
     let neighbours = 0;
     for (let x = -1; x < 2; x++) {
       for (let y = -1; y < 2; y++) {
-        if (this.grid[x + xGi][y + yGi]) {
+        if (this.grid[xGi + x][yGi + y] > 0) {
           neighbours++;
         }
       }
     }
-    if (state) {
+    if (state > 0) {
       neighbours--;
       this.nGrid[xGi][yGi] = neighbours;
       if (neighbours < 2 || neighbours > 3) {
-        return false;
+        return 0;
       }
-      return true;
+      return 1;
     } else {
       this.nGrid[xGi][yGi] = neighbours;
       if (neighbours === 3) {
-        return true;
+        return 1;
       }
-      return false;
+      return 0;
     }
   }
 
@@ -108,10 +88,7 @@ export class AppComponent implements OnInit {
       xG.forEach((yG, yGi) => {
         if (yG) {
           ctx.fillStyle = '#FF0000';
-          ctx.fillRect(xGi * 10, yGi * 10, 10, 10);
-        } else {
-          ctx.fillStyle = '#CCCCCC';
-          ctx.fillRect(xGi * 10 + 1, yGi * 10 + 1, 8, 8);
+          ctx.fillRect(xGi, yGi, 1, 1);
         }
       });
     });
@@ -121,31 +98,81 @@ export class AppComponent implements OnInit {
     const c: any = document.getElementById('myCanvas2');
     const ctx = c.getContext('2d');
     ctx.clearRect(0, 0, 400, 400);
-    this.gridNext.forEach((xG, xGi) => {
+    this.grid.forEach((xG, xGi) => {
       xG.forEach((yG, yGi) => {
         if (yG) {
           ctx.fillStyle = '#FF0000';
-          ctx.fillRect(xGi * 10, yGi * 10, 10, 10);
+          ctx.fillRect(xGi, yGi, 1, 1);
         } else {
           ctx.fillStyle = '#CCCCCC';
-          ctx.fillRect(xGi * 10 + 1, yGi * 10 + 1, 8, 8);
+          ctx.fillRect(xGi, yGi, 1, 1);
+          // ctx.fillRect(xGi * 5 + 0.5, yGi * 5 + 0.5, 4, 4);
         }
       });
     });
   }
 
   startLoop(): void {
-    this.drawGrid();
-    this.checkGrid();
-    this.drawGridNext();
-    // this.ticker = setInterval(() => {
-    //   this.drawGrid();
-    //   this.checkGrid();
-    // }, 200);
+    // this.start = new Date().getTime();
+    this.ticker = setInterval(() => {
+      this.ticks++;
+      // console.log(new Date().getTime() - this.start);
+      // this.start = new Date().getTime();
+      this.drawGrid();
+      this.checkGrid();
+    }, 42);
   }
 
   stopLoop(): void {
     clearInterval(this.ticker);
+  }
+
+  gliderTest(): void {
+    const glider = [[0, 0, 1], [1, 0, 1], [0, 1, 1]];
+    // const glider = [[1, 1, 1]];
+    // const glider = [[false, true, false], [false, true, false], [false, true, false]];
+    const posX = 3;
+    const posY = 2;
+    glider.forEach((xG, xGi) => {
+      xG.forEach((yG, yGi) => {
+        this.grid[posX + xGi][posY + yGi] = yG;
+      });
+    });
+  }
+
+  chaosTest(): void {
+    const chaosA = Array.from({length: 100}).map(value => Array.from({length: 100}).map(v => Math.round(Math.random())));
+    const chaosB = Array.from({length: 100}).map(value => Array.from({length: 100}).map(v => Math.round(Math.random())));
+    const chaosC = Array.from({length: 100}).map(value => Array.from({length: 100}).map(v => Math.round(Math.random())));
+    const chaosD = Array.from({length: 100}).map(value => Array.from({length: 100}).map(v => Math.round(Math.random())));
+    const posXa = 80;
+    const posYa = 80;
+    const posXb = 220;
+    const posYb = 80;
+    const posXc = 80;
+    const posYc = 220;
+    const posXd = 220;
+    const posYd = 220;
+    chaosA.forEach((xG, xGi) => {
+      xG.forEach((yG, yGi) => {
+        this.grid[posXa + xGi][posYa + yGi] = yG;
+      });
+    });
+    chaosB.forEach((xG, xGi) => {
+      xG.forEach((yG, yGi) => {
+        this.grid[posXb + xGi][posYb + yGi] = yG;
+      });
+    });
+    chaosC.forEach((xG, xGi) => {
+      xG.forEach((yG, yGi) => {
+        this.grid[posXc + xGi][posYc + yGi] = yG;
+      });
+    });
+    chaosD.forEach((xG, xGi) => {
+      xG.forEach((yG, yGi) => {
+        this.grid[posXd + xGi][posYd + yGi] = yG;
+      });
+    });
   }
 
   // newQuadrants(grid: number[][]): boolean[][] {
