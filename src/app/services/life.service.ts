@@ -10,31 +10,24 @@ export class LifeService {
   public limitY: number;
   public limitX: number;
 
-  public timer: any;
-  public ticks: number;
-
   constructor() { }
 
-  startService(): void {
-    const y = 500;
-    const x = 400;
-    this.universe = this.newUniverse(y, x);
-    this.nextGen = this.newUniverse(y, x);
-    this.limitY = y - 2;
-    this.limitX = x - 2;
-    this.chaosTest();
-    this.drawGrid();
+  startUniverse(y: number, x: number): void {
+    this.universe = this.newGrid(y, x);
+    this.nextGen = this.newGrid(y, x);
+    this.limitY = y;
+    this.limitX = x;
   }
 
-  newUniverse(y: number, x: number): number[][] {
+  newGrid(y: number, x: number): number[][] {
     const grid = Array.from({length: y}).map(value => Array.from({length: x}).map(v => 0));
     return grid;
   }
 
   calcNextGen(): void {
     this.nextGen.forEach(y => y.fill(0));
-    for (let y = 1; y < this.limitY; y++) {
-      for (let x = 1; x < this.limitX; x++) {
+    for (let y = 1; y < this.limitY - 2; y++) {
+      for (let x = 1; x < this.limitX - 2; x++) {
         this.nextGen[y][x] = this.checkPoint(y, x, this.universe[y][x]);
       }
     }
@@ -64,45 +57,5 @@ export class LifeService {
       }
       return 0;
     }
-  }
-
-  drawGrid(): void {
-    const c: any = document.getElementById('myCanvas');
-    const ctx = c.getContext('2d');
-    ctx.clearRect(0, 0, this.limitX + 2, this.limitY + 2);
-    this.universe.forEach((yG, yGi) => {
-      yG.forEach((xG, xGi) => {
-        if (xG) {
-          ctx.fillStyle = '#FF0000';
-          ctx.fillRect(xGi, yGi, 1, 1);
-        }
-      });
-    });
-  }
-
-  startLoop(): void {
-    this.timer = setInterval(() => {
-      this.ticks++;
-      this.drawGrid();
-      this.calcNextGen();
-      if (this.ticks === 1103) {
-        this.stopLoop();
-      }
-    }, 33);
-  }
-
-  stopLoop(): void {
-    clearInterval(this.timer);
-  }
-
-  chaosTest(): void {
-    const chaosA = Array.from({length: 498}).map(value => Array.from({length: 398}).map(v => Math.round(Math.random() * 100) > 33 ? 1 : 0));
-    const posXa = 1;
-    const posYa = 1;
-    chaosA.forEach((y, yi) => {
-      y.forEach((x, xi) => {
-        this.universe[posYa + yi][posXa + xi] = x;
-      });
-    });
   }
 }
