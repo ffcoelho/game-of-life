@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import * as localforage from 'localforage';
-import { ConfigModel } from '../models/config.model';
+import { ConfigModel, ModeType } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,13 @@ export class DataService {
 
   public localDb: boolean;
 
+  public update: Subject<ConfigModel> = new Subject<ConfigModel>();
+
   constructor() { }
 
   public updateConfig(config: ConfigModel): void {
     this.setItem('config', config);
+    this.update.next(config);
   }
 
   public initialize(): Promise<any> {
@@ -91,9 +95,10 @@ export class DataService {
 
   private initConfig(): ConfigModel {
     return {
+      mode: ModeType.DESKTOP,
       size: 3,
-      speed: 1,
-      step: 1,
+      speed: 60,
+      grid: true,
       colors: {
         alive: '#000000',
         dead: '#CCCCCC',

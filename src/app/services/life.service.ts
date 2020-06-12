@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { ConfigModel } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,22 +9,13 @@ export class LifeService {
 
   public universe: number[][];
   public nextGen: number[][];
-  public limitY: number;
-  public limitX: number;
+
+  public limitY = 380;
+  public limitX = 500;
+
+  public create: Subject<ConfigModel> = new Subject<ConfigModel>();
 
   constructor() { }
-
-  startUniverse(y: number, x: number): void {
-    this.universe = this.newGrid(y, x);
-    this.nextGen = this.newGrid(y, x);
-    this.limitY = y;
-    this.limitX = x;
-  }
-
-  newGrid(y: number, x: number): number[][] {
-    const grid = Array.from({length: y}).map(value => Array.from({length: x}).map(v => 0));
-    return grid;
-  }
 
   calcNextGen(): void {
     this.nextGen.forEach(y => y.fill(0));
@@ -31,31 +24,37 @@ export class LifeService {
         this.nextGen[y][x] = this.checkPoint(y, x, this.universe[y][x]);
       }
     }
-    this.nextGen.forEach((y, yi) => {
-      this.universe[yi] = Array.from(y);
-    });
+    for (let y = 0; y < this.limitY; y++) {
+      this.universe[y] = Array.from(this.nextGen[y]);
+    }
   }
 
   checkPoint(yU: number, xU: number, state: number): number {
-    let neighbours = 0;
-    for (let y = -1; y < 2; y++) {
-      for (let x = -1; x < 2; x++) {
-        if (this.universe[yU + y][xU + x] > 0) {
-          neighbours++;
-        }
-      }
-    }
-    if (state) {
-      neighbours--;
-      if (neighbours < 2 || neighbours > 3) {
-        return 0;
-      }
-      return 1;
-    } else {
+    const neighbours: number = this.universe[yU - 1][xU - 1] + this.universe[yU - 1][xU] + this.universe[yU - 1][xU + 1]
+    + this.universe[yU][xU - 1] + this.universe[yU][xU + 1]
+    + this.universe[yU + 1][xU - 1] + this.universe[yU + 1][xU] + this.universe[yU + 1][xU + 1];
+    if (state === 0) {
       if (neighbours === 3) {
         return 1;
       }
       return 0;
+    } else {
+      if (neighbours < 2 || neighbours > 3) {
+        return 0;
+      }
+      return 1;
     }
   }
+
+  startUniverse(config: ConfigModel): void {
+    this.universe = this.newGrid();
+    this.nextGen = this.newGrid();
+    this.create.next(config);
+  }
+
+  newGrid(): number[][] {
+    const grid = Array.from({length: this.limitY}).map(value => Array.from({length: this.limitX}).map(v => 0));
+    return grid;
+  }
+
 }

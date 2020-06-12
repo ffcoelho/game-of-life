@@ -1,0 +1,11 @@
+.container {
+  position: relative;
+  width: 360px;
+  height: 480px;
+  canvas {
+    position: absolute;
+  }
+  #grid {
+    z-index: 1;
+  }
+}

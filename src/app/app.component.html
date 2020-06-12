@@ -1,6 +1,6 @@
-<canvas #canvas></canvas>
-<div>
-  <button (click)="startLoop()">START</button>
-  <button (click)="stopLoop()">STOP</button>
+<app-universe [config]="config" [play]="universeOn"></app-universe>
+<div class="controls">
+  <button (click)="toggleUniverse()">toggle</button>
+  <button (click)="zoomIn()">zoomIn</button>
+  <button (click)="zoomOut()">zoomOut</button>
 </div>
-<p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 10px;">ticks: {{ ticks }}</p>
