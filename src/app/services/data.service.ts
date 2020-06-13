@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as localforage from 'localforage';
-import { ConfigModel, ModeType } from '../models/config.model';
+import { ConfigModel } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -95,8 +95,8 @@ export class DataService {
 
   private initConfig(): ConfigModel {
     return {
-      mode: ModeType.DESKTOP,
       size: 3,
+      position: [240, 180],
       speed: 60,
       grid: true,
       colors: {

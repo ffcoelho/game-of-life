@@ -18,7 +18,7 @@ export class UniverseComponent implements OnInit {
   grid: ElementRef<HTMLCanvasElement>;
   private gridCtx: CanvasRenderingContext2D;
 
-  @Input() config: ConfigModel;
+  config: ConfigModel;
 
   private playing: boolean;
   @Input() set play(start: boolean) {
@@ -45,15 +45,31 @@ export class UniverseComponent implements OnInit {
               private life: LifeService) { }
 
   ngOnInit(): void {
+    this.initialize();
+  }
+
+  initialize(): void {
     this.life.create.subscribe(conf => {
       this.config = conf;
-      this.updateUniverse();
+      this.createUniverse();
+      // this.chaosTest();
       this.life.create.unsubscribe();
     });
     this.data.update.subscribe(conf => {
+      if (conf.size !== this.config.size) {
+        this.createUniverse();
+      }
       this.config = conf;
       this.updateUniverse();
     });
+  }
+
+  // todo check changes (create if size/colors), (update if position, grid)
+  createUniverse(): void {
+    this.startCanvas();
+    this.startGrid();
+    this.drawGrid();
+    this.drawLife();
   }
 
   updateUniverse(): void {
@@ -70,6 +86,13 @@ export class UniverseComponent implements OnInit {
     console.log(uX, uY);
     this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
     this.drawLife();
+  }
+
+  test2(ev: WheelEvent) {
+    console.log(ev.deltaY);
+    const uY = Math.round((ev.y - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iY + 10;
+    const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX + 10;
+    console.log(uX, uY);
   }
 
   drawLife(): void {
@@ -100,8 +123,8 @@ export class UniverseComponent implements OnInit {
   }
 
   startCanvas(): void {
-    this.canvas.nativeElement.width = this.life.limitX - 20;
-    this.canvas.nativeElement.height = this.life.limitY - 20;
+    this.canvas.nativeElement.width = (this.life.limitX - 20) * 2;
+    this.canvas.nativeElement.height = (this.life.limitY - 20) * 2;
     this.canvasCtx = this.canvas.nativeElement.getContext('2d');
     this.canvasCtx.fillStyle = this.config.colors.alive;
     const scale = GRIDS[this.config.size].scale;
@@ -109,30 +132,46 @@ export class UniverseComponent implements OnInit {
   }
 
   startGrid(): void {
-    this.grid.nativeElement.width = this.life.limitX - 20;
-    this.grid.nativeElement.height = this.life.limitY - 20;
+    this.grid.nativeElement.width = (this.life.limitX - 20) * 2;
+    this.grid.nativeElement.height = (this.life.limitY - 20) * 2;
     this.gridCtx = this.grid.nativeElement.getContext('2d');
     this.gridCtx.fillStyle = this.config.colors.grid;
   }
 
   drawGrid(): void {
     if (this.config.grid && this.config.size > 1) {
-      for (let y = 0; y < this.life.limitX - 20; y += GRIDS[this.config.size].scale) {
-        this.gridCtx.fillRect(0, y, this.life.limitX - 20, 1);
+      for (let y = 0; y < (this.life.limitY - 20) * 2; y += GRIDS[this.config.size].scale) {
+        this.gridCtx.fillRect(0, y, (this.life.limitX - 20) * 2, 1);
       }
-      for (let x = 0; x < this.life.limitX - 20; x += GRIDS[this.config.size].scale) {
-        this.gridCtx.fillRect(x, 0, 1, this.life.limitY - 20);
+      for (let x = 0; x < (this.life.limitX - 20) * 2; x += GRIDS[this.config.size].scale) {
+        this.gridCtx.fillRect(x, 0, 1, (this.life.limitY - 20) * 2);
+      }
+    } else {
+      for (let y = 0; y < (this.life.limitY - 20) * 2; y += GRIDS[this.config.size].scale * 10) {
+        this.gridCtx.fillRect(0, y, (this.life.limitX - 20) * 2, 1);
+      }
+      for (let x = 0; x < (this.life.limitX - 20) * 2; x += GRIDS[this.config.size].scale * 10) {
+        this.gridCtx.fillRect(x, 0, 1, (this.life.limitY - 20) * 2);
       }
     }
   }
 
   chaosTest(): void {
-    // const chaosA = Array.from({length: this.life.limitY - 20}).map(value => Array.from({length: this.life.limitX - 20}).map(v => Math.round(Math.random() * 100) > 84 ? 1 : 0));
-    // const posYa = 10;
-    // const posXa = 10;
-    const chaosA = [[0, 1, 1], [1, 1, 0], [0, 1, 0]];
-    const posYa = 250;
-    const posXa = 190;
+    // const chaosA = Array.from({length: this.life.limitY - 20}).map(value => Array.from({length: this.life.limitX - 20}).map(v => Math.round(Math.random() * 100) > 91 ? 1 : 0));
+    const posYa = 10;
+    const posXa = 10;
+    // const chaosA = [[0, 1, 1], [1, 1, 0], [0, 1, 0]];
+    // const posYa = 250;
+    // const posXa = 190;
+    const chaosA = Array.from({length: this.life.limitY - 20}).map(value => Array.from({length: this.life.limitX - 20}).map(v => 0));
+    for (let i = 0; i < this.life.limitY - 20; i += 4) {
+      for (let j = 0; j < this.life.limitX - 20; j += 4) {
+      chaosA[i][j] = 1;
+      chaosA[i][j + 1] = 1;
+      chaosA[i + 1][j] = 1;
+      chaosA[i + 1][j + 1] = 1;
+      }
+    }
     chaosA.forEach((y, yi) => {
       y.forEach((x, xi) => {
         this.life.universe[posYa + yi][posXa + xi] = x;

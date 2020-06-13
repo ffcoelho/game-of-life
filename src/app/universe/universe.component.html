@@ -1,4 +1,9 @@
 <div class="container">
-  <canvas #grid id="grid" (pointerdown)="test($event)"></canvas>
+  <canvas
+    #grid
+    id="grid"
+    (pointerdown)="test($event)"
+    (wheel)="test2($event)"
+  ></canvas>
   <canvas #canvas></canvas>
 </div>

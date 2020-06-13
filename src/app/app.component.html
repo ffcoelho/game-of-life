@@ -1,6 +1,11 @@
-<app-universe [config]="config" [play]="universeOn"></app-universe>
+<app-universe [play]="universeOn"></app-universe>
 <div class="controls">
   <button (click)="toggleUniverse()">toggle</button>
   <button (click)="zoomIn()">zoomIn</button>
   <button (click)="zoomOut()">zoomOut</button>
+  <br>
+  <input type="text" [formControl]="pattern">
+  <pre>
+{{ pattern.value }}
+  </pre>
 </div>

@@ -1,7 +1,8 @@
 .container {
   position: relative;
-  width: 360px;
-  height: 480px;
+  width: 960px;
+  height: 720px;
+  background-color: rgba(0,0,100,0.2);
   canvas {
     position: absolute;
   }
