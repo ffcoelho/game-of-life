@@ -2,8 +2,8 @@
   <canvas
     #grid
     id="grid"
-    (pointerdown)="test($event)"
-    (wheel)="test2($event)"
+    (pointerdown)="toggleCell($event)"
+    (wheel)="changeScale($event)"
   ></canvas>
   <canvas #canvas></canvas>
 </div>

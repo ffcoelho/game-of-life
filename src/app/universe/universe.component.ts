@@ -79,20 +79,39 @@ export class UniverseComponent implements OnInit {
     this.drawLife();
   }
 
-  test(ev: PointerEvent): void {
-    console.log(`2: ${ev.clientX},${ev.clientY}`);
+  toggleCell(ev: PointerEvent): void {
+    if (ev.buttons !== 1) {
+      return;
+    }
     const uY = Math.round((ev.y - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iY + 10;
     const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX + 10;
-    console.log(uX, uY);
     this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
     this.drawLife();
   }
 
-  test2(ev: WheelEvent) {
-    console.log(ev.deltaY);
-    const uY = Math.round((ev.y - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iY + 10;
-    const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX + 10;
-    console.log(uX, uY);
+  changeScale(ev: WheelEvent): void {
+    const uY = Math.round((ev.y - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iY;
+    const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX;
+    let nX: number;
+    let nY: number;
+    if (ev.deltaY > 0) {
+      if (this.config.size === 0) {
+        return;
+      }
+      nY = Math.round((ev.y - GRIDS[this.config.size - 1].scale * 0.5) / GRIDS[this.config.size - 1].scale);
+      nX = Math.round((ev.x - GRIDS[this.config.size - 1].scale * 0.5) / GRIDS[this.config.size - 1].scale);
+      this.config.size--;
+    } else {
+      if (this.config.size === 4) {
+        return;
+      }
+      nY = Math.round((ev.y - GRIDS[this.config.size + 1].scale * 0.5) / GRIDS[this.config.size + 1].scale);
+      nX = Math.round((ev.x - GRIDS[this.config.size + 1].scale * 0.5) / GRIDS[this.config.size + 1].scale);
+      this.config.size++;
+    }
+    this.iX = uX - nX;
+    this.iY = uY - nY;
+    this.updateUniverse();
   }
 
   drawLife(): void {
