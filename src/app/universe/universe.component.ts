@@ -87,11 +87,13 @@ export class UniverseComponent implements OnInit {
     const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX + 10;
     this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
     this.drawLife();
+    console.log(`toggle: ${uX - 10}, ${uY - 10}`);
   }
 
   changeScale(ev: WheelEvent): void {
     const uY = Math.round((ev.y - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iY;
     const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX;
+    console.log(`scale: ${uX}, ${uY}`);
     let nX: number;
     let nY: number;
     if (ev.deltaY > 0) {
@@ -111,6 +113,18 @@ export class UniverseComponent implements OnInit {
     }
     this.iX = uX - nX;
     this.iY = uY - nY;
+    if (this.iX < 0) {
+      this.iX = 0;
+    }
+    if (this.iY < 0) {
+      this.iY = 0;
+    }
+    if (this.iX + GRIDS[this.config.size].x + 20 > this.life.limitX) {
+      this.iX = this.life.limitX - GRIDS[this.config.size].x - 20;
+    }
+    if (this.iY + GRIDS[this.config.size].y + 20 > this.life.limitY) {
+      this.iY = this.life.limitY - GRIDS[this.config.size].y - 20;
+    }
     this.updateUniverse();
   }
 
