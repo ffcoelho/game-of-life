@@ -52,7 +52,7 @@ export class UniverseComponent implements OnInit {
     this.life.create.subscribe(conf => {
       this.config = conf;
       this.createUniverse();
-      // this.chaosTest();
+      this.chaosTest();
       this.life.create.unsubscribe();
     });
     this.data.update.subscribe(conf => {
@@ -87,13 +87,20 @@ export class UniverseComponent implements OnInit {
     const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX + 10;
     this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
     this.drawLife();
-    console.log(`toggle: ${uX - 10}, ${uY - 10}`);
+    // console.log(`toggle: ${uX - 10}, ${uY - 10}`);
   }
 
   changeScale(ev: WheelEvent): void {
     const uY = Math.round((ev.y - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iY;
     const uX = Math.round((ev.x - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale) + this.iX;
-    console.log(`scale: ${uX}, ${uY}`);
+    this.applyZoomPositioning(uX, uY, ev);
+    this.verifyZoomEdges();
+    this.data.updateConfig(this.config);
+    this.updateUniverse();
+    // console.log(`scale: ${uX}, ${uY}`);
+  }
+
+  applyZoomPositioning(uX: number, uY: number, ev: WheelEvent): void {
     let nX: number;
     let nY: number;
     if (ev.deltaY > 0) {
@@ -113,6 +120,9 @@ export class UniverseComponent implements OnInit {
     }
     this.iX = uX - nX;
     this.iY = uY - nY;
+  }
+
+  verifyZoomEdges(): void {
     if (this.iX < 0) {
       this.iX = 0;
     }
@@ -125,7 +135,6 @@ export class UniverseComponent implements OnInit {
     if (this.iY + GRIDS[this.config.size].y + 20 > this.life.limitY) {
       this.iY = this.life.limitY - GRIDS[this.config.size].y - 20;
     }
-    this.updateUniverse();
   }
 
   drawLife(): void {
@@ -179,32 +188,33 @@ export class UniverseComponent implements OnInit {
       for (let x = 0; x < (this.life.limitX - 20) * 2; x += GRIDS[this.config.size].scale) {
         this.gridCtx.fillRect(x, 0, 1, (this.life.limitY - 20) * 2);
       }
-    } else {
-      for (let y = 0; y < (this.life.limitY - 20) * 2; y += GRIDS[this.config.size].scale * 10) {
-        this.gridCtx.fillRect(0, y, (this.life.limitX - 20) * 2, 1);
-      }
-      for (let x = 0; x < (this.life.limitX - 20) * 2; x += GRIDS[this.config.size].scale * 10) {
-        this.gridCtx.fillRect(x, 0, 1, (this.life.limitY - 20) * 2);
-      }
     }
+    // } else {
+    //   for (let y = 0; y < (this.life.limitY - 20) * 2; y += GRIDS[this.config.size].scale * 10) {
+    //     this.gridCtx.fillRect(0, y, (this.life.limitX - 20) * 2, 1);
+    //   }
+    //   for (let x = 0; x < (this.life.limitX - 20) * 2; x += GRIDS[this.config.size].scale * 10) {
+    //     this.gridCtx.fillRect(x, 0, 1, (this.life.limitY - 20) * 2);
+    //   }
+    // }
   }
 
   chaosTest(): void {
     // const chaosA = Array.from({length: this.life.limitY - 20}).map(value => Array.from({length: this.life.limitX - 20}).map(v => Math.round(Math.random() * 100) > 91 ? 1 : 0));
-    const posYa = 10;
-    const posXa = 10;
-    // const chaosA = [[0, 1, 1], [1, 1, 0], [0, 1, 0]];
-    // const posYa = 250;
-    // const posXa = 190;
-    const chaosA = Array.from({length: this.life.limitY - 20}).map(value => Array.from({length: this.life.limitX - 20}).map(v => 0));
-    for (let i = 0; i < this.life.limitY - 20; i += 4) {
-      for (let j = 0; j < this.life.limitX - 20; j += 4) {
-      chaosA[i][j] = 1;
-      chaosA[i][j + 1] = 1;
-      chaosA[i + 1][j] = 1;
-      chaosA[i + 1][j + 1] = 1;
-      }
-    }
+    // const posYa = 10;
+    // const posXa = 10;
+    const chaosA = [[0, 1, 1], [1, 1, 0], [0, 1, 0]];
+    const posYa = 190;
+    const posXa = 250;
+    // const chaosA = Array.from({length: this.life.limitY - 20}).map(value => Array.from({length: this.life.limitX - 20}).map(v => 0));
+    // for (let i = 0; i < this.life.limitY - 20; i += 4) {
+    //   for (let j = 0; j < this.life.limitX - 20; j += 4) {
+    //   chaosA[i][j] = 1;
+    //   chaosA[i][j + 1] = 1;
+    //   chaosA[i + 1][j] = 1;
+    //   chaosA[i + 1][j + 1] = 1;
+    //   }
+    // }
     chaosA.forEach((y, yi) => {
       y.forEach((x, xi) => {
         this.life.universe[posYa + yi][posXa + xi] = x;

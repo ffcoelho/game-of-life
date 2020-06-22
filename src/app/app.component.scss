@@ -1,4 +1,10 @@
-
+.universe-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1000px;
+  height: 760px;
+}
 .nbs {
   display: flex;
   justify-content: space-between;
