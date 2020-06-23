@@ -1,9 +1,16 @@
 <div class="container">
   <canvas
+    #gridScale
+    class="grid"
+  ></canvas>
+  <canvas
     #grid
-    id="grid"
+    class="grid m-20"
     (pointerdown)="toggleCell($event)"
     (wheel)="changeScale($event)"
   ></canvas>
-  <canvas #canvas></canvas>
+  <canvas
+    #canvas
+    class="bgvar m-20"
+  ></canvas>
 </div>

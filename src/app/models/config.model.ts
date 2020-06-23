@@ -1,9 +1,10 @@
 export interface ConfigModel {
-  size: number;
-  position: [number, number];
-  speed: number;
-  grid: boolean;
   colors: ColorModel;
+  displayGrid: boolean;
+  grid: GridModel;
+  origin: [number, number];
+  size: number;
+  speed: number;
 }
 
 export interface ColorModel {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as localforage from 'localforage';
-import { ConfigModel } from '../models/config.model';
+import { ConfigModel, GRIDS } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -96,9 +96,10 @@ export class DataService {
   private initConfig(): ConfigModel {
     return {
       size: 3,
-      position: [240, 180],
+      origin: [0, 0],
       speed: 60,
-      grid: true,
+      displayGrid: true,
+      grid: GRIDS[2],
       colors: {
         alive: '#000000',
         dead: '#CCCCCC',

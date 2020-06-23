@@ -1,12 +1,18 @@
 .container {
   position: relative;
-  width: 960px;
-  height: 720px;
-  background-color: rgba(0,0,100,0.2);
+  width: 1040px;
+  height: 800px;
+  // background-color: rgba(0,0,100,0.2);
   canvas {
     position: absolute;
   }
-  #grid {
+  .grid {
     z-index: 1;
+  }
+  .bgvar {
+    background-color: rgba(0,0,100,0.2);
+  }
+  .m-20 {
+    margin: 40px
   }
 }
