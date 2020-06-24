@@ -101,9 +101,11 @@ export class DataService {
       displayGrid: true,
       grid: GRIDS[2],
       colors: {
-        alive: '#000000',
-        dead: '#CCCCCC',
-        grid: '#777777'
+        alive: '#8bc34a',
+        dead: '#000000',
+        grid: '#777777',
+        ruler: '#000000',
+        rulerMark: '#334455'
       }
     };
   }

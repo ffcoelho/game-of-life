@@ -10,17 +10,17 @@ import { ConfigModel, GRIDS } from '../models/config.model';
 })
 export class UniverseComponent implements OnInit {
 
-  @ViewChild('gridScale', { static: true })
-  gridScale: ElementRef<HTMLCanvasElement>;
-  private gridScaleCtx: CanvasRenderingContext2D;
+  @ViewChild('ruler', { static: true })
+  ruler: ElementRef<HTMLCanvasElement>;
+  private rulerCtx: CanvasRenderingContext2D;
 
-  @ViewChild('grid', { static: true })
-  grid: ElementRef<HTMLCanvasElement>;
-  private gridCtx: CanvasRenderingContext2D;
+  @ViewChild('panel', { static: true })
+  panel: ElementRef<HTMLCanvasElement>;
+  private panelCtx: CanvasRenderingContext2D;
 
-  @ViewChild('canvas', { static: true })
-  canvas: ElementRef<HTMLCanvasElement>;
-  private canvasCtx: CanvasRenderingContext2D;
+  @ViewChild('cells', { static: true })
+  cells: ElementRef<HTMLCanvasElement>;
+  private cellsCtx: CanvasRenderingContext2D;
 
   private playing: boolean;
   @Input() set play(start: boolean) {
@@ -37,6 +37,8 @@ export class UniverseComponent implements OnInit {
 
   private margin = 40;
   public config: ConfigModel;
+  public panMode = false;
+  public panOrigin: [number, number] = [0, 0];
 
   public timer: any;
   public ticks: number;
@@ -80,15 +82,41 @@ export class UniverseComponent implements OnInit {
     this.drawLife();
   }
 
-  toggleCell(ev: PointerEvent): void {
-    if (ev.buttons !== 1) {
+  panelClick(ev: PointerEvent): void {
+    if (ev.buttons === 1) {
+      const uX = Math.round((ev.x - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0] + 10;
+      const uY = Math.round((ev.y - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1] + 10;
+      this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
+      this.drawLife();
+    } else if (ev.buttons === 4) {
+      this.panOrigin = [ev.x, ev.y];
+      this.panMode = true;
+    }
+  }
+
+  releaseClick(ev: PointerEvent): void {
+    this.panMode = false;
+  }
+
+  panUniverse(ev: PointerEvent): void {
+    const oY = Math.round((this.panOrigin[1] - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1];
+    const oX = Math.round((this.panOrigin[0] - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0];
+    const uY = Math.round((ev.y - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1];
+    const uX = Math.round((ev.x - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0];
+    if (!this.panMode) {
       return;
     }
-    const uX = Math.round((ev.x - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0] + 10;
-    const uY = Math.round((ev.y - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1] + 10;
-    this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
-    this.drawLife();
-    // console.log(`toggle: ${uX - 10}, ${uY - 10}`);
+    let nX: number;
+    let nY: number;
+    nY = Math.round((ev.y - this.margin - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale);
+    nX = Math.round((ev.x - this.margin - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale);
+    if (oX !== uX || oY !== uY) {
+      this.config.origin = [oX - nX, oY - nY];
+      this.verifyZoomEdges();
+      this.panOrigin = [ev.x, ev.y];
+      this.data.updateConfig(this.config);
+      this.updateUniverse();
+    }
   }
 
   changeScale(ev: WheelEvent): void {
@@ -98,7 +126,6 @@ export class UniverseComponent implements OnInit {
     this.verifyZoomEdges();
     this.data.updateConfig(this.config);
     this.updateUniverse();
-    // console.log(`scale: ${uX}, ${uY}`);
   }
 
   applyZoomPositioning(uX: number, uY: number, ev: WheelEvent): void {
@@ -121,8 +148,7 @@ export class UniverseComponent implements OnInit {
       this.config.size++;
       this.config.grid = GRIDS[this.config.size];
     }
-    this.config.origin[0] = uX - nX;
-    this.config.origin[1] = uY - nY;
+    this.config.origin = [uX - nX, uY - nY];
   }
 
   verifyZoomEdges(): void {
@@ -141,11 +167,11 @@ export class UniverseComponent implements OnInit {
   }
 
   drawLife(): void {
-    this.canvasCtx.clearRect(0, 0, (this.life.limitX - 20), (this.life.limitX - 20));
+    this.cellsCtx.clearRect(0, 0, (this.life.limitX - 20), (this.life.limitX - 20));
     for (let y = this.config.origin[1]; y < this.config.origin[1] + this.config.grid.y; y++) {
       for (let x = this.config.origin[0]; x < this.config.origin[0] + this.config.grid.x; x++) {
         if (this.life.universe[y + 10][x + 10]) {
-          this.canvasCtx.fillRect(x - this.config.origin[0], y - this.config.origin[1], 1, 1);
+          this.cellsCtx.fillRect(x - this.config.origin[0], y - this.config.origin[1], 1, 1);
         }
       }
     }
@@ -168,42 +194,49 @@ export class UniverseComponent implements OnInit {
   }
 
   startCanvas(): void {
-    this.canvas.nativeElement.width = (this.life.limitX - 20) * 2;
-    this.canvas.nativeElement.height = (this.life.limitY - 20) * 2;
-    this.canvasCtx = this.canvas.nativeElement.getContext('2d');
-    this.canvasCtx.fillStyle = this.config.colors.alive;
+    this.cells.nativeElement.width = (this.life.limitX - 20) * 2;
+    this.cells.nativeElement.height = (this.life.limitY - 20) * 2;
+    this.cellsCtx = this.cells.nativeElement.getContext('2d');
+    this.cellsCtx.fillStyle = this.config.colors.alive;
     const scale = this.config.grid.scale;
-    this.canvasCtx.scale(scale, scale);
+    this.cellsCtx.scale(scale, scale);
   }
 
   startGrid(): void {
-    this.gridScale.nativeElement.width = (this.life.limitX - 20 + this.margin) * 2;
-    this.gridScale.nativeElement.height = (this.life.limitY - 20 + this.margin) * 2;
-    this.grid.nativeElement.width = (this.life.limitX - 20) * 2;
-    this.grid.nativeElement.height = (this.life.limitY - 20) * 2;
-    this.gridScaleCtx = this.gridScale.nativeElement.getContext('2d');
-    this.gridScaleCtx.fillStyle = this.config.colors.grid;
-    this.gridCtx = this.grid.nativeElement.getContext('2d');
-    this.gridCtx.fillStyle = this.config.colors.grid;
+    this.ruler.nativeElement.width = (this.life.limitX - 20 + this.margin) * 2;
+    this.ruler.nativeElement.height = (this.life.limitY - 20 + this.margin) * 2;
+    this.panel.nativeElement.width = (this.life.limitX - 20) * 2;
+    this.panel.nativeElement.height = (this.life.limitY - 20) * 2;
+    this.rulerCtx = this.ruler.nativeElement.getContext('2d');
+    this.rulerCtx.fillStyle = this.config.colors.rulerMark;
+    this.panelCtx = this.panel.nativeElement.getContext('2d');
+    this.panelCtx.fillStyle = this.config.colors.grid;
   }
 
   drawGrid(): void {
-    for (let y = this.margin; y <= (this.life.limitY - 20) * 2 + this.margin; y += this.config.grid.scale * 10) {
-      this.gridScaleCtx.fillRect(this.margin - 10, y, 10, 1);
-      this.gridScaleCtx.fillRect((this.life.limitX - 20) * 2 + this.margin, y, 10, 1);
-    }
-    for (let x = this.margin; x <= (this.life.limitX - 20) * 2 + this.margin; x += this.config.grid.scale * 10) {
-      this.gridScaleCtx.fillRect(x, this.margin - 10, 1, 10);
-      this.gridScaleCtx.fillRect(x, (this.life.limitY - 20) * 2 + this.margin, 1, 10);
-    }
-    this.gridScaleCtx.fillRect((this.life.limitX - 20) * 2 + this.margin, this.margin, 1, (this.life.limitY - 20) * 2 + 1);
-    this.gridScaleCtx.fillRect(this.margin, (this.life.limitY - 20) * 2 + this.margin, (this.life.limitX - 20) * 2, 1);
-    if (this.config.displayGrid && this.config.size > 1) {
-      for (let y = 0; y < (this.life.limitY - 20) * 2; y += this.config.grid.scale) {
-        this.gridCtx.fillRect(0, y, (this.life.limitX - 20) * 2, 1);
+    const markInterval = this.config.size > 1 ? 5 : 10;
+    for (let y = 0; y < this.config.grid.y; y++) {
+      if ((y + this.config.origin[1]) % markInterval === 0) {
+        this.rulerCtx.fillRect(this.margin - 10, (y * this.config.grid.scale) + this.margin, 10, 1);
+        this.rulerCtx.fillRect((this.life.limitX - 20) * 2 + this.margin, (y * this.config.grid.scale) + this.margin, 10, 1);
+      } else if (y % this.config.grid.scale === 0) {
+        // this.rulerCtx.fillRect(this.margin, (y * this.config.grid.scale) + this.margin, (this.life.limitX - 20) * 2, 1);
       }
-      for (let x = 0; x < (this.life.limitX - 20) * 2; x += this.config.grid.scale) {
-        this.gridCtx.fillRect(x, 0, 1, (this.life.limitY - 20) * 2);
+    }
+    for (let x = 0; x < this.config.grid.x; x++) {
+      if ((x + this.config.origin[0]) % markInterval === 0) {
+        this.rulerCtx.fillRect((x * this.config.grid.scale) + this.margin, this.margin - 10, 1, 10);
+        this.rulerCtx.fillRect((x * this.config.grid.scale) + this.margin, (this.life.limitY - 20) * 2 + this.margin, 1, 10);
+      } else if (x % this.config.grid.scale === 0) {
+        // this.rulerCtx.fillRect((x * this.config.grid.scale) + this.margin, this.margin, 1, (this.life.limitY - 20) * 2);
+      }
+    }
+    if (this.config.size > 1) {
+      for (let y = 0; y <= (this.life.limitY - 20) * 2; y += this.config.grid.scale) {
+        this.rulerCtx.fillRect(this.margin, y + this.margin, (this.life.limitX - 20) * 2, 1);
+      }
+      for (let x = 0; x <= (this.life.limitX - 20) * 2; x += this.config.grid.scale) {
+        this.rulerCtx.fillRect(x + this.margin, this.margin, 1, (this.life.limitY - 20) * 2);
       }
     }
   }

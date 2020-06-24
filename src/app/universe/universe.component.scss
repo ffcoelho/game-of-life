@@ -2,15 +2,9 @@
   position: relative;
   width: 1040px;
   height: 800px;
-  // background-color: rgba(0,0,100,0.2);
+  background-color: black;
   canvas {
     position: absolute;
-  }
-  .grid {
-    z-index: 1;
-  }
-  .bgvar {
-    background-color: rgba(0,0,100,0.2);
   }
   .m-20 {
     margin: 40px

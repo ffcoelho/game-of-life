@@ -1,16 +1,18 @@
 <div class="container">
   <canvas
-    #gridScale
-    class="grid"
+    #cells
+    class="m-20"
   ></canvas>
   <canvas
-    #grid
-    class="grid m-20"
-    (pointerdown)="toggleCell($event)"
+    #ruler
+  ></canvas>
+  <canvas
+    #panel
+    class="m-20"
+    (pointerdown)="panelClick($event)"
+    (pointerup)="releaseClick($event)"
+    (pointermove)="panUniverse($event)"
+    (pointerout)="releaseClick($event)"
     (wheel)="changeScale($event)"
-  ></canvas>
-  <canvas
-    #canvas
-    class="bgvar m-20"
   ></canvas>
 </div>

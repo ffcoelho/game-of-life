@@ -1,10 +1,23 @@
 export interface ConfigModel {
-  colors: ColorModel;
+  colors: ColorsModel;
   displayGrid: boolean;
   grid: GridModel;
   origin: [number, number];
   size: number;
   speed: number;
+}
+
+export interface NewConfigModel {
+  colors: ColorsModel;
+  grid: GridModel;
+}
+
+interface ColorsModel {
+  alive: string;
+  dead: string;
+  grid: string;
+  ruler: string;
+  rulerMark: string;
 }
 
 export interface ColorModel {
