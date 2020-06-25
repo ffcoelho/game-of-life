@@ -1,14 +1,14 @@
 <div class="container">
   <canvas
     #cells
-    class="m-20"
-  ></canvas>
-  <canvas
-    #ruler
+    class="m-40"
   ></canvas>
   <canvas
     #panel
-    class="m-20"
+  ></canvas>
+  <canvas
+    #control
+    class="m-40"
     (pointerdown)="panelClick($event)"
     (pointerup)="releaseClick($event)"
     (pointermove)="panUniverse($event)"

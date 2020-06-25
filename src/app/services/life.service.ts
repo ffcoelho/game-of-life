@@ -1,30 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ConfigModel } from '../models/config.model';
+import { ConfigModel, LIFE } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LifeService {
 
+  public create: Subject<ConfigModel> = new Subject<ConfigModel>();
+
   public universe: number[][];
   public nextGen: number[][];
-
-  public limitY = 380;
-  public limitX = 500;
-
-  public create: Subject<ConfigModel> = new Subject<ConfigModel>();
 
   constructor() { }
 
   calcNextGen(): void {
     this.nextGen.forEach(y => y.fill(0));
-    for (let y = 1; y < this.limitY - 2; y++) {
-      for (let x = 1; x < this.limitX - 2; x++) {
+    for (let y = 1; y < LIFE.y - 2; y++) {
+      for (let x = 1; x < LIFE.x - 2; x++) {
         this.nextGen[y][x] = this.checkPoint(y, x, this.universe[y][x]);
       }
     }
-    for (let y = 0; y < this.limitY; y++) {
+    for (let y = 0; y < LIFE.y; y++) {
       this.universe[y] = Array.from(this.nextGen[y]);
     }
   }
@@ -53,7 +50,7 @@ export class LifeService {
   }
 
   newGrid(): number[][] {
-    const grid = Array.from({length: this.limitY}).map(value => Array.from({length: this.limitX}).map(v => 0));
+    const grid = Array.from({length: LIFE.y}).map(value => Array.from({length: LIFE.x}).map(v => 0));
     return grid;
   }
 

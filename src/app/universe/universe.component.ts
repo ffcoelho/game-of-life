@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { LifeService } from '../services/life.service';
-import { ConfigModel, GRIDS } from '../models/config.model';
+import { ConfigModel, PointModel, GRIDS, LIFE } from '../models/config.model';
 
 @Component({
   selector: 'app-universe',
@@ -10,13 +10,13 @@ import { ConfigModel, GRIDS } from '../models/config.model';
 })
 export class UniverseComponent implements OnInit {
 
-  @ViewChild('ruler', { static: true })
-  ruler: ElementRef<HTMLCanvasElement>;
-  private rulerCtx: CanvasRenderingContext2D;
-
   @ViewChild('panel', { static: true })
   panel: ElementRef<HTMLCanvasElement>;
   private panelCtx: CanvasRenderingContext2D;
+
+  @ViewChild('control', { static: true })
+  control: ElementRef<HTMLCanvasElement>;
+  private controlCtx: CanvasRenderingContext2D;
 
   @ViewChild('cells', { static: true })
   cells: ElementRef<HTMLCanvasElement>;
@@ -35,146 +35,22 @@ export class UniverseComponent implements OnInit {
     return this.playing;
   }
 
-  private margin = 40;
-  public config: ConfigModel;
+  public cfg: ConfigModel;
+
   public panMode = false;
-  public panOrigin: [number, number] = [0, 0];
+  public pan: PointModel = { x: 0, y: 0 };
 
   public timer: any;
   public ticks: number;
 
-  time: number;
+  // test
+  public time: number;
 
   constructor(private data: DataService,
               private life: LifeService) { }
 
   ngOnInit(): void {
     this.initialize();
-  }
-
-  initialize(): void {
-    this.life.create.subscribe(conf => {
-      this.config = conf;
-      this.createUniverse();
-      this.life.create.unsubscribe();
-    });
-    this.data.update.subscribe(conf => {
-      if (conf.size !== this.config.size) {
-        this.createUniverse();
-      }
-      this.config = conf;
-      this.updateUniverse();
-    });
-  }
-
-  // todo check changes (create if size/colors), (update if position, grid)
-  createUniverse(): void {
-    this.startCanvas();
-    this.startGrid();
-    this.drawGrid();
-    this.drawLife();
-  }
-
-  updateUniverse(): void {
-    this.startCanvas();
-    this.startGrid();
-    this.drawGrid();
-    this.drawLife();
-  }
-
-  panelClick(ev: PointerEvent): void {
-    if (ev.buttons === 1) {
-      const uX = Math.round((ev.x - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0] + 10;
-      const uY = Math.round((ev.y - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1] + 10;
-      this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
-      this.drawLife();
-    } else if (ev.buttons === 4) {
-      this.panOrigin = [ev.x, ev.y];
-      this.panMode = true;
-    }
-  }
-
-  releaseClick(ev: PointerEvent): void {
-    this.panMode = false;
-  }
-
-  panUniverse(ev: PointerEvent): void {
-    const oY = Math.round((this.panOrigin[1] - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1];
-    const oX = Math.round((this.panOrigin[0] - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0];
-    const uY = Math.round((ev.y - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1];
-    const uX = Math.round((ev.x - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0];
-    if (!this.panMode) {
-      return;
-    }
-    let nX: number;
-    let nY: number;
-    nY = Math.round((ev.y - this.margin - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale);
-    nX = Math.round((ev.x - this.margin - GRIDS[this.config.size].scale * 0.5) / GRIDS[this.config.size].scale);
-    if (oX !== uX || oY !== uY) {
-      this.config.origin = [oX - nX, oY - nY];
-      this.verifyZoomEdges();
-      this.panOrigin = [ev.x, ev.y];
-      this.data.updateConfig(this.config);
-      this.updateUniverse();
-    }
-  }
-
-  changeScale(ev: WheelEvent): void {
-    const uY = Math.round((ev.y - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[1];
-    const uX = Math.round((ev.x - this.margin - this.config.grid.scale * 0.5) / this.config.grid.scale) + this.config.origin[0];
-    this.applyZoomPositioning(uX, uY, ev);
-    this.verifyZoomEdges();
-    this.data.updateConfig(this.config);
-    this.updateUniverse();
-  }
-
-  applyZoomPositioning(uX: number, uY: number, ev: WheelEvent): void {
-    let nX: number;
-    let nY: number;
-    if (ev.deltaY > 0) {
-      if (this.config.size === 0) {
-        return;
-      }
-      nY = Math.round((ev.y - this.margin - GRIDS[this.config.size - 1].scale * 0.5) / GRIDS[this.config.size - 1].scale);
-      nX = Math.round((ev.x - this.margin - GRIDS[this.config.size - 1].scale * 0.5) / GRIDS[this.config.size - 1].scale);
-      this.config.size--;
-      this.config.grid = GRIDS[this.config.size];
-    } else {
-      if (this.config.size === 4) {
-        return;
-      }
-      nY = Math.round((ev.y - this.margin - GRIDS[this.config.size + 1].scale * 0.5) / GRIDS[this.config.size + 1].scale);
-      nX = Math.round((ev.x - this.margin - GRIDS[this.config.size + 1].scale * 0.5) / GRIDS[this.config.size + 1].scale);
-      this.config.size++;
-      this.config.grid = GRIDS[this.config.size];
-    }
-    this.config.origin = [uX - nX, uY - nY];
-  }
-
-  verifyZoomEdges(): void {
-    if (this.config.origin[0] < 0) {
-      this.config.origin[0] = 0;
-    }
-    if (this.config.origin[1] < 0) {
-      this.config.origin[1] = 0;
-    }
-    if (this.config.origin[0] + this.config.grid.x + 20 > this.life.limitX) {
-      this.config.origin[0] = this.life.limitX - this.config.grid.x - 20;
-    }
-    if (this.config.origin[1] + this.config.grid.y + 20 > this.life.limitY) {
-      this.config.origin[1] = this.life.limitY - this.config.grid.y - 20;
-    }
-  }
-
-  drawLife(): void {
-    this.cellsCtx.clearRect(0, 0, (this.life.limitX - 20), (this.life.limitX - 20));
-    for (let y = this.config.origin[1]; y < this.config.origin[1] + this.config.grid.y; y++) {
-      for (let x = this.config.origin[0]; x < this.config.origin[0] + this.config.grid.x; x++) {
-        if (this.life.universe[y + 10][x + 10]) {
-          this.cellsCtx.fillRect(x - this.config.origin[0], y - this.config.origin[1], 1, 1);
-        }
-      }
-    }
   }
 
   startLoop(): void {
@@ -184,60 +60,225 @@ export class UniverseComponent implements OnInit {
       this.ticks++;
       // console.log(`1: ${new Date().getTime() - this.time}`);
       this.life.calcNextGen();
-      this.drawLife();
+      this.drawCells();
       // console.log(`2: ${new Date().getTime() - this.time}`);
-    }, 1000 / this.config.speed);
+    }, 1000 / this.cfg.speed);
   }
 
   stopLoop(): void {
     clearInterval(this.timer);
   }
 
-  startCanvas(): void {
-    this.cells.nativeElement.width = (this.life.limitX - 20) * 2;
-    this.cells.nativeElement.height = (this.life.limitY - 20) * 2;
-    this.cellsCtx = this.cells.nativeElement.getContext('2d');
-    this.cellsCtx.fillStyle = this.config.colors.alive;
-    const scale = this.config.grid.scale;
-    this.cellsCtx.scale(scale, scale);
+  panelClick(ev: PointerEvent): void {
+    if (ev.buttons === 1) {
+      const uX = Math.round((ev.x - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x + LIFE.o;
+      const uY = Math.round((ev.y - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y + LIFE.o;
+      this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
+      this.drawCells();
+    } else if (ev.buttons === 4) {
+      this.pan = { x: ev.x, y: ev.y };
+      this.panMode = true;
+      this.control.nativeElement.style.cursor = 'grabbing';
+    }
   }
 
-  startGrid(): void {
-    this.ruler.nativeElement.width = (this.life.limitX - 20 + this.margin) * 2;
-    this.ruler.nativeElement.height = (this.life.limitY - 20 + this.margin) * 2;
-    this.panel.nativeElement.width = (this.life.limitX - 20) * 2;
-    this.panel.nativeElement.height = (this.life.limitY - 20) * 2;
-    this.rulerCtx = this.ruler.nativeElement.getContext('2d');
-    this.rulerCtx.fillStyle = this.config.colors.rulerMark;
-    this.panelCtx = this.panel.nativeElement.getContext('2d');
-    this.panelCtx.fillStyle = this.config.colors.grid;
+  releaseClick(ev: PointerEvent): void {
+    this.panMode = false;
+    this.control.nativeElement.style.cursor = 'default';
+  }
+
+  panUniverse(ev: PointerEvent): void {
+    if (!this.panMode) {
+      return;
+    }
+    const cP = LIFE.r - this.cfg.grid.scale * 0.5;
+    const panY = Math.round((this.pan.y - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const panX = Math.round((this.pan.x - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
+    const nextY = Math.round((ev.y - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const nextX = Math.round((ev.x - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
+    if (panX !== nextX || panY !== nextY) {
+      this.cfg.origin = { x: panX - nextX + this.cfg.origin.x, y: panY - nextY + this.cfg.origin.y };
+      this.checkLimits();
+      this.pan = { x: ev.x, y: ev.y };
+      this.data.updateConfig(this.cfg);
+    }
+  }
+
+  changeScale(ev: WheelEvent): void {
+    const uY = Math.round((ev.y - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const uX = Math.round((ev.x - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x;
+    this.applyZoomPositioning(uX, uY, ev);
+    this.checkLimits();
+    this.data.updateConfig(this.cfg);
+  }
+
+  applyZoomPositioning(uX: number, uY: number, ev: WheelEvent): void {
+    let nX: number;
+    let nY: number;
+    if (ev.deltaY > 0) {
+      if (this.cfg.grid.size === 0) {
+        return;
+      }
+      nY = Math.round((ev.y - LIFE.r - GRIDS[this.cfg.grid.size - 1].scale * 0.5) / GRIDS[this.cfg.grid.size - 1].scale);
+      nX = Math.round((ev.x - LIFE.r - GRIDS[this.cfg.grid.size - 1].scale * 0.5) / GRIDS[this.cfg.grid.size - 1].scale);
+      this.cfg.grid = GRIDS[this.cfg.grid.size - 1];
+    } else {
+      if (this.cfg.grid.size === 4) {
+        return;
+      }
+      nY = Math.round((ev.y - LIFE.r - GRIDS[this.cfg.grid.size + 1].scale * 0.5) / GRIDS[this.cfg.grid.size + 1].scale);
+      nX = Math.round((ev.x - LIFE.r - GRIDS[this.cfg.grid.size + 1].scale * 0.5) / GRIDS[this.cfg.grid.size + 1].scale);
+      this.cfg.grid = GRIDS[this.cfg.grid.size + 1];
+    }
+    this.cfg.origin = { x: uX - nX, y: uY - nY };
+  }
+
+  checkLimits(): void {
+    if (this.cfg.origin.x < 0) {
+      this.cfg.origin.x = 0;
+    }
+    if (this.cfg.origin.y < 0) {
+      this.cfg.origin.y = 0;
+    }
+    if (this.cfg.origin.x + this.cfg.grid.x + 2 * LIFE.o > LIFE.x) {
+      this.cfg.origin.x = LIFE.x - this.cfg.grid.x - 2 * LIFE.o;
+    }
+    if (this.cfg.origin.y + this.cfg.grid.y + 2 * LIFE.o > LIFE.y) {
+      this.cfg.origin.y = LIFE.y - this.cfg.grid.y - 2 * LIFE.o;
+    }
+  }
+
+  drawCells(): void {
+    this.cellsCtx.clearRect(0, 0, (LIFE.x - 2 * LIFE.o), (LIFE.x - 2 * LIFE.o));
+    for (let y = this.cfg.origin.y; y < this.cfg.origin.y + this.cfg.grid.y; y++) {
+      for (let x = this.cfg.origin.x; x < this.cfg.origin.x + this.cfg.grid.x; x++) {
+        if (this.life.universe[y + LIFE.o][x + LIFE.o]) {
+          this.cellsCtx.fillRect(x - this.cfg.origin.x, y - this.cfg.origin.y, 1, 1);
+        }
+      }
+    }
+  }
+
+  drawPanel(): void {
+    if (this.cfg.grid.size > 1) {
+      this.drawGrid();
+      this.drawGuide();
+    }
+    this.drawRuler();
   }
 
   drawGrid(): void {
-    const markInterval = this.config.size > 1 ? 5 : 10;
-    for (let y = 0; y < this.config.grid.y; y++) {
-      if ((y + this.config.origin[1]) % markInterval === 0) {
-        this.rulerCtx.fillRect(this.margin - 10, (y * this.config.grid.scale) + this.margin, 10, 1);
-        this.rulerCtx.fillRect((this.life.limitX - 20) * 2 + this.margin, (y * this.config.grid.scale) + this.margin, 10, 1);
-      } else if (y % this.config.grid.scale === 0) {
-        // this.rulerCtx.fillRect(this.margin, (y * this.config.grid.scale) + this.margin, (this.life.limitX - 20) * 2, 1);
+    this.panelCtx.fillStyle = this.cfg.colors.grid;
+    for (let y = 0; y <= (LIFE.y - 2 * LIFE.o) * 2; y += this.cfg.grid.scale) {
+      this.panelCtx.fillRect(LIFE.r, y + LIFE.r, (LIFE.x - 2 * LIFE.o) * 2, 1);
+    }
+    for (let x = 0; x <= (LIFE.x - 2 * LIFE.o) * 2; x += this.cfg.grid.scale) {
+      this.panelCtx.fillRect(x + LIFE.r, LIFE.r, 1, (LIFE.y - 2 * LIFE.o) * 2);
+    }
+  }
+
+  drawGuide(): void {
+    this.panelCtx.fillStyle = this.cfg.colors.guide;
+    for (let y = 0; y <= this.cfg.grid.y; y++) {
+      if ((y + this.cfg.origin.y) % 5 === 0) {
+        this.panelCtx.fillRect(LIFE.r, (y * this.cfg.grid.scale) + LIFE.r, (LIFE.x - 2 * LIFE.o) * 2, 1);
       }
     }
-    for (let x = 0; x < this.config.grid.x; x++) {
-      if ((x + this.config.origin[0]) % markInterval === 0) {
-        this.rulerCtx.fillRect((x * this.config.grid.scale) + this.margin, this.margin - 10, 1, 10);
-        this.rulerCtx.fillRect((x * this.config.grid.scale) + this.margin, (this.life.limitY - 20) * 2 + this.margin, 1, 10);
-      } else if (x % this.config.grid.scale === 0) {
-        // this.rulerCtx.fillRect((x * this.config.grid.scale) + this.margin, this.margin, 1, (this.life.limitY - 20) * 2);
+    for (let x = 0; x <= this.cfg.grid.x; x++) {
+      if ((x + this.cfg.origin.x) % 5 === 0) {
+        this.panelCtx.fillRect((x * this.cfg.grid.scale) + LIFE.r, LIFE.r, 1, (LIFE.y - 2 * LIFE.o) * 2);
       }
     }
-    if (this.config.size > 1) {
-      for (let y = 0; y <= (this.life.limitY - 20) * 2; y += this.config.grid.scale) {
-        this.rulerCtx.fillRect(this.margin, y + this.margin, (this.life.limitX - 20) * 2, 1);
-      }
-      for (let x = 0; x <= (this.life.limitX - 20) * 2; x += this.config.grid.scale) {
-        this.rulerCtx.fillRect(x + this.margin, this.margin, 1, (this.life.limitY - 20) * 2);
+  }
+
+  drawRuler(): void {
+    for (let y = 0; y <= this.cfg.grid.y; y++) {
+      if ((y + this.cfg.origin.y) % 5 === 0) {
+        this.panelCtx.fillStyle = this.cfg.colors.label;
+        this.panelCtx.fillText(`${y + this.cfg.origin.y}`, LIFE.r - 32, (y * this.cfg.grid.scale) + LIFE.r + 4);
+        this.panelCtx.fillText(`${y + this.cfg.origin.y}`, (LIFE.x - 2 * LIFE.o) * 2 + LIFE.r + 12, (y * this.cfg.grid.scale) + LIFE.r + 4);
+        this.panelCtx.fillStyle = this.cfg.colors.guide;
+        this.panelCtx.fillRect(LIFE.r - 10, (y * this.cfg.grid.scale) + LIFE.r, 10, 1);
+        this.panelCtx.fillRect((LIFE.x - 2 * LIFE.o) * 2 + LIFE.r, (y * this.cfg.grid.scale) + LIFE.r, 10, 1);
       }
     }
+    for (let x = 0; x <= this.cfg.grid.x; x++) {
+      if ((x + this.cfg.origin.x) % 5 === 0) {
+        this.panelCtx.fillStyle = this.cfg.colors.label;
+        this.panelCtx.fillText(`${x + this.cfg.origin.x}`, (x * this.cfg.grid.scale) + LIFE.r - 6, LIFE.r - 16);
+        this.panelCtx.fillText(`${x + this.cfg.origin.x}`, (x * this.cfg.grid.scale) + LIFE.r - 6, (LIFE.y - 2 * LIFE.o) * 2 + LIFE.r + 24);
+        this.panelCtx.fillStyle = this.cfg.colors.guide;
+        this.panelCtx.fillRect((x * this.cfg.grid.scale) + LIFE.r, LIFE.r - 10, 1, 10);
+        this.panelCtx.fillRect((x * this.cfg.grid.scale) + LIFE.r, (LIFE.y - 2 * LIFE.o) * 2 + LIFE.r, 1, 10);
+      }
+    }
+  }
+
+  initialize(): void {
+    this.life.create.subscribe(config => {
+      this.cfg = config;
+      this.chaosTest();
+      this.createUniverse();
+      this.life.create.unsubscribe();
+    });
+    this.data.update.subscribe(config => {
+      if (config.grid.size !== this.cfg.grid.size) {
+        this.createUniverse();
+      }
+      this.cfg = config;
+      this.updateUniverse();
+    });
+  }
+
+  chaosTest(): void {
+    const c = Array.from({length: LIFE.y - 2 * LIFE.o})
+      .map(value => Array.from({length: LIFE.x - 2 * LIFE.o})
+      .map(v => (Math.random() > 0.7 ? 1 : 0)));
+    for (let y = 0; y < c.length; y++) {
+      for (let x = 0; x < c[0].length; x++) {
+        this.life.universe[y + LIFE.o][x + LIFE.o] = c[y][x];
+      }
+    }
+  }
+
+  // todo fix create/update logic
+  createUniverse(): void {
+    this.canvasInit();
+    this.drawPanel();
+    this.drawCells();
+  }
+
+  updateUniverse(): void {
+    this.canvasInit();
+    this.drawPanel();
+    this.drawCells();
+  }
+
+  canvasInit(): void {
+    this.cellsInit();
+    this.panelInit();
+    this.controlInit();
+  }
+
+  cellsInit(): void {
+    this.cells.nativeElement.width = (LIFE.x - 2 * LIFE.o) * 2;
+    this.cells.nativeElement.height = (LIFE.y - 2 * LIFE.o) * 2;
+    this.cellsCtx = this.cells.nativeElement.getContext('2d');
+    this.cellsCtx.fillStyle = this.cfg.colors.alive;
+    this.cellsCtx.scale(this.cfg.grid.scale, this.cfg.grid.scale);
+  }
+
+  panelInit(): void {
+    this.panel.nativeElement.width = (LIFE.x - 2 * LIFE.o + LIFE.r) * 2;
+    this.panel.nativeElement.height = (LIFE.y - 2 * LIFE.o + LIFE.r) * 2;
+    this.panelCtx = this.panel.nativeElement.getContext('2d');
+    this.panelCtx.font = '12px monospace';
+  }
+
+  controlInit(): void {
+    this.control.nativeElement.width = (LIFE.x - 2 * LIFE.o) * 2;
+    this.control.nativeElement.height = (LIFE.y - 2 * LIFE.o) * 2;
+    this.controlCtx = this.control.nativeElement.getContext('2d');
+    this.controlCtx.fillStyle = this.cfg.colors.grid;
   }
 }

@@ -24,8 +24,6 @@ export class AppComponent implements OnInit {
       (storedConfig: ConfigModel) => {
         this.config = storedConfig;
         this.life.startUniverse(storedConfig);
-
-        // this.chaosTest();
       }
     );
   }
@@ -33,21 +31,4 @@ export class AppComponent implements OnInit {
   toggleUniverse(): void {
     this.universeOn = !this.universeOn;
   }
-
-  zoomIn(): void {
-    if (this.config.size > 3) {
-      return;
-    }
-    this.config.size++;
-    this.data.updateConfig(this.config);
-  }
-
-  zoomOut(): void {
-    if (this.config.size < 1) {
-      return;
-    }
-    this.config.size--;
-    this.data.updateConfig(this.config);
-  }
-
 }

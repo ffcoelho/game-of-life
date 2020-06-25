@@ -26,10 +26,10 @@ export class DataService {
           this.getItem('config').then(
             (storedConfig) => {
               if (storedConfig == null) {
-                this.setItem('config', this.initConfig()).then(
-                  (initConfig) => {
+                this.setItem('config', this.generateConfig()).then(
+                  (newConfig) => {
                     this.localDb = true;
-                    resolve(initConfig);
+                    resolve(newConfig);
                   },
                   (error) => {
                     this.localDb = false;
@@ -93,21 +93,25 @@ export class DataService {
     });
   }
 
-  private initConfig(): ConfigModel {
+  private generateConfig(): ConfigModel {
     return {
-      size: 3,
-      origin: [0, 0],
-      speed: 60,
-      displayGrid: true,
-      grid: GRIDS[2],
       colors: {
         alive: '#8bc34a',
         dead: '#000000',
-        grid: '#777777',
-        ruler: '#000000',
-        rulerMark: '#334455'
-      }
+        grid: '#404040',
+        guide: '#575757',
+        label: '#808080',
+        ruler: '#000000'
+      },
+      darkMode: false,
+      display: {
+        grid: true,
+        guide: true,
+        ruler: true
+      },
+      grid: GRIDS[2],
+      origin: { x: 0, y: 0 },
+      speed: 60
     };
   }
-
 }
