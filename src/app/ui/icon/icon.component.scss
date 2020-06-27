@@ -1,0 +1,15 @@
+@import '../../../assets/styles/variables';
+
+.icon-container {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  svg {
+    fill: $panel-color;
+  }
+  &.on {
+    svg {
+      fill: $panel-on-color;
+    }
+  }
+}

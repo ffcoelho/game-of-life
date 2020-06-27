@@ -1,11 +1,3 @@
 <div class="universe-container">
   <app-universe [play]="universeOn"></app-universe>
 </div>
-<div class="controls">
-  <button (click)="toggleUniverse()">toggle</button>
-  <br>
-  <input type="text" [formControl]="pattern">
-  <pre>
-{{ pattern.value }}
-  </pre>
-</div>

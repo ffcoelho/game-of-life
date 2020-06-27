@@ -105,9 +105,9 @@ export class DataService {
         grid: '#404040',
         guide: '#575757',
         label: '#808080',
+        panel: '#ffd633',
         ruler: '#000000'
       },
-      darkMode: false,
       display: {
         grid: true,
         guide: true,

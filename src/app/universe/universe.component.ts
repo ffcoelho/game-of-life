@@ -189,6 +189,7 @@ export class UniverseComponent implements OnInit {
   }
 
   panelClick(ev: PointerEvent): void {
+    ev.preventDefault();
     if (ev.buttons === 1) {
       this.toggleCell(ev);
     } else if (ev.buttons === 4) {

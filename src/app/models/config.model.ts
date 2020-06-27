@@ -1,6 +1,5 @@
 export interface ConfigModel {
   colors: ColorsModel;
-  darkMode: boolean;
   display: DisplayModel;
   grid: GridModel;
   origin: PointModel;
@@ -18,6 +17,7 @@ interface ColorsModel {
   grid: string;
   guide: string;
   label: string;
+  panel: string;
   ruler: string;
 }
 
