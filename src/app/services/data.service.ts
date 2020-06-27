@@ -15,7 +15,9 @@ export class DataService {
   constructor() { }
 
   public updateConfig(config: ConfigModel): void {
-    this.setItem('config', config);
+    if (this.localDb) {
+      this.setItem('config', config);
+    }
     this.update.next(config);
   }
 
