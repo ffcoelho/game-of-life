@@ -41,7 +41,7 @@ export class UniverseComponent implements OnInit {
   public pan: PointModel = { x: 0, y: 0 };
 
   public timer: any;
-  public ticks: number;
+  public ticks = 0;
 
   constructor(private data: DataService,
               private life: LifeService) { }
@@ -81,7 +81,6 @@ export class UniverseComponent implements OnInit {
   }
 
   startLoop(): void {
-    this.ticks = 0;
     this.timer = setInterval(() => {
       this.ticks++;
       this.life.calcNextGen();
@@ -94,6 +93,7 @@ export class UniverseComponent implements OnInit {
   }
 
   drawCells(): void {
+    this.cellsCtx.fillStyle = this.cfg.colors.alive;
     this.cellsCtx.clearRect(0, 0, (LIFE.x - 2 * LIFE.o), (LIFE.y - 2 * LIFE.o));
     for (let y = this.cfg.origin.y; y < this.cfg.origin.y + this.cfg.grid.y; y++) {
       for (let x = this.cfg.origin.x; x < this.cfg.origin.x + this.cfg.grid.x; x++) {
@@ -171,7 +171,6 @@ export class UniverseComponent implements OnInit {
     this.cells.nativeElement.width = (LIFE.x - 2 * LIFE.o) * 2;
     this.cells.nativeElement.height = (LIFE.y - 2 * LIFE.o) * 2;
     this.cellsCtx = this.cells.nativeElement.getContext('2d');
-    this.cellsCtx.fillStyle = this.cfg.colors.alive;
     this.cellsCtx.scale(this.cfg.grid.scale, this.cfg.grid.scale);
   }
 

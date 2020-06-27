@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as localforage from 'localforage';
+import { ThemeService } from './theme.service';
 import { ConfigModel, GRIDS } from '../models/config.model';
 
 @Injectable({
@@ -12,12 +13,13 @@ export class DataService {
 
   public update: Subject<ConfigModel> = new Subject<ConfigModel>();
 
-  constructor() { }
+  constructor(private theme: ThemeService) { }
 
   public updateConfig(config: ConfigModel): void {
     if (this.localDb) {
       this.setItem('config', config);
     }
+    this.theme.updateStyleVars(config);
     this.update.next(config);
   }
 
@@ -99,7 +101,7 @@ export class DataService {
     return {
       colors: {
         alive: '#8bc34a',
-        dead: '#000000',
+        dead: '#333333',
         grid: '#404040',
         guide: '#575757',
         label: '#808080',

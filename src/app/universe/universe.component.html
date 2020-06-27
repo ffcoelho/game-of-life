@@ -1,7 +1,7 @@
-<div class="container">
+<div class="universe-view">
   <canvas
     #cells
-    class="m-40"
+    class="m-40 grid-background"
   ></canvas>
   <canvas
     #panel
@@ -15,4 +15,9 @@
     (pointerout)="releaseClick($event)"
     (wheel)="changeScale($event)"
   ></canvas>
+</div>
+<div class="universe-info">
+  <div class="display">
+    Generation: {{ ticks }}
+  </div>
 </div>
