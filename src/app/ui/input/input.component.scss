@@ -1,0 +1,10 @@
+@import '../../../assets/styles/variables';
+@import '../../../assets/styles/mixins';
+
+.input-container {
+  @include custom-input;
+  width: 100%;
+  &.err {
+    background-color: #cc0000;
+  }
+}

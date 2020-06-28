@@ -7,6 +7,7 @@
   <div class="menu-separator"></div>
   <div class="menu-mode" *ngIf="menu.mode === 0"></div>
   <div class="menu-mode" *ngIf="menu.mode === 1">
+    <app-input class="menu-input" type="number" min="1" max="60" *ngIf="displaySpeedInput"></app-input>
     <div class="menu-item" *ngFor="let btn of menu.game;">
       <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" (action)="gameAction(btn.actionId)"></app-button>
     </div>

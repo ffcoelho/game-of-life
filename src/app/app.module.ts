@@ -7,6 +7,7 @@ import { UniverseComponent } from './universe/universe.component';
 import { MenuComponent } from './menu/menu.component';
 import { IconComponent } from './ui/icon/icon.component';
 import { ButtonComponent } from './ui/button/button.component';
+import { InputComponent } from './ui/input/input.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { ButtonComponent } from './ui/button/button.component';
     UniverseComponent,
     MenuComponent,
     IconComponent,
-    ButtonComponent
+    ButtonComponent,
+    InputComponent
   ],
   imports: [
     BrowserModule,

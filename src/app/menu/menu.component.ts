@@ -17,7 +17,7 @@ export class MenuComponent implements OnInit {
 
   menu: MenuModel;
 
-  displayColorsModal: boolean;
+  displaySpeedInput: boolean;
 
   constructor() {
     this.menu = MENU;
@@ -40,14 +40,14 @@ export class MenuComponent implements OnInit {
 
   gameAction(id: string): void {
     if (id === 'speed') {
-      this.openColorsModal();
+      this.showSpeedInput();
       return;
     }
     this.playback.emit(id);
   }
 
-  openColorsModal(): void {
-    this.displayColorsModal = true;
+  showSpeedInput(): void {
+    this.displaySpeedInput = true;
   }
 
   playingState(state: boolean): void {
