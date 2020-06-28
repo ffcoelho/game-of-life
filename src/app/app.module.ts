@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { UniverseComponent } from './universe/universe.component';
 import { MenuComponent } from './menu/menu.component';
 import { IconComponent } from './ui/icon/icon.component';
+import { ButtonComponent } from './ui/button/button.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UniverseComponent,
     MenuComponent,
-    IconComponent
+    IconComponent,
+    ButtonComponent
   ],
   imports: [
     BrowserModule,

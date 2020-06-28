@@ -1,0 +1,23 @@
+@import '../../../assets/styles/variables';
+
+button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  border-radius: 16px;
+  color: $led-color;
+  outline: none;
+  cursor: pointer;
+  span {
+    color: $led-color;
+    &.led {
+      color: $led-on-color;
+    }
+  }
+  &.led {
+    background: radial-gradient(circle, var(--led-color) -5%, var(--panel-color) 70%);
+  }
+}

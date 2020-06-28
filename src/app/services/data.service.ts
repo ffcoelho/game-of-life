@@ -105,7 +105,8 @@ export class DataService {
         grid: '#404040',
         guide: '#575757',
         label: '#808080',
-        panel: '#ffd633',
+        led: '#ffd633',
+        panel: '#0d0d0d',
         ruler: '#000000'
       },
       display: {

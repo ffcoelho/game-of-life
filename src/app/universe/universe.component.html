@@ -16,9 +16,21 @@
     (wheel)="changeScale($event)"
   ></canvas>
 </div>
-<div class="universe-info">
-  <div class="display">
-    <app-icon [icon]="'play'" [on]="false"></app-icon>
-    <app-icon [icon]="'play'" [on]="true"></app-icon>
+<div class="universe-panel" *ngIf="cfg">
+  <div class="panel">
+    <div class="info">
+      <div class="info-item">
+        <app-button (click)="play = !play" icon="timer" [led]="play"></app-button>
+        <span>{{ ticks | number:'6.0-0'}}</span>
+      </div>
+      <div class="info-item">
+        <app-icon icon="speed"></app-icon>
+        <span *ngIf="!fps || fps >= cfg.speed">{{ cfg.speed | number:'3.0-0' }} fps</span>
+        <span style="color: #cc0000" *ngIf="fps < cfg.speed">{{ fps | number:'3.0-0' }} fps</span>
+      </div>
+    </div>
+    <div class="menu">
+      <app-menu></app-menu>
+    </div>
   </div>
 </div>

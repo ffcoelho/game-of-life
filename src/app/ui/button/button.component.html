@@ -1,0 +1,4 @@
+<button [ngClass]="{'led': led}">
+  <app-icon *ngIf="icon" [icon]="icon" [led]="led"></app-icon>
+  <span *ngIf="!icon" [ngClass]="{'led': led}">{{ label }}</span>
+</button>

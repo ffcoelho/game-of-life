@@ -17,6 +17,7 @@ interface ColorsModel {
   grid: string;
   guide: string;
   label: string;
+  led: string;
   panel: string;
   ruler: string;
 }

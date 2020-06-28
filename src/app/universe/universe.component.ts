@@ -42,6 +42,8 @@ export class UniverseComponent implements OnInit {
 
   public timer: any;
   public ticks = 0;
+  public fps: number;
+  public time: number;
 
   constructor(private data: DataService,
               private life: LifeService) { }
@@ -81,10 +83,12 @@ export class UniverseComponent implements OnInit {
   }
 
   startLoop(): void {
+    this.time = new Date().getTime();
     this.timer = setInterval(() => {
       this.ticks++;
       this.life.calcNextGen();
       this.drawCells();
+      this.fps = Math.floor(this.ticks / ((new Date().getTime() - this.time) / 1000));
     }, 1000 / this.cfg.speed);
   }
 

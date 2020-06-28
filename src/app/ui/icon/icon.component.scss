@@ -5,11 +5,11 @@
   width: 24px;
   height: 24px;
   svg {
-    fill: $panel-color;
+    fill: $led-color;
   }
-  &.on {
+  &.led {
     svg {
-      fill: $panel-on-color;
+      fill: $led-on-color;
     }
   }
 }

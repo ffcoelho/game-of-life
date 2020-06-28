@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class IconComponent implements OnInit {
 
   @Input() icon: string;
-  @Input() on: boolean;
+  @Input() led: boolean;
 
   constructor() { }
 
