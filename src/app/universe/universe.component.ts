@@ -22,24 +22,14 @@ export class UniverseComponent implements OnInit {
   cells: ElementRef<HTMLCanvasElement>;
   private cellsCtx: CanvasRenderingContext2D;
 
-  private playing: boolean;
-  @Input() set play(start: boolean) {
-    if (start) {
-      this.startLoop();
-    } else {
-      this.stopLoop();
-    }
-    this.playing = start;
-  }
-  get play(): boolean {
-    return this.playing;
-  }
+  public playing: boolean;
 
   public cfg: ConfigModel;
 
   public panMode = false;
   public pan: PointModel = { x: 0, y: 0 };
 
+  public leds: boolean;
   public timer: any;
   public ticks = 0;
   public tickRef = 0;
@@ -283,6 +273,40 @@ export class UniverseComponent implements OnInit {
     }
     if (this.cfg.origin.y + this.cfg.grid.y + 2 * LIFE.o > LIFE.y) {
       this.cfg.origin.y = LIFE.y - this.cfg.grid.y - 2 * LIFE.o;
+    }
+  }
+
+  playback(id: string): void {
+    switch (id) {
+      case 'restart': {
+        this.ticks = 0;
+        this.tickRef = 0;
+        this.fps = null;
+        this.life.restartUniverse();
+        this.drawCells();
+        break;
+      }
+      case 'skip': {
+        if (this.ticks === 999999) {
+          return;
+        }
+        this.ticks++;
+        this.tickRef = this.ticks;
+        this.life.calcNextGen();
+        this.drawCells();
+        break;
+      }
+      case 'play': {
+        if (this.playing) {
+          this.stopLoop();
+          this.fps = null;
+          this.playing = false;
+        } else {
+          this.startLoop();
+          this.playing = true;
+        }
+        break;
+      }
     }
   }
 

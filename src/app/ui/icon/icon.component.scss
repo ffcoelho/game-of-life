@@ -12,6 +12,11 @@
       fill: $led-dim-color;
     }
   }
+  &:active {
+    svg {
+      fill: $led-on-color;
+    }
+  }
   &.disable {
     svg {
       fill: $led-disable-color;

@@ -12,6 +12,7 @@ export class LifeService {
 
   public universe: number[][];
   public nextGen: number[][];
+  public zeroState: number[][];
 
   constructor(private theme: ThemeService) { }
 
@@ -49,6 +50,24 @@ export class LifeService {
     this.nextGen = this.newGrid();
     this.theme.updateStyleVars(config);
     this.create.next(config);
+  }
+
+  setZeroState(): void {
+    this.zeroState = this.newGrid();
+    for (let y = 0; y < LIFE.y; y++) {
+      this.zeroState[y] = Array.from(this.universe[y]);
+    }
+  }
+
+  restartUniverse(): void {
+    if (this.zeroState) {
+      for (let y = 0; y < LIFE.y; y++) {
+        this.universe[y] = Array.from(this.zeroState[y]);
+      }
+    } else {
+      this.universe = this.newGrid();
+    }
+    this.nextGen = this.newGrid();
   }
 
   newGrid(): number[][] {

@@ -7,6 +7,7 @@ export interface MenuModel {
 }
 
 interface MenuItemModel {
+  actionId: string;
   disabled: boolean;
   led: boolean;
   icon: string;
@@ -31,36 +32,42 @@ export const MENU: MenuModel = {
   ],
   fixed: [
     {
+      actionId: 'colors',
       disabled: false,
       led: false,
       icon: 'colors',
       tooltip: 'Colors'
     },
     {
+      actionId: 'ruler',
       disabled: false,
       led: false,
       icon: 'ruler',
       tooltip: 'Ruler'
     },
     {
+      actionId: 'lines',
       disabled: false,
       led: false,
       icon: 'lines',
       tooltip: 'Ruler lines'
     },
     {
+      actionId: 'zoomIn',
       disabled: true,
       led: false,
       icon: 'zoom_in',
       tooltip: 'Zoom in'
     },
     {
+      actionId: 'zoomOut',
       disabled: false,
       led: false,
       icon: 'zoom_out',
       tooltip: 'Zoom out'
     },
     {
+      actionId: 'panTool',
       disabled: false,
       led: false,
       icon: 'pan',
@@ -69,24 +76,28 @@ export const MENU: MenuModel = {
   ],
   game: [
     {
+      actionId: 'speed',
       disabled: false,
       led: false,
       icon: 'speed',
       tooltip: 'Speed'
     },
     {
+      actionId: 'restart',
       disabled: false,
       led: false,
       icon: 'restart',
-      tooltip: 'Restart'
+      tooltip: 'Load state'
     },
     {
+      actionId: 'skip',
       disabled: false,
       led: false,
       icon: 'skip_fwd',
       tooltip: 'Next'
     },
     {
+      actionId: 'play',
       disabled: false,
       led: false,
       icon: 'play',

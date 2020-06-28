@@ -8,7 +8,7 @@
   <div class="menu-mode" *ngIf="menu.mode === 0"></div>
   <div class="menu-mode" *ngIf="menu.mode === 1">
     <div class="menu-item" *ngFor="let btn of menu.game;">
-      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled"></app-button>
+      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" (action)="gameAction(btn.actionId)"></app-button>
     </div>
   </div>
   <div class="menu-mode" *ngIf="menu.mode === 2">
