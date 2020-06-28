@@ -21,11 +21,9 @@ export class InputComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    const n: number = this.num ? this.num : null;
-    const t: string = this.txt ? this.txt : null;
     this.form = this.fb.group({
-      num: [n, [ Validators.min(this.min), Validators.max(this.max) ]],
-      txt: [t, [ Validators.minLength(this.minLength), Validators.maxLength(this.maxLength) ]]
+      num: [this.num, [ Validators.min(this.min), Validators.max(this.max) ]],
+      txt: [this.txt, [ Validators.minLength(this.minLength), Validators.maxLength(this.maxLength) ]]
     });
   }
 

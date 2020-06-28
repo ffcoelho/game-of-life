@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MenuMode, MenuModel, MENU } from '../models/menu.model';
+import { MenuMode, MenuModel, MENU } from '../../models/menu.model';
 
 @Component({
   selector: 'app-menu',
@@ -29,13 +29,14 @@ export class MenuComponent implements OnInit {
   mode(mode: MenuMode): void {
     if (mode === this.menu.mode) {
       this.menu.mode = MenuMode.NONE;
-      this.game.emit(false);
-      return;
+    } else {
+      this.menu.mode = mode;
+      if (this.menu.mode === MenuMode.PLAY) {
+        this.game.emit(true);
+        return;
+      }
     }
-    this.menu.mode = mode;
-    if (this.menu.mode === MenuMode.PLAY) {
-      this.game.emit(true);
-    }
+    this.game.emit(false);
   }
 
   gameAction(id: string): void {

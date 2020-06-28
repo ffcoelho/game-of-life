@@ -1,19 +1,61 @@
 @import '../../../assets/styles/variables';
 
-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  background-color: transparent;
-  border-radius: 16px;
-  outline: none;
-  cursor: pointer;
-  &.led {
-    background: radial-gradient(circle, var(--led-color) -5%, var(--panel-color) 70%);
+.button-container {
+  position: relative;
+  button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border-radius: 16px;
+    outline: none;
+    cursor: pointer;
+    &.led {
+      background: radial-gradient(circle, var(--led-color) -5%, var(--panel-color) 70%);
+    }
+    &.disabled {
+      cursor: default;
+    }
   }
-  &.disabled {
-    cursor: default;
+  .tooltip {
+    position: absolute;
+    top: -25px;
+    left: 4px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 25px;
+    color: $led-on-color;
+    font-family: monospace;
+    font-size: 12px;
+    background-color: #000000;
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px 2px $led-color;
+    opacity: 0;
+  }
+  &:hover {
+    .tooltip {
+      display: flex;
+      animation: fade-in 240ms ease-out;
+      animation-fill-mode: forwards;
+      animation-delay: 500ms;
+    }
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    top: -25px;
+    opacity: 0;
+  }
+  70% {
+    top: -36px;
+  }
+  100% {
+    top: -36px;
+    opacity: 0.75;
   }
 }

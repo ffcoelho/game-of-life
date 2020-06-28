@@ -1,3 +1,8 @@
-<button [ngClass]="{'led': led, 'disabled': disabled}" (click)="btnClick()">
-  <app-icon [icon]="icon" [led]="led" [disable]="disabled"></app-icon>
-</button>
+<div class="button-container">
+  <button [ngClass]="{'led': led, 'disabled': disabled}" (click)="btnClick()">
+    <app-icon [icon]="icon" [led]="led" [disable]="disabled"></app-icon>
+  </button>
+  <div class="tooltip" *ngIf="tooltip">
+    <span>{{ tooltip }}</span>
+  </div>
+</div>

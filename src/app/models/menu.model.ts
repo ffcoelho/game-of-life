@@ -3,7 +3,7 @@ export interface MenuModel {
   fixed: MenuItemModel[];
   game: MenuItemModel[];
   mode: MenuMode;
-  selector: SelectorItemModel[];
+  selector: MenuModeSelectorModel[];
 }
 
 interface MenuItemModel {
@@ -14,7 +14,7 @@ interface MenuItemModel {
   tooltip: string;
 }
 
-interface SelectorItemModel {
+interface MenuModeSelectorModel {
   disabled: boolean;
   mode: MenuMode;
   icon: string;
@@ -50,7 +50,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'lines',
-      tooltip: 'Ruler lines'
+      tooltip: 'Lines'
     },
     {
       actionId: 'zoomIn',
@@ -87,7 +87,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'restart',
-      tooltip: 'Load state'
+      tooltip: 'Restart'
     },
     {
       actionId: 'skip',
@@ -101,7 +101,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'play',
-      tooltip: 'Play'
+      tooltip: 'Start'
     }
   ],
   mode: MenuMode.NONE,

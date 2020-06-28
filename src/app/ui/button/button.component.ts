@@ -10,6 +10,7 @@ export class ButtonComponent implements OnInit {
   @Input() disabled: boolean;
   @Input() icon: string;
   @Input() led: boolean;
+  @Input() tooltip: string;
 
   @Output() action: EventEmitter<null> = new EventEmitter();
 

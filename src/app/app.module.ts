@@ -4,10 +4,10 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { UniverseComponent } from './universe/universe.component';
-import { MenuComponent } from './menu/menu.component';
+import { MenuComponent } from './ui/menu/menu.component';
 import { IconComponent } from './ui/icon/icon.component';
-import { ButtonComponent } from './ui/button/button.component';
 import { InputComponent } from './ui/input/input.component';
+import { ButtonComponent } from './ui/button/button.component';
 
 @NgModule({
   declarations: [
@@ -15,8 +15,8 @@ import { InputComponent } from './ui/input/input.component';
     UniverseComponent,
     MenuComponent,
     IconComponent,
-    ButtonComponent,
-    InputComponent
+    InputComponent,
+    ButtonComponent
   ],
   imports: [
     BrowserModule,

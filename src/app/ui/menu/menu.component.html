@@ -1,7 +1,7 @@
 <div class="menu-container">
   <div class="menu-fixed">
     <div class="menu-item" *ngFor="let btn of menu.fixed">
-      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled"></app-button>
+      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" [tooltip]="btn.tooltip"></app-button>
     </div>
   </div>
   <div class="menu-separator"></div>
@@ -9,18 +9,18 @@
   <div class="menu-mode" *ngIf="menu.mode === 1">
     <app-input class="menu-input" type="number" min="1" max="60" *ngIf="displaySpeedInput"></app-input>
     <div class="menu-item" *ngFor="let btn of menu.game;">
-      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" (action)="gameAction(btn.actionId)"></app-button>
+      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" [tooltip]="btn.tooltip" (action)="gameAction(btn.actionId)"></app-button>
     </div>
   </div>
   <div class="menu-mode" *ngIf="menu.mode === 2">
     <div class="menu-item" *ngFor="let btn of menu.build">
-      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled"></app-button>
+      <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" [tooltip]="btn.tooltip"></app-button>
     </div>
   </div>
   <div class="menu-separator"></div>
   <div class="menu-selector">
     <div class="menu-item" *ngFor="let btn of menu.selector">
-      <app-button [icon]="btn.icon" [led]="btn.mode === menu.mode" [disabled]="btn.disabled" (action)="mode(btn.mode)"></app-button>
+      <app-button [icon]="btn.icon" [led]="btn.mode === menu.mode" [disabled]="btn.disabled" [tooltip]="btn.tooltip" (action)="mode(btn.mode)"></app-button>
     </div>
   </div>
 </div>
