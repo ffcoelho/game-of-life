@@ -36,41 +36,37 @@
     padding: 4px 0;
     border-top: 1px solid #333333;
     .menu {
-      width: 824px;
+      width: 935px;
       height: 100%;
     }
     .info {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      width: 200px;
-      height: 100%;
+      width: 90px;
+      height: calc(100% - 2px);
+      margin-bottom: 2px;
+      border-left: 1px solid $led-color;
       font-family: monospace;
       font-size: 12px;
       color: $led-color;
-      .info-item {
+      .fps {
         display: flex;
-        justify-content: flex-start;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-end;
+        margin-right: 12px;
+      }
+      .generation {
+        display: flex;
+        justify-content: flex-end;
         align-items: center;
-        height: 100%;
-        margin-right: 14px;
-        .fps {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          align-items: flex-end;
-        }
-        &.generation {
-          justify-content: flex-end;
-          height: 20px;
-          width: 48px;
-          margin-bottom: 2px;
-          margin-right: 0;
-          border: 1px solid $led-color;
-          border-radius: 5px;
-          span {
-            margin-right: 4px;
-          }
+        height: 20px;
+        width: 48px;
+        border: 1px solid $led-color;
+        border-radius: 5px;
+        span {
+          margin-right: 4px;
         }
       }
     }

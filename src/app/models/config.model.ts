@@ -15,7 +15,7 @@ interface ColorsModel {
   alive: string;
   dead: string;
   grid: string;
-  guide: string;
+  lines: string;
   label: string;
   led: string;
   panel: string;
@@ -23,8 +23,7 @@ interface ColorsModel {
 }
 
 interface DisplayModel {
-  grid: boolean;
-  guide: boolean;
+  lines: boolean;
   ruler: boolean;
 }
 

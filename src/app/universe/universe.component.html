@@ -22,15 +22,12 @@
       <app-menu></app-menu>
     </div>
     <div class="info">
-      <div class="info-item">
-        <app-button icon="timer" (click)="play = !play"></app-button>
-        <div class="fps">
-          <span>{{ cfg.speed | number:'3.0-0' }}</span>
-          <span *ngIf="!fps">000</span>
-          <span [ngStyle]="{'color': fps >= cfg.speed ? '#009933' : '#cc0000'}" *ngIf="fps">{{ fps | number:'3.0-0' }}</span>
-        </div>
+      <div class="fps">
+        <span>{{ cfg.speed | number:'3.0-0' }}</span>
+        <span *ngIf="!fps">000</span>
+        <span [ngStyle]="{'color': fps >= cfg.speed ? '#009933' : '#cc0000'}" *ngIf="fps">{{ fps | number:'3.0-0' }}</span>
       </div>
-      <div class="info-item generation">
+      <div class="generation">
         <span>{{ ticks }}</span>
       </div>
     </div>

@@ -7,6 +7,16 @@
   svg {
     fill: $led-color;
   }
+  &:hover {
+    svg {
+      fill: $led-dim-color;
+    }
+  }
+  &.disable {
+    svg {
+      fill: $led-disable-color;
+    }
+  }
   &.led {
     svg {
       fill: $led-on-color;

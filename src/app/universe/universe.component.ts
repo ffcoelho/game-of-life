@@ -42,6 +42,7 @@ export class UniverseComponent implements OnInit {
 
   public timer: any;
   public ticks = 0;
+  public tickRef = 0;
   public fps: number;
   public time: number;
 
@@ -86,17 +87,23 @@ export class UniverseComponent implements OnInit {
     this.time = new Date().getTime();
     this.timer = setInterval(() => {
       this.ticks++;
+      this.fps = Math.floor((this.ticks - this.tickRef) / ((new Date().getTime() - this.time) / 1000));
       this.life.calcNextGen();
       this.drawCells();
-      this.fps = Math.floor(this.ticks / ((new Date().getTime() - this.time) / 1000));
       if (this.ticks === 999999) {
         clearInterval(this.timer);
       }
     }, 1000 / this.cfg.speed);
   }
 
+  pauseLoop(): void {
+    clearInterval(this.timer);
+    this.tickRef = this.ticks;
+  }
+
   stopLoop(): void {
     clearInterval(this.timer);
+    this.tickRef = this.ticks;
   }
 
   drawCells(): void {
@@ -114,12 +121,12 @@ export class UniverseComponent implements OnInit {
   drawPanel(): void {
     this.panelCtx.clearRect(0, 0, (LIFE.x - 2 * LIFE.o + LIFE.r) * 2, (LIFE.y - 2 * LIFE.o + LIFE.r) * 2);
     this.drawGrid();
-    this.drawGuide();
+    this.drawRulerLines();
     this.drawRuler();
   }
 
   drawGrid(): void {
-    if (!this.cfg.display.grid || this.cfg.grid.size < 2) {
+    if (this.cfg.grid.size < 2) {
       return;
     }
     this.panelCtx.fillStyle = this.cfg.colors.grid;
@@ -131,11 +138,11 @@ export class UniverseComponent implements OnInit {
     }
   }
 
-  drawGuide(): void {
-    if (!this.cfg.display.guide || this.cfg.grid.size < 2) {
+  drawRulerLines(): void {
+    if (!this.cfg.display.lines || this.cfg.grid.size < 2) {
       return;
     }
-    this.panelCtx.fillStyle = this.cfg.colors.guide;
+    this.panelCtx.fillStyle = this.cfg.colors.lines;
     for (let y = 0; y <= this.cfg.grid.y; y++) {
       if ((y + this.cfg.origin.y) % this.cfg.grid.rulerY === 0) {
         this.panelCtx.fillRect(LIFE.r, (y * this.cfg.grid.scale) + LIFE.r, (LIFE.x - 2 * LIFE.o) * 2, 1);
@@ -157,7 +164,7 @@ export class UniverseComponent implements OnInit {
         this.panelCtx.fillStyle = this.cfg.colors.label;
         this.panelCtx.fillText(`${y + this.cfg.origin.y}`, LIFE.r - 32, (y * this.cfg.grid.scale) + LIFE.r + 4);
         this.panelCtx.fillText(`${y + this.cfg.origin.y}`, (LIFE.x - 2 * LIFE.o) * 2 + LIFE.r + 12, (y * this.cfg.grid.scale) + LIFE.r + 4);
-        this.panelCtx.fillStyle = this.cfg.colors.guide;
+        this.panelCtx.fillStyle = this.cfg.colors.lines;
         this.panelCtx.fillRect(LIFE.r - 10, (y * this.cfg.grid.scale) + LIFE.r, 10, 1);
         this.panelCtx.fillRect((LIFE.x - 2 * LIFE.o) * 2 + LIFE.r, (y * this.cfg.grid.scale) + LIFE.r, 10, 1);
       }
@@ -167,7 +174,7 @@ export class UniverseComponent implements OnInit {
         this.panelCtx.fillStyle = this.cfg.colors.label;
         this.panelCtx.fillText(`${x + this.cfg.origin.x}`, (x * this.cfg.grid.scale) + LIFE.r - 6, LIFE.r - 16);
         this.panelCtx.fillText(`${x + this.cfg.origin.x}`, (x * this.cfg.grid.scale) + LIFE.r - 6, (LIFE.y - 2 * LIFE.o) * 2 + LIFE.r + 24);
-        this.panelCtx.fillStyle = this.cfg.colors.guide;
+        this.panelCtx.fillStyle = this.cfg.colors.lines;
         this.panelCtx.fillRect((x * this.cfg.grid.scale) + LIFE.r, LIFE.r - 10, 1, 10);
         this.panelCtx.fillRect((x * this.cfg.grid.scale) + LIFE.r, (LIFE.y - 2 * LIFE.o) * 2 + LIFE.r, 1, 10);
       }

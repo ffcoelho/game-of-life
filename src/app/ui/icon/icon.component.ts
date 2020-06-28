@@ -9,6 +9,7 @@ export class IconComponent implements OnInit {
 
   @Input() icon: string;
   @Input() led: boolean;
+  @Input() disable: boolean;
 
   constructor() { }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuMode, MenuModel, MENU } from '../models/menu.model';
 
 @Component({
   selector: 'app-menu',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MenuComponent implements OnInit {
 
-  constructor() { }
+  menu: MenuModel;
+
+  constructor() {
+    this.menu = MENU;
+  }
 
   ngOnInit(): void {
+  }
+
+  mode(mode: MenuMode): void {
+    if (mode === this.menu.mode) {
+      this.menu.mode = MenuMode.NONE;
+      return;
+    }
+    this.menu.mode = mode;
   }
 
 }

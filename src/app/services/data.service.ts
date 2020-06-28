@@ -103,15 +103,14 @@ export class DataService {
         alive: '#8bc34a',
         dead: '#333333',
         grid: '#404040',
-        guide: '#575757',
+        lines: '#575757',
         label: '#808080',
         led: '#ffd633',
         panel: '#0d0d0d',
         ruler: '#000000'
       },
       display: {
-        grid: true,
-        guide: true,
+        lines: true,
         ruler: true
       },
       grid: GRIDS[2],
