@@ -89,6 +89,9 @@ export class UniverseComponent implements OnInit {
       this.life.calcNextGen();
       this.drawCells();
       this.fps = Math.floor(this.ticks / ((new Date().getTime() - this.time) / 1000));
+      if (this.ticks === 999999) {
+        clearInterval(this.timer);
+      }
     }, 1000 / this.cfg.speed);
   }
 
