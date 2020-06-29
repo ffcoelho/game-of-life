@@ -19,14 +19,15 @@
     -moz-appearance: textfield;
   }
   input {
-    width: 100%;
+    width: calc(100% - 4px);
     height: 20px;
+    padding-left: 4px;
     background-color: transparent;
-    border: 1px solid $led-color;
+    border: 1px solid $led-dim-color;
     border-radius: 5px;
     font-family: monospace;
     font-size: 12px;
-    color: $led-color;
+    color: $led-dim-color;
     outline: none;
     &:focus {
       border: 1px solid $led-on-color;

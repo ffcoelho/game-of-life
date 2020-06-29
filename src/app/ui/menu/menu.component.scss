@@ -2,35 +2,27 @@
 
 .menu-container {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   width: calc(100% - 8px);
   height: 100%;
   padding-right: 8px;
-  .menu-fixed {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 216px;
-  }
-  .menu-mode {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 605px;
-  }
-  .menu-selector {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 72px;
-  }
   .menu-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0 2px;
-  }
-  .menu-input {
-    width: 48px;
-    margin-right: 14px;
+    span {
+      font-family: monospace;
+      font-size: 12px;
+      color: $led-dim-color;
+    }
+    .small-input {
+      width: 27px;
+      margin: 0 14px 0 7px;
+    }
+    &.form {
+      margin-right: 24px;
+    }
   }
   .menu-separator {
     width: 8px;
@@ -38,5 +30,26 @@
     margin-bottom: 2px;
     margin-left: 8px;
     border-left: 1px solid $led-color;
+  }
+  .menu-fixed {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 216px;
+    height: 100%;
+  }
+  .menu-mode {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 605px;
+    height: 100%;
+  }
+  .menu-selector {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 72px;
+    height: 100%;
   }
 }

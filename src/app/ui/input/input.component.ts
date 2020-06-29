@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -9,22 +9,22 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class InputComponent implements OnInit {
 
   @Input() type: string;
-  @Input() txt: string;
-  @Input() num: number;
-  @Input() min = 0;
-  @Input() max = 1;
-  @Input() minLength = 0;
-  @Input() maxLength = 1;
+  @Input() parentForm: FormGroup;
+  @Input() controlName: string;
+  @Input() minLength: number;
+  @Input() maxLength: number;
 
-  form: FormGroup;
-
-  constructor(private fb: FormBuilder) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      num: [this.num, [ Validators.min(this.min), Validators.max(this.max) ]],
-      txt: [this.txt, [ Validators.minLength(this.minLength), Validators.maxLength(this.maxLength) ]]
-    });
+    if (this.type === 'number') {
+      this.parentForm.get(this.controlName).valueChanges.subscribe((value: any) => this.limitNumLength(value));
+    }
   }
 
+  limitNumLength(value: any): void {
+    if (value.toString().length > this.maxLength) {
+      this.parentForm.get(this.controlName).patchValue(parseInt(value.toString().slice(0, this.maxLength), 10));
+    }
+  }
 }

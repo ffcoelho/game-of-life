@@ -19,12 +19,12 @@
 <div class="universe-panel" *ngIf="cfg">
   <div class="panel">
     <div class="menu">
-      <app-menu [playing]="playing" (game)="leds = $event" (playback)="playback($event)"></app-menu>
+      <app-menu [playing]="playing" [config]="cfg" (game)="leds = $event" (playback)="playback($event)"></app-menu>
     </div>
     <div class="info" [ngClass]="{'led': leds}" >
       <div class="fps">
         <span>{{ cfg.speed | number:'3.0-0' }}</span>
-        <span *ngIf="!fps">000</span>
+        <span *ngIf="!fps"> 000</span>
         <span [ngStyle]="{'color': fps >= cfg.speed ? '#009933' : '#cc0000', 'opacity': leds ? '1' : '0.5'}" *ngIf="fps">{{ fps | number:'3.0-0' }}</span>
       </div>
       <div class="generation">

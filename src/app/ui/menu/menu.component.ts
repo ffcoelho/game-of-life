@@ -1,5 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DataService } from 'src/app/services/data.service';
 import { MenuMode, MenuModel, MENU } from '../../models/menu.model';
+import { ConfigModel } from 'src/app/models/config.model';
 
 @Component({
   selector: 'app-menu',
@@ -11,19 +14,34 @@ export class MenuComponent implements OnInit {
   @Input() set playing(playing: boolean) {
     this.playingState(playing);
   }
+  @Input() config: ConfigModel;
 
   @Output() game: EventEmitter<boolean> = new EventEmitter();
   @Output() playback: EventEmitter<string> = new EventEmitter();
 
-  menu: MenuModel;
+  public menu: MenuModel;
+  public blocked: boolean;
 
-  displaySpeedInput: boolean;
+  public gameForm: FormGroup;
 
-  constructor() {
+  public displaySpeedInput: boolean;
+
+  constructor(private fb: FormBuilder,
+              private data: DataService) {
     this.menu = MENU;
   }
 
   ngOnInit(): void {
+    this.gameForm = this.fb.group({
+      speed: [
+        this.config.speed,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(200)
+        ]
+      ]
+    });
   }
 
   mode(mode: MenuMode): void {
@@ -47,16 +65,35 @@ export class MenuComponent implements OnInit {
     this.playback.emit(id);
   }
 
-  showSpeedInput(): void {
-    this.displaySpeedInput = true;
-  }
-
   playingState(state: boolean): void {
-    this.menu.selector.forEach(sel => sel.disabled = state);
     this.menu.game[0].disabled = state;
     this.menu.game[1].disabled = state;
     this.menu.game[2].disabled = state;
     this.menu.game[3].led = state;
+    this.menu.selector.forEach(sel => sel.disabled = state);
+    this.menu.fixed[0].disabled = state;
+    this.menu.fixed[1].disabled = state;
+    this.menu.fixed[2].disabled = state;
   }
 
+  showSpeedInput(): void {
+    this.blocked = true;
+    this.displaySpeedInput = true;
+  }
+
+  speedInputCancel(): void {
+    this.displaySpeedInput = false;
+    this.blocked = false;
+    this.gameForm.get('speed').patchValue(this.config.speed);
+  }
+
+  speedInputUpdate(): void {
+    if (!/^[0-9]*$/.test(this.gameForm.get('speed').value)) {
+      return;
+    }
+    this.displaySpeedInput = false;
+    this.blocked = false;
+    this.config.speed = this.gameForm.get('speed').value * 1;
+    this.data.updateConfig(this.config);
+  }
 }

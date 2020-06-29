@@ -29,6 +29,76 @@ export enum MenuMode {
 
 export const MENU: MenuModel = {
   build: [
+    {
+      actionId: 'draw',
+      disabled: false,
+      led: false,
+      icon: 'draw',
+      tooltip: 'Draw'
+    },
+    {
+      actionId: 'select',
+      disabled: false,
+      led: false,
+      icon: 'select',
+      tooltip: 'Select'
+    },
+    {
+      actionId: 'cut',
+      disabled: false,
+      led: false,
+      icon: 'cut',
+      tooltip: 'Cut'
+    },
+    {
+      actionId: 'copy',
+      disabled: false,
+      led: false,
+      icon: 'copy',
+      tooltip: 'Copy'
+    },
+    {
+      actionId: 'paste',
+      disabled: false,
+      led: false,
+      icon: 'paste',
+      tooltip: 'Paste'
+    },
+    {
+      actionId: 'rotate_l',
+      disabled: false,
+      led: false,
+      icon: 'rotate_left',
+      tooltip: 'Rotate Left'
+    },
+    {
+      actionId: 'rotate_r',
+      disabled: false,
+      led: false,
+      icon: 'rotate_right',
+      tooltip: 'Rotate Right'
+    },
+    {
+      actionId: 'flip',
+      disabled: false,
+      led: false,
+      icon: 'flip',
+      tooltip: 'Flip'
+    },
+    {
+      actionId: 'save',
+      disabled: false,
+      led: false,
+      icon: 'save',
+      tooltip: 'Save'
+    },
+    {
+      actionId: 'clear',
+      disabled: false,
+      led: false,
+      icon: 'close',
+      tooltip: 'Clear'
+    }
   ],
   fixed: [
     {
@@ -54,7 +124,7 @@ export const MENU: MenuModel = {
     },
     {
       actionId: 'zoomIn',
-      disabled: true,
+      disabled: false,
       led: false,
       icon: 'zoom_in',
       tooltip: 'Zoom in'

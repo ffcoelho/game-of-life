@@ -1,4 +1,11 @@
-<div class="input-container" [ngClass]="{'err': form.invalid}" [formGroup]="form">
-  <input type="text" formControlName="txt" *ngIf="type ==='text'">
-  <input type="number" formControlName="num" *ngIf="type ==='number'">
+<!-- <div class="input-container" [ngClass]="{'err': form.invalid}" [formGroup]="form">
+  <input type="text" formControlName="control">
+</div> -->
+
+<div class="input-container" [ngClass]="{'err': parentForm.invalid}" [formGroup]="parentForm">
+  <input
+    [type]="type"
+    [formControlName]="controlName"
+    (click)="$event.target.select()"
+  >
 </div>
