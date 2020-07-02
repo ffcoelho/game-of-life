@@ -1,48 +1,92 @@
 export interface MenuModel {
-  build: MenuItemModel[];
-  fixed: MenuItemModel[];
+  display: MenuItemModel[];
+  zoom: MenuItemModel[];
+  tools: MenuItemModel[];
+  edit: MenuItemModel[];
+  file: MenuItemModel[];
   game: MenuItemModel[];
+  selector: MenuItemModel[];
   mode: MenuMode;
-  selector: MenuModeSelectorModel[];
 }
 
 interface MenuItemModel {
-  actionId: string;
+  actionId?: string;
+  mode?: MenuMode;
+  led?: boolean;
   disabled: boolean;
-  led: boolean;
-  icon: string;
-  tooltip: string;
-}
-
-interface MenuModeSelectorModel {
-  disabled: boolean;
-  mode: MenuMode;
   icon: string;
   tooltip: string;
 }
 
 export enum MenuMode {
-  NONE = 0,
-  PLAY = 1,
-  BUILD = 2
+  PLAY = 0,
+  BUILD = 1
 }
 
 export const MENU: MenuModel = {
-  build: [
+  display: [
+    {
+      actionId: 'colors',
+      disabled: false,
+      led: false,
+      icon: 'colors',
+      tooltip: 'Colors'
+    },
+    {
+      actionId: 'ruler',
+      disabled: false,
+      led: false,
+      icon: 'ruler',
+      tooltip: 'Ruler'
+    },
+    {
+      actionId: 'lines',
+      disabled: false,
+      led: false,
+      icon: 'lines',
+      tooltip: 'Lines'
+    }
+  ],
+  zoom: [
+    {
+      actionId: 'zoomIn',
+      disabled: false,
+      led: false,
+      icon: 'zoom_in',
+      tooltip: 'Zoom in'
+    },
+    {
+      actionId: 'zoomOut',
+      disabled: false,
+      led: false,
+      icon: 'zoom_out',
+      tooltip: 'Zoom out'
+    }
+  ],
+  tools: [
+    {
+      actionId: 'pan',
+      disabled: false,
+      led: false,
+      icon: 'pan',
+      tooltip: 'Pan tool'
+    },
     {
       actionId: 'draw',
       disabled: false,
       led: false,
       icon: 'draw',
-      tooltip: 'Draw'
+      tooltip: 'Draw tool'
     },
     {
       actionId: 'select',
       disabled: false,
       led: false,
-      icon: 'select',
-      tooltip: 'Select'
-    },
+      icon: 'screen',
+      tooltip: 'Select Tool'
+    }
+  ],
+  edit: [
     {
       actionId: 'cut',
       disabled: false,
@@ -86,13 +130,6 @@ export const MENU: MenuModel = {
       tooltip: 'Flip'
     },
     {
-      actionId: 'save',
-      disabled: false,
-      led: false,
-      icon: 'save',
-      tooltip: 'Save'
-    },
-    {
       actionId: 'clear',
       disabled: false,
       led: false,
@@ -100,58 +137,23 @@ export const MENU: MenuModel = {
       tooltip: 'Clear'
     }
   ],
-  fixed: [
+  file: [
     {
-      actionId: 'colors',
+      actionId: 'load',
       disabled: false,
       led: false,
-      icon: 'colors',
-      tooltip: 'Colors'
+      icon: 'folder',
+      tooltip: 'Load'
     },
     {
-      actionId: 'ruler',
+      actionId: 'save',
       disabled: false,
       led: false,
-      icon: 'ruler',
-      tooltip: 'Ruler'
-    },
-    {
-      actionId: 'lines',
-      disabled: false,
-      led: false,
-      icon: 'lines',
-      tooltip: 'Lines'
-    },
-    {
-      actionId: 'zoomIn',
-      disabled: false,
-      led: false,
-      icon: 'zoom_in',
-      tooltip: 'Zoom in'
-    },
-    {
-      actionId: 'zoomOut',
-      disabled: false,
-      led: false,
-      icon: 'zoom_out',
-      tooltip: 'Zoom out'
-    },
-    {
-      actionId: 'panTool',
-      disabled: false,
-      led: false,
-      icon: 'pan',
-      tooltip: 'Pan tool'
+      icon: 'save',
+      tooltip: 'Save'
     }
   ],
   game: [
-    {
-      actionId: 'speed',
-      disabled: false,
-      led: false,
-      icon: 'speed',
-      tooltip: 'Speed'
-    },
     {
       actionId: 'restart',
       disabled: false,
@@ -174,7 +176,6 @@ export const MENU: MenuModel = {
       tooltip: 'Start'
     }
   ],
-  mode: MenuMode.NONE,
   selector: [
     {
       disabled: false,
@@ -188,5 +189,6 @@ export const MENU: MenuModel = {
       icon: 'game',
       tooltip: 'Game mode'
     }
-  ]
+  ],
+  mode: MenuMode.BUILD
 };

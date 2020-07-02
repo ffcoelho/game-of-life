@@ -26,7 +26,9 @@ export class UniverseComponent implements OnInit {
 
   public cfg: ConfigModel;
 
-  public panMode = false;
+  public clickPanMode = false;
+  public tool: string;
+
   public pan: PointModel = { x: 0, y: 0 };
 
   public leds: boolean;
@@ -195,16 +197,35 @@ export class UniverseComponent implements OnInit {
   panelClick(ev: PointerEvent): void {
     ev.preventDefault();
     if (ev.buttons === 1) {
-      this.toggleCell(ev);
+      if (this.tool === 'draw') {
+        this.toggleCell(ev);
+        return;
+      }
+      if (this.tool === 'pan') {
+        this.pan = { x: ev.x, y: ev.y };
+        this.clickPanMode = true;
+        this.control.nativeElement.style.cursor = 'grabbing';
+        return;
+      }
+      if (this.tool === 'select') {
+        console.log('Select Mode');
+      }
     } else if (ev.buttons === 4) {
       this.pan = { x: ev.x, y: ev.y };
-      this.panMode = true;
+      this.clickPanMode = true;
       this.control.nativeElement.style.cursor = 'grabbing';
     }
   }
 
   releaseClick(ev: PointerEvent): void {
-    this.panMode = false;
+    this.clickPanMode = false;
+    if (this.tool === 'pan') {
+      this.control.nativeElement.style.cursor = 'grab';
+      return;
+    }
+    if (this.tool === 'select') {
+      return;
+    }
     this.control.nativeElement.style.cursor = 'default';
   }
 
@@ -216,7 +237,7 @@ export class UniverseComponent implements OnInit {
   }
 
   panUniverse(ev: PointerEvent): void {
-    if (!this.panMode) {
+    if (!this.clickPanMode) {
       return;
     }
     const cP = LIFE.r - this.cfg.grid.scale * 0.5;
@@ -276,6 +297,50 @@ export class UniverseComponent implements OnInit {
     }
   }
 
+  toggleDisplay(id: string): void {
+    this.cfg.display[id] = !this.cfg.display[id];
+    this.data.updateConfig(this.cfg);
+  }
+
+  toggleZoom(id: string): void {
+    let idx: number;
+    if (id === 'zoomOut') {
+      if (this.cfg.grid.size === 0) {
+        return;
+      }
+      idx = -1;
+    } else {
+      if (this.cfg.grid.size === 4) {
+        return;
+      }
+      idx = 1;
+    }
+    const mY = (LIFE.y / 2 - LIFE.o) * 2 + LIFE.r;
+    const mX = (LIFE.x / 2 - LIFE.o) * 2 + LIFE.r;
+    const uY = Math.round((mY - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const uX = Math.round((mX - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x;
+    const nY = Math.round((mY - LIFE.r - GRIDS[this.cfg.grid.size + idx].scale * 0.5) / GRIDS[this.cfg.grid.size + idx].scale);
+    const nX = Math.round((mX - LIFE.r - GRIDS[this.cfg.grid.size + idx].scale * 0.5) / GRIDS[this.cfg.grid.size + idx].scale);
+    this.cfg.grid = GRIDS[this.cfg.grid.size + idx];
+    this.cfg.origin = { x: uX - nX, y: uY - nY };
+    this.checkLimits();
+    this.data.updateConfig(this.cfg);
+  }
+
+  selectTool(id: string): void {
+    this.tool = id;
+    if (id === 'draw') {
+      this.control.nativeElement.style.cursor = 'default';
+      return;
+    }
+    if (id === 'pan') {
+      this.control.nativeElement.style.cursor = 'grab';
+    }
+    if (id === 'select') {
+      this.control.nativeElement.style.cursor = 'crosshair';
+    }
+  }
+
   playback(id: string): void {
     switch (id) {
       case 'restart': {
@@ -309,5 +374,4 @@ export class UniverseComponent implements OnInit {
       }
     }
   }
-
 }
