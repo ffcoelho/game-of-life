@@ -1,0 +1,17 @@
+.modal-container {
+  position: absolute;
+  top: -800px;
+  // left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1040px;
+  height: 840px;
+  background-color: #000000a8;
+  .modal-content {
+    width: 600px;
+    height: 400px;
+    background-color: #424242;
+    border-radius: 5px;
+  }
+}

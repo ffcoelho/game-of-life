@@ -22,15 +22,13 @@
       <app-menu
         [playing]="playing"
         [config]="cfg"
-        (game)="leds = $event"
+        (gameMode)="gameMode($event)"
         (display)="toggleDisplay($event)"
         (zoom)="toggleZoom($event)"
+        (edit)="selectEdit($event)"
         (tool)="selectTool($event)"
         (playback)="playback($event)"
       ></app-menu>
-    </div>
-    <div class="speed-btn">
-      <app-button icon="speed" [disabled]="playing" tooltip="Game speed"></app-button>
     </div>
     <div class="info" [ngClass]="{'led': leds}" >
       <div class="fps">
@@ -50,5 +48,8 @@
         <span>{{ population }}</span>
       </div>
     </div>
+  </div>
+  <div class="universe-modal" *ngIf="showLifeModal">
+    <app-modal [type]="'save'" (exit)="showLifeModal = false"></app-modal>
   </div>
 </div>

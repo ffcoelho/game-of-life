@@ -23,32 +23,28 @@
   position: absolute;
   top: 800px;
   left: 0;
-  width: 1026px;
+  width: 1040px;
   height: 40px;
-  padding: 0px 7px;
   background-color: $panel-color;
   .panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1026px;
+    width: 1020px;
     height: calc(100% - 8px);
-    padding: 4px 0;
-    border-top: 1px solid #333333;
+    padding: 3px 9px;
+    border: 1px solid $led-color;
+    border-radius: 5px;
     .menu {
-      width: 800px;
+      width: 834px;
       height: 100%;
-    }
-    .speed-btn {
-      width: 32px;
     }
     .info {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      width: 193px;
-      height: calc(100% - 2px);
-      margin-bottom: 2px;
+      width: 186px;
+      height: 100%;
       font-family: monospace;
       font-size: 12px;
       color: $led-color;

@@ -1,11 +1,11 @@
 export interface MenuModel {
   display: MenuItemModel[];
   zoom: MenuItemModel[];
-  tools: MenuItemModel[];
   edit: MenuItemModel[];
+  tools: MenuItemModel[];
+  selector: MenuItemModel[];
   game: MenuItemModel[];
   play: MenuItemModel[];
-  selector: MenuItemModel[];
   mode: MenuMode;
 }
 
@@ -63,29 +63,13 @@ export const MENU: MenuModel = {
       tooltip: 'Zoom out'
     }
   ],
-  tools: [
-    {
-      actionId: 'pan',
-      disabled: false,
-      led: false,
-      icon: 'pan',
-      tooltip: 'Pan tool'
-    },
-    {
-      actionId: 'draw',
-      disabled: false,
-      led: false,
-      icon: 'draw',
-      tooltip: 'Draw tool'
-    }
-  ],
   edit: [
     {
-      actionId: 'clear',
+      actionId: 'new',
       disabled: false,
       led: false,
-      icon: 'close',
-      tooltip: 'Clear'
+      icon: 'new',
+      tooltip: 'New'
     },
     {
       actionId: 'load',
@@ -102,7 +86,44 @@ export const MENU: MenuModel = {
       tooltip: 'Save'
     }
   ],
+  tools: [
+    {
+      actionId: 'pan',
+      disabled: false,
+      led: false,
+      icon: 'pan',
+      tooltip: 'Pan tool'
+    },
+    {
+      actionId: 'draw',
+      disabled: false,
+      led: false,
+      icon: 'draw',
+      tooltip: 'Draw tool'
+    }
+  ],
+  selector: [
+    {
+      disabled: false,
+      mode: MenuMode.BUILD,
+      icon: 'build',
+      tooltip: 'Build mode'
+    },
+    {
+      disabled: false,
+      mode: MenuMode.PLAY,
+      icon: 'game',
+      tooltip: 'Game mode'
+    }
+  ],
   game: [
+    {
+      actionId: 'skip',
+      disabled: false,
+      led: false,
+      icon: 'skip_fwd',
+      tooltip: 'Next'
+    },
     {
       actionId: 'restart',
       disabled: false,
@@ -111,11 +132,11 @@ export const MENU: MenuModel = {
       tooltip: 'Restart'
     },
     {
-      actionId: 'skip',
+      actionId: 'speed',
       disabled: false,
       led: false,
-      icon: 'skip_fwd',
-      tooltip: 'Next'
+      icon: 'timer',
+      tooltip: 'Game speed'
     }
   ],
   play: [
@@ -132,20 +153,6 @@ export const MENU: MenuModel = {
       led: false,
       icon: 'pause',
       tooltip: 'Pause'
-    }
-  ],
-  selector: [
-    {
-      disabled: false,
-      mode: MenuMode.BUILD,
-      icon: 'build',
-      tooltip: 'Build mode'
-    },
-    {
-      disabled: false,
-      mode: MenuMode.PLAY,
-      icon: 'game',
-      tooltip: 'Game mode'
     }
   ],
   mode: MenuMode.BUILD

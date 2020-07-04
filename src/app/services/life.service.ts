@@ -59,13 +59,13 @@ export class LifeService {
     }
   }
 
-  restartUniverse(): void {
-    if (this.zeroState) {
+  restartUniverse(clear?: boolean): void {
+    if (clear) {
+      this.universe = this.newGrid();
+    } else {
       for (let y = 0; y < LIFE.y; y++) {
         this.universe[y] = Array.from(this.zeroState[y]);
       }
-    } else {
-      this.universe = this.newGrid();
     }
     this.nextGen = this.newGrid();
   }

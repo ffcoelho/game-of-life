@@ -18,15 +18,16 @@ export class MenuComponent implements OnInit {
     this.playOn = playing;
     this.playingState(playing);
   }
-  get play(): boolean {
+  get playing(): boolean {
     return this.playOn;
   }
 
   @Input() config: ConfigModel;
 
-  @Output() game: EventEmitter<boolean> = new EventEmitter();
+  @Output() gameMode: EventEmitter<boolean> = new EventEmitter();
   @Output() display: EventEmitter<string> = new EventEmitter();
   @Output() zoom: EventEmitter<string> = new EventEmitter();
+  @Output() edit: EventEmitter<string> = new EventEmitter();
   @Output() tool: EventEmitter<string> = new EventEmitter();
   @Output() playback: EventEmitter<string> = new EventEmitter();
 
@@ -59,11 +60,11 @@ export class MenuComponent implements OnInit {
   selectMode(mode: MenuMode): void {
     this.menu.mode = mode;
     if (this.menu.mode === MenuMode.PLAY) {
-      this.game.emit(true);
+      this.gameMode.emit(true);
       this.toggleButtonsState();
       return;
     }
-    this.game.emit(false);
+    this.gameMode.emit(false);
     this.toggleButtonsState();
   }
 
@@ -91,6 +92,10 @@ export class MenuComponent implements OnInit {
     this.zoom.emit(id);
   }
 
+  editAction(id: string): void {
+    this.edit.emit(id);
+  }
+
   toolAction(id: string) {
     this.menu.tools.forEach(tool => {
       tool.led = false;
@@ -112,6 +117,7 @@ export class MenuComponent implements OnInit {
   playingState(state: boolean): void {
     this.menu.game[0].disabled = state;
     this.menu.game[1].disabled = state;
+    this.menu.game[2].disabled = state;
     this.menu.play[1].led = state;
     this.menu.selector.forEach(sel => sel.disabled = state);
   }

@@ -22,9 +22,10 @@ export class UniverseComponent implements OnInit {
   cells: ElementRef<HTMLCanvasElement>;
   private cellsCtx: CanvasRenderingContext2D;
 
-  public playing: boolean;
-
   public cfg: ConfigModel;
+  public playing: boolean;
+  public paused: boolean;
+  public showLifeModal: boolean;
 
   public clickPanMode = false;
   public pan: PointModel = { x: 0, y: 0 };
@@ -33,7 +34,6 @@ export class UniverseComponent implements OnInit {
   public selX: number;
   public selY: number;
   public tool: string;
-
 
   public leds: boolean;
   public timer: any;
@@ -346,6 +346,19 @@ export class UniverseComponent implements OnInit {
     this.data.updateConfig(this.cfg);
   }
 
+  selectEdit(id: string): void {
+    this.tool = id;
+    if (id === 'clear') {
+      this.life.restartUniverse(true);
+      this.drawCells();
+      return;
+    }
+    if (id === 'save') {
+      // todo
+    }
+    this.showLifeModal = true;
+  }
+
   selectTool(id: string): void {
     this.tool = id;
     if (id === 'draw') {
@@ -357,15 +370,17 @@ export class UniverseComponent implements OnInit {
     }
   }
 
+  gameMode(play: boolean): void {
+    this.leds = play;
+    if (!play) {
+      this.getBuildState();
+    }
+  }
+
   playback(id: string): void {
     switch (id) {
       case 'restart': {
-        this.ticks = 0;
-        this.tickRef = 0;
-        this.population = 0;
-        this.fps = null;
-        this.life.restartUniverse();
-        this.drawCells();
+        this.getBuildState();
         break;
       }
       case 'skip': {
@@ -383,12 +398,27 @@ export class UniverseComponent implements OnInit {
           this.stopLoop();
           this.fps = null;
           this.playing = false;
+          this.paused = true;
         } else {
+          if (!this.paused) {
+            this.life.setZeroState();
+          }
           this.startLoop();
           this.playing = true;
+          this.paused = false;
         }
         break;
       }
     }
   }
+
+  getBuildState(): void {
+    this.ticks = 0;
+    this.tickRef = 0;
+    this.population = 0;
+    this.fps = null;
+    this.life.restartUniverse();
+    this.drawCells();
+  }
+
 }

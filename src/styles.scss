@@ -1,3 +1,7 @@
 @import './assets/styles/reset';
 @import './assets/styles/variables';
 @import './assets/styles/mixins';
+
+body {
+  background-color: $panel-color;
+}
