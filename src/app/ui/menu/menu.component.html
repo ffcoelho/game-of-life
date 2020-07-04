@@ -11,30 +11,32 @@
         <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip" (action)="zoomAction(btn.actionId)"></app-button>
       </div>
     </div>
-    <div class="menu-separator" *ngIf="menu.mode === 1"></div>
-    <div class="menu-item-container" *ngIf="menu.mode === 1">
+    <div class="menu-separator"></div>
+    <div class="menu-item-container">
       <div class="menu-item" *ngFor="let btn of menu.tools">
         <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip" (action)="toolAction(btn.actionId)"></app-button>
       </div>
     </div>
     <div class="menu-separator"></div>
-    <div class="menu-item-container" *ngIf="menu.mode === 1">
+    <div class="menu-item-container">
       <div class="menu-item" *ngFor="let btn of menu.edit">
-        <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip"></app-button>
-      </div>
-    </div>
-    <div class="menu-separator" *ngIf="menu.mode === 1"></div>
-    <div class="menu-item-container" *ngIf="menu.mode === 1">
-      <div class="menu-item" *ngFor="let btn of menu.file">
         <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip"></app-button>
       </div>
     </div>
   </div>
   <div class="menu-right">
-    <div class="menu-separator" *ngIf="menu.mode === 0"></div>
-    <div class="menu-item-container" *ngIf="menu.mode === 0">
+    <div class="menu-separator"></div>
+    <div class="menu-item-container">
       <div class="menu-item" *ngFor="let btn of menu.game">
         <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip" (action)="gameAction(btn.actionId)"></app-button>
+      </div>
+    </div>
+    <div class="menu-item-container">
+      <div class="menu-item" *ngIf="!playOn">
+        <app-button [icon]="menu.play[0].icon" [led]="menu.play[0].led" [disabled]="menu.play[0].disabled || blocked" [tooltip]="menu.play[0].tooltip" (action)="gameAction(menu.play[0].actionId)"></app-button>
+      </div>
+      <div class="menu-item" *ngIf="playOn">
+        <app-button [icon]="menu.play[1].icon" [led]="menu.play[1].led" [disabled]="menu.play[1].disabled || blocked" [tooltip]="menu.play[1].tooltip" (action)="gameAction(menu.play[1].actionId)"></app-button>
       </div>
     </div>
     <div class="menu-separator"></div>

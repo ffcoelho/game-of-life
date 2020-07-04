@@ -27,14 +27,19 @@ export class UniverseComponent implements OnInit {
   public cfg: ConfigModel;
 
   public clickPanMode = false;
+  public pan: PointModel = { x: 0, y: 0 };
+  public select: PointModel[] = [ null, null ];
+  public sel: PointModel = { x: 0, y: 0 };
+  public selX: number;
+  public selY: number;
   public tool: string;
 
-  public pan: PointModel = { x: 0, y: 0 };
 
   public leds: boolean;
   public timer: any;
   public ticks = 0;
   public tickRef = 0;
+  public population = 0;
   public fps: number;
   public time: number;
 
@@ -99,15 +104,18 @@ export class UniverseComponent implements OnInit {
   }
 
   drawCells(): void {
+    let population = 0;
     this.cellsCtx.fillStyle = this.cfg.colors.alive;
     this.cellsCtx.clearRect(0, 0, (LIFE.x - 2 * LIFE.o), (LIFE.y - 2 * LIFE.o));
     for (let y = this.cfg.origin.y; y < this.cfg.origin.y + this.cfg.grid.y; y++) {
       for (let x = this.cfg.origin.x; x < this.cfg.origin.x + this.cfg.grid.x; x++) {
         if (this.life.universe[y + LIFE.o][x + LIFE.o]) {
+          population++;
           this.cellsCtx.fillRect(x - this.cfg.origin.x, y - this.cfg.origin.y, 1, 1);
         }
       }
     }
+    this.population = population;
   }
 
   drawPanel(): void {
@@ -202,19 +210,33 @@ export class UniverseComponent implements OnInit {
         return;
       }
       if (this.tool === 'pan') {
-        this.pan = { x: ev.x, y: ev.y };
-        this.clickPanMode = true;
-        this.control.nativeElement.style.cursor = 'grabbing';
+        this.clickPan(ev);
         return;
       }
-      if (this.tool === 'select') {
-        console.log('Select Mode');
-      }
     } else if (ev.buttons === 4) {
-      this.pan = { x: ev.x, y: ev.y };
-      this.clickPanMode = true;
-      this.control.nativeElement.style.cursor = 'grabbing';
+      this.clickPan(ev);
     }
+  }
+
+  clickPan(ev: PointerEvent): void {
+    this.pan = { x: ev.clientX, y: ev.clientY };
+    this.clickPanMode = true;
+    this.control.nativeElement.style.cursor = 'grabbing';
+  }
+
+  formatSelectOrigin(): void {
+    if (this.select[0].x < this.select[1].x) {
+      this.sel.x = this.select[0].x;
+    } else {
+      this.sel.x = this.select[1].x;
+    }
+    if (this.select[0].y < this.select[1].y) {
+      this.sel.y = this.select[0].y;
+    } else {
+      this.sel.y = this.select[1].y;
+    }
+    this.selX = Math.abs(this.select[1].x - this.select[0].x);
+    this.selY = Math.abs(this.select[1].y - this.select[0].y);
   }
 
   releaseClick(ev: PointerEvent): void {
@@ -223,15 +245,12 @@ export class UniverseComponent implements OnInit {
       this.control.nativeElement.style.cursor = 'grab';
       return;
     }
-    if (this.tool === 'select') {
-      return;
-    }
     this.control.nativeElement.style.cursor = 'default';
   }
 
   toggleCell(ev: PointerEvent): void {
-    const uX = Math.round((ev.x - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x + LIFE.o;
-    const uY = Math.round((ev.y - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y + LIFE.o;
+    const uX = Math.round((ev.clientX - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x + LIFE.o;
+    const uY = Math.round((ev.clientY - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y + LIFE.o;
     this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
     this.drawCells();
   }
@@ -243,19 +262,19 @@ export class UniverseComponent implements OnInit {
     const cP = LIFE.r - this.cfg.grid.scale * 0.5;
     const panY = Math.round((this.pan.y - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
     const panX = Math.round((this.pan.x - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
-    const nextY = Math.round((ev.y - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
-    const nextX = Math.round((ev.x - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
+    const nextY = Math.round((ev.clientY - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const nextX = Math.round((ev.clientX - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
     if (panX !== nextX || panY !== nextY) {
       this.cfg.origin = { x: panX - nextX + this.cfg.origin.x, y: panY - nextY + this.cfg.origin.y };
       this.checkLimits();
-      this.pan = { x: ev.x, y: ev.y };
+      this.pan = { x: ev.clientX, y: ev.clientY };
       this.data.updateConfig(this.cfg);
     }
   }
 
   changeScale(ev: WheelEvent): void {
-    const uY = Math.round((ev.y - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y;
-    const uX = Math.round((ev.x - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x;
+    const uY = Math.round((ev.clientY - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const uX = Math.round((ev.clientX - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x;
     this.zoomPositioning(uX, uY, ev);
     this.data.updateConfig(this.cfg);
   }
@@ -275,8 +294,8 @@ export class UniverseComponent implements OnInit {
     }
     let nX: number;
     let nY: number;
-    nY = Math.round((ev.y - LIFE.r - GRIDS[this.cfg.grid.size + idx].scale * 0.5) / GRIDS[this.cfg.grid.size + idx].scale);
-    nX = Math.round((ev.x - LIFE.r - GRIDS[this.cfg.grid.size + idx].scale * 0.5) / GRIDS[this.cfg.grid.size + idx].scale);
+    nY = Math.round((ev.clientY - LIFE.r - GRIDS[this.cfg.grid.size + idx].scale * 0.5) / GRIDS[this.cfg.grid.size + idx].scale);
+    nX = Math.round((ev.clientX - LIFE.r - GRIDS[this.cfg.grid.size + idx].scale * 0.5) / GRIDS[this.cfg.grid.size + idx].scale);
     this.cfg.grid = GRIDS[this.cfg.grid.size + idx];
     this.cfg.origin = { x: uX - nX, y: uY - nY };
     this.checkLimits();
@@ -336,9 +355,6 @@ export class UniverseComponent implements OnInit {
     if (id === 'pan') {
       this.control.nativeElement.style.cursor = 'grab';
     }
-    if (id === 'select') {
-      this.control.nativeElement.style.cursor = 'crosshair';
-    }
   }
 
   playback(id: string): void {
@@ -346,6 +362,7 @@ export class UniverseComponent implements OnInit {
       case 'restart': {
         this.ticks = 0;
         this.tickRef = 0;
+        this.population = 0;
         this.fps = null;
         this.life.restartUniverse();
         this.drawCells();

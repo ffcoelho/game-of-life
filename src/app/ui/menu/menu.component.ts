@@ -12,9 +12,16 @@ import { nextTick } from 'process';
 })
 export class MenuComponent implements OnInit {
 
-  @Input() set playing(playing: boolean) {
+  private playOn: boolean;
+  @Input()
+  set playing(playing: boolean) {
+    this.playOn = playing;
     this.playingState(playing);
   }
+  get play(): boolean {
+    return this.playOn;
+  }
+
   @Input() config: ConfigModel;
 
   @Output() game: EventEmitter<boolean> = new EventEmitter();
@@ -64,12 +71,14 @@ export class MenuComponent implements OnInit {
     if (this.menu.mode === MenuMode.PLAY) {
       this.menu.tools.forEach(tool => tool.disabled = true);
       this.menu.edit.forEach(tool => tool.disabled = true);
-      this.menu.file.forEach(tool => tool.disabled = true);
+      this.menu.game.forEach(tool => tool.disabled = false);
+      this.menu.play[0].disabled = false;
       this.toolAction('pan');
     } else {
       this.menu.tools.forEach(tool => tool.disabled = false);
-      this.menu.edit[6].disabled = false;
-      this.menu.file.forEach(tool => tool.disabled = false);
+      this.menu.edit.forEach(tool => tool.disabled = false);
+      this.menu.game.forEach(tool => tool.disabled = true);
+      this.menu.play[0].disabled = true;
       this.toolAction('draw');
     }
   }
@@ -101,14 +110,10 @@ export class MenuComponent implements OnInit {
   }
 
   playingState(state: boolean): void {
-    // this.menu.game[0].disabled = state;
-    // this.menu.game[1].disabled = state;
-    // this.menu.game[2].disabled = state;
-    // this.menu.game[3].led = state;
-    // this.menu.selector.forEach(sel => sel.disabled = state);
-    // this.menu.fixed[0].disabled = state;
-    // this.menu.fixed[1].disabled = state;
-    // this.menu.fixed[2].disabled = state;
+    this.menu.game[0].disabled = state;
+    this.menu.game[1].disabled = state;
+    this.menu.play[1].led = state;
+    this.menu.selector.forEach(sel => sel.disabled = state);
   }
 
   showSpeedInput(): void {

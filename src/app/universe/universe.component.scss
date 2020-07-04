@@ -70,11 +70,17 @@
         span {
           margin: 0 4px;
         }
+        svg {
+          fill: $led-color;
+        }
       }
       &.led {
         color: $led-on-color;
-        .generation {
+        .disp {
           border: 1px solid $led-on-color;
+          svg {
+            fill: $led-on-color;
+          }
         }
       }
     }

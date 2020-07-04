@@ -3,8 +3,8 @@ export interface MenuModel {
   zoom: MenuItemModel[];
   tools: MenuItemModel[];
   edit: MenuItemModel[];
-  file: MenuItemModel[];
   game: MenuItemModel[];
+  play: MenuItemModel[];
   selector: MenuItemModel[];
   mode: MenuMode;
 }
@@ -44,7 +44,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'lines',
-      tooltip: 'Lines'
+      tooltip: 'Ruler lines'
     }
   ],
   zoom: [
@@ -77,67 +77,16 @@ export const MENU: MenuModel = {
       led: false,
       icon: 'draw',
       tooltip: 'Draw tool'
-    },
-    {
-      actionId: 'select',
-      disabled: false,
-      led: false,
-      icon: 'screen',
-      tooltip: 'Select Tool'
     }
   ],
   edit: [
-    {
-      actionId: 'cut',
-      disabled: false,
-      led: false,
-      icon: 'cut',
-      tooltip: 'Cut'
-    },
-    {
-      actionId: 'copy',
-      disabled: false,
-      led: false,
-      icon: 'copy',
-      tooltip: 'Copy'
-    },
-    {
-      actionId: 'paste',
-      disabled: false,
-      led: false,
-      icon: 'paste',
-      tooltip: 'Paste'
-    },
-    {
-      actionId: 'rotate_l',
-      disabled: false,
-      led: false,
-      icon: 'rotate_left',
-      tooltip: 'Rotate Left'
-    },
-    {
-      actionId: 'rotate_r',
-      disabled: false,
-      led: false,
-      icon: 'rotate_right',
-      tooltip: 'Rotate Right'
-    },
-    {
-      actionId: 'flip',
-      disabled: false,
-      led: false,
-      icon: 'flip',
-      tooltip: 'Flip'
-    },
     {
       actionId: 'clear',
       disabled: false,
       led: false,
       icon: 'close',
       tooltip: 'Clear'
-    }
-  ],
-  file: [
+    },
     {
       actionId: 'load',
       disabled: false,
@@ -167,13 +116,22 @@ export const MENU: MenuModel = {
       led: false,
       icon: 'skip_fwd',
       tooltip: 'Next'
-    },
+    }
+  ],
+  play: [
     {
       actionId: 'play',
       disabled: false,
       led: false,
       icon: 'play',
-      tooltip: 'Start'
+      tooltip: 'Play'
+    },
+    {
+      actionId: 'play',
+      disabled: false,
+      led: false,
+      icon: 'pause',
+      tooltip: 'Pause'
     }
   ],
   selector: [
