@@ -1,6 +1,8 @@
 <div class="modal-container">
   <div class="modal-content">
-    <h3></h3>
-    {{ type }}
+    <div class="modal-header">
+      <span class="title">{{ type | titlecase }}</span>
+      <button (click)="exit.emit()">X</button>
+    </div>
   </div>
 </div>

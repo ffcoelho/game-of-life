@@ -13,5 +13,11 @@
     height: 400px;
     background-color: #424242;
     border-radius: 5px;
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
   }
 }

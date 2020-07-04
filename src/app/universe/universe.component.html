@@ -50,6 +50,6 @@
     </div>
   </div>
   <div class="universe-modal" *ngIf="showLifeModal">
-    <app-modal [type]="'save'" (exit)="showLifeModal = false"></app-modal>
+    <app-modal [type]="modalType" (exit)="showLifeModal = false"></app-modal>
   </div>
 </div>

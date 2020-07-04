@@ -25,7 +25,10 @@ export class UniverseComponent implements OnInit {
   public cfg: ConfigModel;
   public playing: boolean;
   public paused: boolean;
+  public hasChanges: boolean;
+
   public showLifeModal: boolean;
+  public modalType: string;
 
   public clickPanMode = false;
   public pan: PointModel = { x: 0, y: 0 };
@@ -253,6 +256,7 @@ export class UniverseComponent implements OnInit {
     const uY = Math.round((ev.clientY - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y + LIFE.o;
     this.life.universe[uY][uX] = this.life.universe[uY][uX] === 1 ? 0 : 1;
     this.drawCells();
+    this.hasChanges = true;
   }
 
   panUniverse(ev: PointerEvent): void {
@@ -347,15 +351,18 @@ export class UniverseComponent implements OnInit {
   }
 
   selectEdit(id: string): void {
-    this.tool = id;
-    if (id === 'clear') {
-      this.life.restartUniverse(true);
-      this.drawCells();
+    if (id === 'new') {
+      if (!this.hasChanges) {
+        this.life.restartUniverse(true);
+        this.drawCells();
+        return;
+      }
+      this.modalType = 'ask first!';
+      this.showLifeModal = true;
+      this.hasChanges = false;
       return;
     }
-    if (id === 'save') {
-      // todo
-    }
+    this.modalType = id;
     this.showLifeModal = true;
   }
 
