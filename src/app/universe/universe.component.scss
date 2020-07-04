@@ -20,6 +20,7 @@
   }
 }
 .universe-panel {
+  @include user-select-none;
   position: absolute;
   top: 800px;
   left: 0;
@@ -47,7 +48,7 @@
       height: 100%;
       font-family: monospace;
       font-size: 12px;
-      color: $led-color;
+      color: $led-off-color;
       .fps {
         display: flex;
         flex-direction: column;
@@ -61,21 +62,21 @@
         height: 20px;
         width: 74px;
         margin-left: 7px;
-        border: 1px solid $led-color;
+        border: 1px solid $led-off-color;
         border-radius: 5px;
         span {
           margin: 0 4px;
         }
         svg {
-          fill: $led-color;
+          fill: $led-off-color;
         }
       }
       &.led {
-        color: $led-on-color;
+        color: $led-dim-color;
         .disp {
-          border: 1px solid $led-on-color;
+          border: 1px solid $led-dim-color;
           svg {
-            fill: $led-on-color;
+            fill: $led-dim-color;
           }
         }
       }

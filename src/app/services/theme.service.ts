@@ -11,7 +11,7 @@ export class ThemeService {
   updateStyleVars(config: ConfigModel): void {
     document.documentElement.style.setProperty('--panel-color', `${config.colors.panel}`);
     document.documentElement.style.setProperty('--led-color', `${config.colors.led}70`);
-    document.documentElement.style.setProperty('--led-disable-color', `${config.colors.led}25`);
+    document.documentElement.style.setProperty('--led-off-color', `${config.colors.led}25`);
     document.documentElement.style.setProperty('--led-dim-color', `${config.colors.led}a4`);
     document.documentElement.style.setProperty('--led-on-color', `${config.colors.led}`);
     document.documentElement.style.setProperty('--ruler-color', `${config.colors.ruler}`);

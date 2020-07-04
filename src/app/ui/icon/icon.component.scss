@@ -19,7 +19,7 @@
   }
   &.disable {
     svg {
-      fill: $led-disable-color;
+      fill: $led-off-color;
     }
   }
   &.led {
