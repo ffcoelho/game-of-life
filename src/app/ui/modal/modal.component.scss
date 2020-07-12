@@ -36,6 +36,10 @@
       align-items: flex-start;
       width: 96%;
       height: 280px;
+      p {
+        font-family: monospace;
+        font-size: 14px;
+      }
       .new-item {
         display: flex;
         justify-content: flex-start;
@@ -89,8 +93,6 @@
           border-radius: 5px;
           p {
             width: 80px;
-            font-family: monospace;
-            font-size: 14px;
             line-height: 32px;
             &.name {
               width: 180px;
@@ -120,6 +122,35 @@
         &.load-h {
           height: 260px;
         }
+      }
+      .control {
+        margin-left: 36px;
+        .form-control {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          @include color-input;
+          width: 80px;
+          height: 40px;
+          span {
+            font-family: monospace;
+            font-size: 14px;
+          }
+        }
+      }
+      .preview {
+        width: 201px;
+        height: 201px;
+        margin-right: 36px;
+        background-color: rgba(0,0,100,0.2);
+      }
+      &.hide {
+        display: none;
+      }
+      &.colors {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
       }
     }
     .modal-footer {

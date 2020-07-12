@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { LifeService } from '../services/life.service';
-import { ConfigModel, PointModel, GRIDS, LIFE, UniverseModel } from '../models/config.model';
+import { ConfigModel, PointModel, GRIDS, LIFE, UniverseModel, ColorsModel } from '../models/config.model';
 import { UniverseDataModel } from '../models/data.model';
 
 @Component({
@@ -463,6 +463,12 @@ export class UniverseComponent implements OnInit {
     this.showLifePopup = false;
     this.cfg.speed = event * 1;
     this.data.updateConfig(this.cfg);
+  }
+
+  updateColors(colors: ColorsModel): void {
+    this.cfg.colors = colors;
+    this.data.updateConfig(this.cfg);
+    this.showLifeModal = false;
   }
 
   loadLife(id: string): void {

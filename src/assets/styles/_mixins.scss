@@ -50,3 +50,19 @@
     }
   }
 }
+
+@mixin color-input {
+  input {
+    width: 20px;
+    height: 24px;
+    padding: 0 2px;
+    background-color: transparent;
+    border: 1px solid $led-dim-color;
+    border-radius: 5px;
+    outline: none;
+    &:focus {
+      border: 1px solid $led-on-color;
+      color: $led-on-color;
+    }
+  }
+}

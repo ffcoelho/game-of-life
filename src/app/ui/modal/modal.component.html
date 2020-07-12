@@ -23,8 +23,28 @@
         </div>
       </div>
     </div>
-    <div class="modal-body" *ngIf="type === 'colors'">
-      
+    <div class="modal-body" [ngClass]="{'hide': type !== 'colors', 'colors': type === 'colors'}">
+      <div class="control" [formGroup]="modalForm" *ngIf="type === 'colors'">
+        <div class="form-control">
+          <span>Alive</span>
+          <input type="color" formControlName="alive" (change)="updatePreviewer()">
+        </div>
+        <div class="form-control">
+          <span>Dead</span>
+          <input type="color" formControlName="dead" (change)="updatePreviewer()">
+        </div>
+        <div class="form-control">
+          <span>Grid</span>
+          <input type="color" formControlName="grid" (change)="updatePreviewer()">
+        </div>
+        <div class="form-control">
+          <span>Ruler</span>
+          <input type="color" formControlName="lines" (change)="updatePreviewer()">
+        </div>
+      </div>
+      <div class="preview">
+        <canvas #previewer></canvas>
+      </div>
     </div>
     <div class="modal-footer">
       <app-button icon="check" (action)="updateColors()" *ngIf="type === 'colors'"></app-button>

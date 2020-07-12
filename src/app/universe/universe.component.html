@@ -54,6 +54,7 @@
       [type]="modalType"
       [config]="cfg"
       (exit)="showLifeModal = false"
+      (colorsUpdate)="updateColors($event)"
       (lifeLoad)="loadLife($event)"
       (lifeSave)="saveLife($event)"
     ></app-modal>
