@@ -39,6 +39,15 @@ export class DataService {
     });
   }
 
+  public deleteUniverse(id: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.removeItem(id).then(
+        () => resolve(),
+        err => reject()
+      );
+    });
+  }
+
   public initialize(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.dbInit().then(
@@ -90,6 +99,16 @@ export class DataService {
       localforage.setItem(key, value)
       .then(
         (result) => resolve(result),
+        (error) => reject(error)
+      );
+    });
+  }
+
+  private removeItem(key: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      localforage.removeItem(key)
+      .then(
+        () => resolve(),
         (error) => reject(error)
       );
     });

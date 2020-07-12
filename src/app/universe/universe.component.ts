@@ -495,6 +495,21 @@ export class UniverseComponent implements OnInit {
     this.showLifeModal = false;
   }
 
+  deleteLife(idx: number): void {
+    const id = this.cfg.universes[idx].id;
+    this.data.deleteUniverse(id).then(
+      () => {
+        this.cfg.universes.splice(idx, 1);
+        this.data.updateConfig(this.cfg);
+        if (id === this.loadedId) {
+          this.loadedId = null;
+          this.hasChanges = true;
+        }
+      },
+      () => {}
+    );
+  }
+
   saveUniverse(data: UniverseModel): void {
     for (let i = 0; i < this.cfg.universes.length; i++) {
       if (data.id === this.cfg.universes[i].id) {

@@ -20,6 +20,7 @@ export class ModalComponent implements OnInit {
   @Output() colorsUpdate: EventEmitter<ColorsModel> = new EventEmitter();
   @Output() lifeLoad: EventEmitter<string> = new EventEmitter();
   @Output() lifeSave: EventEmitter<string> = new EventEmitter();
+  @Output() lifeDelete: EventEmitter<number> = new EventEmitter();
 
   modalForm: FormGroup;
   selected: number;
@@ -122,5 +123,9 @@ export class ModalComponent implements OnInit {
       this.modalForm.patchValue(this.config.universes[this.selected]);
     }
     this.lifeSave.emit(this.modalForm.value);
+  }
+
+  deleteFile(idx: number): void {
+    this.lifeDelete.emit(idx);
   }
 }

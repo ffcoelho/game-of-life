@@ -20,6 +20,7 @@
           <p class="pop">{{ uni.pop }}</p>
           <p class="size">{{ uni.size[0] }} x {{ uni.size[1] }}</p>
           <p class="date">{{ uni.lastUpdate | date }}</p>
+          <app-button icon="delete" (action)="deleteFile(uniIdx)"></app-button>
         </div>
       </div>
     </div>
