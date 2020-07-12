@@ -1,3 +1,4 @@
+@import '../../../assets/styles/variables';
 @import '../../../assets/styles/mixins';
 
 .modal-container {
@@ -126,12 +127,15 @@
       .control {
         margin-left: 36px;
         .form-control {
+          @include color-input;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          @include color-input;
           width: 80px;
           height: 40px;
+          input {
+            cursor: pointer;
+          }
           span {
             font-family: monospace;
             font-size: 14px;

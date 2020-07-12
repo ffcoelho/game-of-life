@@ -41,6 +41,9 @@
           <span>Ruler</span>
           <input type="color" formControlName="lines" (change)="updatePreviewer()">
         </div>
+        <div class="form-control">
+          <app-button label="RESET" (click)="resetColors()"></app-button>
+        </div>
       </div>
       <div class="preview">
         <canvas #previewer></canvas>

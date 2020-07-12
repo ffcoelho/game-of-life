@@ -93,6 +93,16 @@ export class ModalComponent implements OnInit {
     this.previewerCtx.fillRect(0, 180, 201, 1);
   }
 
+  resetColors(): void {
+    this.modalForm.patchValue({
+      alive: '#8bc34a',
+      dead: '#333333',
+      grid: '#404040',
+      lines: '#575757'
+    });
+    this.updatePreviewer();
+  }
+
   updateColors(): void {
     this.colorsUpdate.emit(this.modalForm.value);
   }

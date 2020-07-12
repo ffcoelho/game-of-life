@@ -9,6 +9,7 @@ export class ButtonComponent implements OnInit {
 
   @Input() disabled: boolean;
   @Input() icon: string;
+  @Input() label: string;
   @Input() led: boolean;
   @Input() tooltip: string;
 
