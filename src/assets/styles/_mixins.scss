@@ -9,6 +9,21 @@
   user-select: none;
 }
 
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar-track {
+      border-radius: 6px;
+      background-color: #424242;
+  }
+  &::-webkit-scrollbar {
+      width: 8px;
+      background-color: #424242;
+  }
+  &::-webkit-scrollbar-thumb {
+      border-radius: 6px;
+      background-color: $led-color;
+  }
+}
+
 @mixin custom-input {
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {

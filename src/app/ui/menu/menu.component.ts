@@ -36,6 +36,7 @@ export class MenuComponent implements OnInit {
 
   public gameForm: FormGroup;
 
+  public showColorsModal: boolean;
   public displaySpeedInput: boolean;
 
   constructor(private fb: FormBuilder,
@@ -54,37 +55,14 @@ export class MenuComponent implements OnInit {
         ]
       ]
     });
-    this.selectMode(MenuMode.BUILD);
-  }
-
-  selectMode(mode: MenuMode): void {
-    this.menu.mode = mode;
-    if (this.menu.mode === MenuMode.PLAY) {
-      this.gameMode.emit(true);
-      this.toggleButtonsState();
-      return;
-    }
-    this.gameMode.emit(false);
-    this.toggleButtonsState();
-  }
-
-  toggleButtonsState(): void {
-    if (this.menu.mode === MenuMode.PLAY) {
-      this.menu.tools.forEach(tool => tool.disabled = true);
-      this.menu.edit.forEach(tool => tool.disabled = true);
-      this.menu.game.forEach(tool => tool.disabled = false);
-      this.menu.play[0].disabled = false;
-      this.toolAction('pan');
-    } else {
-      this.menu.tools.forEach(tool => tool.disabled = false);
-      this.menu.edit.forEach(tool => tool.disabled = false);
-      this.menu.game.forEach(tool => tool.disabled = true);
-      this.menu.play[0].disabled = true;
-      this.toolAction('draw');
-    }
+    this.modeAction(MenuMode.BUILD);
   }
 
   displayAction(id: string): void {
+    if (id === 'colors') {
+      this.showColorsModal = true;
+      return;
+    }
     this.display.emit(id);
   }
 
@@ -106,20 +84,41 @@ export class MenuComponent implements OnInit {
     this.tool.emit(id);
   }
 
-  gameAction(id: string): void {
-    if (id === 'speed') {
-      this.showSpeedInput();
+  modeAction(mode: MenuMode): void {
+    this.menu.mode = mode;
+    if (this.menu.mode === MenuMode.PLAY) {
+      this.gameMode.emit(true);
+      this.toggleButtonsState();
       return;
     }
+    this.gameMode.emit(false);
+    this.toggleButtonsState();
+  }
+
+  gameAction(id: string): void {
     this.playback.emit(id);
   }
 
   playingState(state: boolean): void {
-    this.menu.game[0].disabled = state;
-    this.menu.game[1].disabled = state;
-    this.menu.game[2].disabled = state;
+    this.menu.game.forEach(sel => sel.disabled = state);
     this.menu.play[1].led = state;
     this.menu.selector.forEach(sel => sel.disabled = state);
+  }
+
+  toggleButtonsState(): void {
+    if (this.menu.mode === MenuMode.PLAY) {
+      this.menu.tools.forEach(tool => tool.disabled = true);
+      this.menu.edit.forEach(tool => tool.disabled = true);
+      this.menu.game.forEach(tool => tool.disabled = false);
+      this.menu.play[0].disabled = false;
+      this.toolAction('pan');
+    } else {
+      this.menu.tools.forEach(tool => tool.disabled = false);
+      this.menu.edit.forEach(tool => tool.disabled = false);
+      this.menu.game.forEach(tool => tool.disabled = true);
+      this.menu.play[0].disabled = true;
+      this.toolAction('draw');
+    }
   }
 
   showSpeedInput(): void {

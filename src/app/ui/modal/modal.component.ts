@@ -8,8 +8,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class ModalComponent implements OnInit {
 
   @Input() type: string;
+  @Input() universes: string[];
 
   @Output() exit: EventEmitter<null> = new EventEmitter();
+  @Output() lifeLoad: EventEmitter<string> = new EventEmitter();
+  @Output() lifeSave: EventEmitter<string> = new EventEmitter();
 
   constructor() { }
 

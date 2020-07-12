@@ -2,7 +2,19 @@
   <div class="modal-content">
     <div class="modal-header">
       <span class="title">{{ type | titlecase }}</span>
-      <button (click)="exit.emit()">X</button>
+      <app-button icon="exit" (action)="exit.emit()"></app-button>
+    </div>
+    <div class="modal-body">
+      <div class="body-item">
+
+      </div>
+      <div class="body-item" *ngFor="let uni of universes">
+        <p>{{ uni.name }}</p>
+        <p>{{ uni.lastUpdate | date }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <app-button icon="check" (action)="exit.emit()"></app-button>
     </div>
   </div>
 </div>

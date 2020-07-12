@@ -24,21 +24,18 @@ export class UniverseComponent implements OnInit {
 
   public cfg: ConfigModel;
   public playing: boolean;
-  public paused: boolean;
   public hasChanges: boolean;
 
   public showLifeModal: boolean;
+  public showLifePopup: boolean;
   public modalType: string;
+  public popupType: string;
 
   public clickPanMode = false;
   public pan: PointModel = { x: 0, y: 0 };
-  public select: PointModel[] = [ null, null ];
-  public sel: PointModel = { x: 0, y: 0 };
-  public selX: number;
-  public selY: number;
   public tool: string;
 
-  public leds: boolean;
+  public infoLeds: boolean;
   public timer: any;
   public ticks = 0;
   public tickRef = 0;
@@ -86,13 +83,13 @@ export class UniverseComponent implements OnInit {
   startLoop(): void {
     this.time = new Date().getTime();
     this.timer = setInterval(() => {
+      if (this.ticks === 999999) {
+        clearInterval(this.timer);
+      }
       this.ticks++;
       this.fps = Math.floor((this.ticks - this.tickRef) / ((new Date().getTime() - this.time) / 1000));
       this.life.calcNextGen();
       this.drawCells();
-      if (this.ticks === 999999) {
-        clearInterval(this.timer);
-      }
     }, 1000 / this.cfg.speed);
   }
 
@@ -227,20 +224,20 @@ export class UniverseComponent implements OnInit {
     this.control.nativeElement.style.cursor = 'grabbing';
   }
 
-  formatSelectOrigin(): void {
-    if (this.select[0].x < this.select[1].x) {
-      this.sel.x = this.select[0].x;
-    } else {
-      this.sel.x = this.select[1].x;
-    }
-    if (this.select[0].y < this.select[1].y) {
-      this.sel.y = this.select[0].y;
-    } else {
-      this.sel.y = this.select[1].y;
-    }
-    this.selX = Math.abs(this.select[1].x - this.select[0].x);
-    this.selY = Math.abs(this.select[1].y - this.select[0].y);
-  }
+  // formatSelectOrigin(): void {
+  //   if (this.select[0].x < this.select[1].x) {
+  //     this.sel.x = this.select[0].x;
+  //   } else {
+  //     this.sel.x = this.select[1].x;
+  //   }
+  //   if (this.select[0].y < this.select[1].y) {
+  //     this.sel.y = this.select[0].y;
+  //   } else {
+  //     this.sel.y = this.select[1].y;
+  //   }
+  //   this.selX = Math.abs(this.select[1].x - this.select[0].x);
+  //   this.selY = Math.abs(this.select[1].y - this.select[0].y);
+  // }
 
   releaseClick(ev: PointerEvent): void {
     this.clickPanMode = false;
@@ -353,17 +350,22 @@ export class UniverseComponent implements OnInit {
   selectEdit(id: string): void {
     if (id === 'new') {
       if (!this.hasChanges) {
-        this.life.restartUniverse(true);
-        this.drawCells();
+        this.newUniverse();
         return;
       }
-      this.modalType = 'ask first!';
-      this.showLifeModal = true;
-      this.hasChanges = false;
+      this.popupType = 'new';
+      this.showLifePopup = true;
       return;
     }
     this.modalType = id;
     this.showLifeModal = true;
+  }
+
+  newUniverse(): void {
+    this.life.restartUniverse(true);
+    this.drawCells();
+    this.hasChanges = false;
+    this.showLifePopup = false;
   }
 
   selectTool(id: string): void {
@@ -378,14 +380,20 @@ export class UniverseComponent implements OnInit {
   }
 
   gameMode(play: boolean): void {
-    this.leds = play;
+    this.infoLeds = play;
     if (!play) {
       this.getBuildState();
+      return;
     }
+    this.life.setZeroState();
   }
 
   playback(id: string): void {
     switch (id) {
+      case 'speed': {
+        this.displaySpeedPopup();
+        break;
+      }
       case 'restart': {
         this.getBuildState();
         break;
@@ -405,18 +413,18 @@ export class UniverseComponent implements OnInit {
           this.stopLoop();
           this.fps = null;
           this.playing = false;
-          this.paused = true;
         } else {
-          if (!this.paused) {
-            this.life.setZeroState();
-          }
           this.startLoop();
           this.playing = true;
-          this.paused = false;
         }
         break;
       }
     }
+  }
+
+  displaySpeedPopup(): void {
+    this.popupType = 'speed';
+    this.showLifePopup = true;
   }
 
   getBuildState(): void {
@@ -426,6 +434,16 @@ export class UniverseComponent implements OnInit {
     this.fps = null;
     this.life.restartUniverse();
     this.drawCells();
+  }
+
+  popupConfirm(event: any): void {
+    if (event === 'new') {
+      this.newUniverse();
+      return;
+    }
+    this.showLifePopup = false;
+    this.cfg.speed = event * 1;
+    this.data.updateConfig(this.cfg);
   }
 
 }

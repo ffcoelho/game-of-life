@@ -4,6 +4,7 @@ export interface ConfigModel {
   grid: GridModel;
   origin: PointModel;
   speed: number;
+  universes: UniverseDataModel[];
 }
 
 export interface PointModel {
@@ -34,6 +35,12 @@ interface GridModel {
   rulerY: number;
   x: number;
   y: number;
+}
+
+interface UniverseDataModel {
+  id: string;
+  name: string;
+  lastUpdate: number;
 }
 
 export const GRIDS: GridModel[] = [

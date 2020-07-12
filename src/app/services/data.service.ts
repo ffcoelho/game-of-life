@@ -115,7 +115,39 @@ export class DataService {
       },
       grid: GRIDS[2],
       origin: { x: 0, y: 0 },
-      speed: 60
+      speed: 60,
+      universes: [
+        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
+        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
+        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
+        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
+        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
+        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
+        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
+        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
+        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
+        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
+        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
+        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
+        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
+        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
+        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
+        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
+        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
+        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
+        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
+        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
+        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
+        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
+        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
+        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
+        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
+        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
+        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
+        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
+        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
+        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 }
+      ]
     };
   }
 }

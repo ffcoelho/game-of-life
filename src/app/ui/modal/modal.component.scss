@@ -1,14 +1,19 @@
+@import '../../../assets/styles/mixins';
+
 .modal-container {
   position: absolute;
   top: -800px;
-  // left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 1040px;
   height: 840px;
-  background-color: #000000a8;
+  background-color: #00000067;
   .modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     width: 600px;
     height: 400px;
     background-color: #424242;
@@ -17,7 +22,46 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 96%;
+      margin-top: 10px;
+      .title {
+        font-family: monospace;
+        font-size: 14px;
+      }
+    }
+    .modal-body {
+      @include custom-scrollbar;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 96%;
+      height: 280px;
+      overflow-y: scroll;
+      .body-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: calc(100% - 20px);
+        padding: 0 6px;
+        border-radius: 5px;
+        p {
+          font-family: monospace;
+          font-size: 12px;
+          line-height: 32px;
+        }
+        &:hover {
+          background-color: #4f4f4f;
+          cursor: pointer;
+        }
+      }
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 100%;
+      margin-bottom: 10px;
     }
   }
 }

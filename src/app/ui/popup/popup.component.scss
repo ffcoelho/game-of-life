@@ -1,0 +1,56 @@
+.popup-container {
+  position: absolute;
+  top: -800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1040px;
+  height: 840px;
+  background-color: #00000067;
+  .popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 214px;
+    height: 100px;
+    background-color: #424242;
+    border-radius: 5px;
+    .popup-body {
+      width: 90%;
+      margin-top: 10px;
+      p {
+        margin-bottom: 10px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+      span {
+        font-family: monospace;
+        font-size: 10px;
+        font-style: italic;
+      }
+      .form-control {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-family: monospace;
+        font-size: 12px;
+        span {
+          font-family: monospace;
+          font-size: 12px;
+        }
+        app-input {
+          width: 26px;
+          margin: 0 6px;
+        }
+      }
+    }
+    .popup-footer {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+}

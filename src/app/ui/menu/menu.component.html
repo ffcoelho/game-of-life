@@ -28,7 +28,7 @@
     <div class="menu-separator"></div>
     <div class="menu-item-container">
       <div class="menu-item" *ngFor="let btn of menu.selector">
-        <app-button [icon]="btn.icon" [led]="btn.mode === menu.mode" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip" (action)="selectMode(btn.mode)"></app-button>
+        <app-button [icon]="btn.icon" [led]="btn.mode === menu.mode" [disabled]="btn.disabled || blocked" [tooltip]="btn.tooltip" (action)="modeAction(btn.mode)"></app-button>
       </div>
     </div>
     <div class="menu-separator"></div>

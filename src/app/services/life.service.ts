@@ -48,6 +48,7 @@ export class LifeService {
   startUniverse(config: ConfigModel): void {
     this.universe = this.newGrid();
     this.nextGen = this.newGrid();
+    this.zeroState = this.newGrid();
     this.theme.updateStyleVars(config);
     this.create.next(config);
   }
