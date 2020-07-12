@@ -4,17 +4,31 @@
       <span class="title">{{ type | titlecase }}</span>
       <app-button icon="exit" (action)="exit.emit()"></app-button>
     </div>
-    <div class="modal-body">
-      <div class="body-item">
-
+    <div class="modal-body" *ngIf="type !== 'colors'">
+      <div class="new-item" *ngIf="type === 'save'">
+        <app-input type="text" [parentForm]="modalForm" controlName="name" maxLength="24" (click)="selectFile()"></app-input>
       </div>
-      <div class="body-item" *ngFor="let uni of universes">
-        <p>{{ uni.name }}</p>
-        <p>{{ uni.lastUpdate | date }}</p>
+      <div class="list-header">
+        <span>Name</span>
+        <span>Pop.</span>
+        <span>Size</span>
+        <span>Last Update</span>
+      </div>
+      <div class="item-list" [ngClass]="{'load-h': type === 'load'}">
+        <div class="item" [ngClass]="{'highlight': selected === uniIdx}" (click)="selectFile(uniIdx)" *ngFor="let uni of config.universes; let uniIdx = index">
+          <p class="name">{{ uni.name }}</p>
+          <p class="pop">{{ uni.pop }}</p>
+          <p class="size">{{ uni.size[0] }} x {{ uni.size[1] }}</p>
+          <p class="date">{{ uni.lastUpdate | date }}</p>
+        </div>
       </div>
     </div>
+    <div class="modal-body" *ngIf="type === 'colors'">
+    </div>
     <div class="modal-footer">
-      <app-button icon="check" (action)="exit.emit()"></app-button>
+      <app-button icon="check" (action)="updateColors()" *ngIf="type === 'colors'"></app-button>
+      <app-button icon="check" (action)="loadFile()" *ngIf="type === 'load'"></app-button>
+      <app-button icon="check" (action)="saveFile()" *ngIf="type === 'save'"></app-button>
     </div>
   </div>
 </div>

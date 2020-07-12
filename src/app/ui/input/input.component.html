@@ -1,10 +1,7 @@
-<!-- <div class="input-container" [ngClass]="{'err': form.invalid}" [formGroup]="form">
-  <input type="text" formControlName="control">
-</div> -->
-
 <div class="input-container" [ngClass]="{'err': parentForm.invalid}" [formGroup]="parentForm">
   <input
     [type]="type"
+    [maxLength]="maxLength"
     [formControlName]="controlName"
     (click)="$event.target.select()"
   >

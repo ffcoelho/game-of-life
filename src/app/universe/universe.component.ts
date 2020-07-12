@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { LifeService } from '../services/life.service';
-import { ConfigModel, PointModel, GRIDS, LIFE } from '../models/config.model';
+import { ConfigModel, PointModel, GRIDS, LIFE, UniverseModel } from '../models/config.model';
+import { UniverseDataModel } from '../models/data.model';
 
 @Component({
   selector: 'app-universe',
@@ -446,4 +447,101 @@ export class UniverseComponent implements OnInit {
     this.data.updateConfig(this.cfg);
   }
 
+  loadLife(id: string): void {
+    this.data.loadUniverse(id).then(
+      (data: UniverseDataModel) => {
+        this.life.restartUniverse(true);
+        data.grid.forEach((y, yi) => y.forEach((x, xi) => {
+          if (x === 1) {
+            this.life.universe[yi + data.y][xi + data.x] = 1;
+          }
+        }));
+        this.drawCells();
+        this.showLifeModal = false;
+      },
+      () => this.showLifeModal = false
+    );
+  }
+
+  saveLife(data: UniverseModel): void {
+    const time = new Date().getTime();
+    if (!data.id) {
+      data.id = `life-${time}`;
+    }
+    const info = this.saveUniverseDataAndGetInfo(data.id);
+    data.pop = info[0];
+    data.size = info[1];
+    data.lastUpdate = time;
+    this.saveUniverse(data);
+    this.showLifeModal = false;
+  }
+
+  saveUniverse(data: UniverseModel): void {
+    for (let i = 0; i < this.cfg.universes.length; i++) {
+      if (data.id === this.cfg.universes[i].id) {
+        this.cfg.universes[i] = data;
+        return;
+      }
+    }
+    this.cfg.universes.push(data);
+    this.data.updateConfig(this.cfg);
+  }
+
+  saveUniverseDataAndGetInfo(id: string): any[] {
+    const b = this.getUniverseBorders();
+    const croppedGrid = Array.from({length: b[1] - b[0] + 1}).map(value => Array.from({length: b[3] - b[2] + 1}).map(v => 0));
+    let pop = 0;
+    for (let y = b[0]; y <= b[1] ; y++) {
+      for (let x = b[2]; x <= b[3]; x++) {
+        if (this.life.universe[y][x] === 1) {
+          croppedGrid[y - b[0]][x - b[2]] = 1;
+          pop++;
+        }
+      }
+    }
+    const data: UniverseDataModel = {
+      x: b[2],
+      y: b[0],
+      grid: croppedGrid
+    };
+    this.data.saveUniverse(id, data);
+    return [ pop, [ b[3] - b[2] + 1, b[1] - b[0] + 1 ] ];
+  }
+
+  getUniverseBorders(): number[] {
+    const borders = [ 0, 0, 0, 0 ];
+    top: for (let y = LIFE.o; y < LIFE.y - LIFE.o; y++) {
+      for (let x = LIFE.o; x < LIFE.x - LIFE.o; x++) {
+        if (this.life.universe[y][x] === 1) {
+          borders[0] = y;
+          break top;
+        }
+      }
+    }
+    down: for (let y = LIFE.y - LIFE.o; y >= LIFE.o; y--) {
+      for (let x = LIFE.o; x < LIFE.x - LIFE.o; x++) {
+        if (this.life.universe[y][x] === 1) {
+          borders[1] = y;
+          break down;
+        }
+      }
+    }
+    right: for (let x = LIFE.o; x < LIFE.x - LIFE.o; x++) {
+      for (let y = LIFE.o; y < LIFE.y - LIFE.o; y++) {
+        if (this.life.universe[y][x] === 1) {
+          borders[2] = x;
+          break right;
+        }
+      }
+    }
+    left: for (let x = LIFE.x - LIFE.o; x >= LIFE.o; x--) {
+      for (let y = LIFE.o; y < LIFE.y - LIFE.o; y++) {
+        if (this.life.universe[y][x] === 1) {
+          borders[3] = x;
+          break left;
+        }
+      }
+    }
+    return borders;
+  }
 }

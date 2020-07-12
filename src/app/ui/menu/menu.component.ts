@@ -32,7 +32,6 @@ export class MenuComponent implements OnInit {
   @Output() playback: EventEmitter<string> = new EventEmitter();
 
   public menu: MenuModel;
-  public blocked: boolean;
 
   public gameForm: FormGroup;
 
@@ -119,26 +118,5 @@ export class MenuComponent implements OnInit {
       this.menu.play[0].disabled = true;
       this.toolAction('draw');
     }
-  }
-
-  showSpeedInput(): void {
-    this.blocked = true;
-    this.displaySpeedInput = true;
-  }
-
-  speedInputCancel(): void {
-    this.displaySpeedInput = false;
-    this.blocked = false;
-    this.gameForm.get('speed').patchValue(this.config.speed);
-  }
-
-  speedInputUpdate(): void {
-    if (!/^[0-9]*$/.test(this.gameForm.get('speed').value)) {
-      return;
-    }
-    this.displaySpeedInput = false;
-    this.blocked = false;
-    this.config.speed = this.gameForm.get('speed').value * 1;
-    this.data.updateConfig(this.config);
   }
 }

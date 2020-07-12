@@ -26,33 +26,96 @@
       margin-top: 10px;
       .title {
         font-family: monospace;
-        font-size: 14px;
+        font-size: 16px;
       }
     }
     .modal-body {
-      @include custom-scrollbar;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       width: 96%;
       height: 280px;
-      overflow-y: scroll;
-      .body-item {
+      .new-item {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
-        width: calc(100% - 20px);
-        padding: 0 6px;
-        border-radius: 5px;
-        p {
+        width: 100%;
+        height: 32px;
+        margin-bottom: 8px;
+        app-input {
+          width: 166px;
+          margin-right: 16px;
+        }
+      }
+      .list-header {
+        display: flex;
+        justify-content: flex-start;
+        span {
           font-family: monospace;
           font-size: 12px;
-          line-height: 32px;
+          line-height: 18px;
+          &:nth-child(1) {
+            margin-left: 6px;
+          }
+          &:nth-child(2) {
+            margin-left: 170px;
+          }
+          &:nth-child(3) {
+            margin-left: 37px;
+          }
+          &:nth-child(4) {
+            margin-left: 170px;
+          }
         }
-        &:hover {
-          background-color: #4f4f4f;
-          cursor: pointer;
+      }
+      .item-list {
+        @include custom-scrollbar;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        height: 220px;
+        overflow-y: scroll;
+        border-top: 1px solid #333333;
+        border-bottom: 1px solid #333333;
+        .item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: calc(100% - 20px);
+          padding: 0 6px;
+          border-radius: 5px;
+          p {
+            width: 80px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 32px;
+            &.name {
+              width: 180px;
+            }
+            &.pop {
+              width: 48px;
+            }
+            &.size {
+              width: 72px;
+            }
+            &.date {
+              text-align: end;
+              width: 200px;
+            }
+          }
+          &:hover {
+            background-color: #4f4f4f;
+            cursor: pointer;
+          }
+          &.highlight {
+            background-color: #4f4f4f;
+          }
+        }
+        &.load-h {
+          height: 260px;
         }
       }
     }

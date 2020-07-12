@@ -52,10 +52,10 @@
   <div class="universe-modal" *ngIf="showLifeModal">
     <app-modal
       [type]="modalType"
-      [universes]="cfg.universes"
+      [config]="cfg"
       (exit)="showLifeModal = false"
-      (lifeLoad)="showLifeModal = false"
-      (lifeSave)="showLifeModal = false"
+      (lifeLoad)="loadLife($event)"
+      (lifeSave)="saveLife($event)"
     ></app-modal>
   </div>
   <div class="universe-popup" *ngIf="showLifePopup">

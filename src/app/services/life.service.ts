@@ -10,6 +10,7 @@ export class LifeService {
 
   public create: Subject<ConfigModel> = new Subject<ConfigModel>();
 
+  // [y][x]
   public universe: number[][];
   public nextGen: number[][];
   public zeroState: number[][];

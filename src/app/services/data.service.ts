@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import * as localforage from 'localforage';
 import { ThemeService } from './theme.service';
 import { ConfigModel, GRIDS } from '../models/config.model';
+import { UniverseDataModel } from '../models/data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,21 @@ export class DataService {
     }
     this.theme.updateStyleVars(config);
     this.update.next(config);
+  }
+
+  public saveUniverse(id: string, data: UniverseDataModel): void {
+    if (this.localDb) {
+      this.setItem(id, data);
+    }
+  }
+
+  public loadUniverse(id: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.getItem(id).then(
+        value => resolve(value),
+        err => reject()
+      );
+    });
   }
 
   public initialize(): Promise<any> {
@@ -116,38 +132,7 @@ export class DataService {
       grid: GRIDS[2],
       origin: { x: 0, y: 0 },
       speed: 60,
-      universes: [
-        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
-        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
-        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
-        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
-        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
-        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
-        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
-        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
-        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
-        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
-        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
-        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
-        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
-        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
-        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
-        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
-        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
-        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
-        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
-        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
-        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
-        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
-        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
-        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
-        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 },
-        { id: 'a', name: 'Mock A', lastUpdate: 1594506267050 },
-        { id: 'b', name: 'Mock B', lastUpdate: 1594505267050 },
-        { id: 'c', name: 'Mock C', lastUpdate: 1594504267050 },
-        { id: 'd', name: 'Mock D', lastUpdate: 1594503267050 },
-        { id: 'e', name: 'Mock E', lastUpdate: 1594502267050 }
-      ]
+      universes: []
     };
   }
 }
