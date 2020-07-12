@@ -119,11 +119,7 @@ export class DataService {
         alive: '#8bc34a',
         dead: '#333333',
         grid: '#404040',
-        lines: '#575757',
-        label: '#808080',
-        led: '#ffd633',
-        panel: '#0d0d0d',
-        ruler: '#000000'
+        lines: '#575757'
       },
       display: {
         lines: true,

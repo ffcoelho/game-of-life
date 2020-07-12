@@ -2,7 +2,7 @@
   <div class="popup-content">
     <div class="popup-body" *ngIf="type !== 'speed'">
       <p>Unsaved changes will be lost.</p>
-      <p>Confirm?</p>
+      <p *ngIf="type === 'new'">Confirm?</p>
     </div>
     <div class="popup-body" *ngIf="type === 'speed'">
       <div class="form-control">
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="popup-footer">
-      <app-button icon="exit" (action)="exit.emit()"></app-button>
+      <app-button icon="exit" (action)="exit.emit()" *ngIf="type !== 'load'"></app-button>
       <app-button icon="check" (action)="popupConfirm()"></app-button>
     </div>
   </div>

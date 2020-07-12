@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { DataService } from 'src/app/services/data.service';
 import { MenuMode, MenuModel, MENU } from '../../models/menu.model';
 import { ConfigModel } from 'src/app/models/config.model';
-import { nextTick } from 'process';
 
 @Component({
   selector: 'app-menu',
@@ -35,11 +33,7 @@ export class MenuComponent implements OnInit {
 
   public gameForm: FormGroup;
 
-  public showColorsModal: boolean;
-  public displaySpeedInput: boolean;
-
-  constructor(private fb: FormBuilder,
-              private data: DataService) {
+  constructor(private fb: FormBuilder) {
     this.menu = MENU;
   }
 
@@ -58,10 +52,6 @@ export class MenuComponent implements OnInit {
   }
 
   displayAction(id: string): void {
-    if (id === 'colors') {
-      this.showColorsModal = true;
-      return;
-    }
     this.display.emit(id);
   }
 

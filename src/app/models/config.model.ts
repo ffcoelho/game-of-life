@@ -25,10 +25,6 @@ export interface ColorsModel {
   dead: string;
   grid: string;
   lines: string;
-  label: string;
-  led: string;
-  panel: string;
-  ruler: string;
 }
 
 interface DisplayModel {

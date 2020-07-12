@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { LifeService } from '../services/life.service';
 import { ConfigModel, PointModel, GRIDS, LIFE, UniverseModel } from '../models/config.model';
@@ -162,7 +162,7 @@ export class UniverseComponent implements OnInit {
     }
     for (let y = 0; y <= this.cfg.grid.y; y++) {
       if ((y + this.cfg.origin.y) % this.cfg.grid.rulerY === 0) {
-        this.panelCtx.fillStyle = this.cfg.colors.label;
+        this.panelCtx.fillStyle = '#808080';
         this.panelCtx.fillText(`${y + this.cfg.origin.y}`, LIFE.r - 32, (y * this.cfg.grid.scale) + LIFE.r + 4);
         this.panelCtx.fillText(`${y + this.cfg.origin.y}`, (LIFE.x - 2 * LIFE.o) * 2 + LIFE.r + 12, (y * this.cfg.grid.scale) + LIFE.r + 4);
         this.panelCtx.fillStyle = this.cfg.colors.lines;
@@ -172,7 +172,7 @@ export class UniverseComponent implements OnInit {
     }
     for (let x = 0; x <= this.cfg.grid.x; x++) {
       if ((x + this.cfg.origin.x) % this.cfg.grid.rulerX === 0) {
-        this.panelCtx.fillStyle = this.cfg.colors.label;
+        this.panelCtx.fillStyle = '#808080';
         this.panelCtx.fillText(`${x + this.cfg.origin.x}`, (x * this.cfg.grid.scale) + LIFE.r - 6, LIFE.r - 16);
         this.panelCtx.fillText(`${x + this.cfg.origin.x}`, (x * this.cfg.grid.scale) + LIFE.r - 6, (LIFE.y - 2 * LIFE.o) * 2 + LIFE.r + 24);
         this.panelCtx.fillStyle = this.cfg.colors.lines;
@@ -319,6 +319,11 @@ export class UniverseComponent implements OnInit {
   }
 
   toggleDisplay(id: string): void {
+    if (id === 'colors') {
+      this.modalType = id;
+      this.showLifeModal = true;
+      return;
+    }
     this.cfg.display[id] = !this.cfg.display[id];
     this.data.updateConfig(this.cfg);
   }
@@ -466,7 +471,7 @@ export class UniverseComponent implements OnInit {
         this.life.restartUniverse(true);
         data.grid.forEach((y, yi) => y.forEach((x, xi) => {
           if (x === 1) {
-            this.life.universe[yi + data.y][xi + data.x] = 1;
+            this.life.universe[yi + data.y + LIFE.o][xi + data.x + LIFE.o] = 1;
           }
         }));
         this.drawCells();
@@ -514,8 +519,8 @@ export class UniverseComponent implements OnInit {
       }
     }
     const data: UniverseDataModel = {
-      x: b[2],
-      y: b[0],
+      x: b[2] - LIFE.o,
+      y: b[0] - LIFE.o,
       grid: croppedGrid
     };
     this.data.saveUniverse(id, data);

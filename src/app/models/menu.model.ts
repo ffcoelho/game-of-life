@@ -69,17 +69,24 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'new',
-      tooltip: 'New'
+      tooltip: 'New life'
     },
     {
       actionId: 'load',
       disabled: false,
       led: false,
       icon: 'folder',
-      tooltip: 'Load'
+      tooltip: 'Open'
     },
     {
       actionId: 'save',
+      disabled: false,
+      led: false,
+      icon: 'save2',
+      tooltip: 'Save as'
+    },
+    {
+      actionId: 'quickSave',
       disabled: false,
       led: false,
       icon: 'save',

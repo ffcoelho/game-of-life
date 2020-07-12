@@ -1,9 +1,9 @@
 
-$panel-color: var(--panel-color);
-$led-color: var(--led-color);
-$led-off-color: var(--led-off-color);
-$led-dim-color: var(--led-dim-color);
-$led-on-color: var(--led-on-color);
-$ruler-color: var(--ruler-color);
-$ruler-label: var(--ruler-label);
+$panel-color: var(--panel-color, #0d0d0d);
+$led-color: var(--led-color, #ffd63370);
+$led-off-color: var(--led-off-color, #ffd63325);
+$led-dim-color: var(--led-dim-color, #ffd633a4);
+$led-on-color: var(--led-on-color, #ffd633);
+$ruler-color: var(--ruler-color, #000000);
+$ruler-label: var(--ruler-label, #808080);
 $grid-background: var(--grid-background);
