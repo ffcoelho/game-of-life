@@ -358,6 +358,13 @@ export class UniverseComponent implements OnInit {
       this.showLifePopup = true;
       return;
     }
+    if (id === 'load') {
+      if (this.hasChanges) {
+        this.popupType = 'load';
+        this.showLifePopup = true;
+        return;
+      }
+    }
     this.modalType = id;
     this.showLifeModal = true;
   }
@@ -442,6 +449,12 @@ export class UniverseComponent implements OnInit {
       this.newUniverse();
       return;
     }
+    if (event === 'load') {
+      this.modalType = event;
+      this.showLifePopup = false;
+      this.showLifeModal = true;
+      return;
+    }
     this.showLifePopup = false;
     this.cfg.speed = event * 1;
     this.data.updateConfig(this.cfg);
@@ -457,6 +470,7 @@ export class UniverseComponent implements OnInit {
           }
         }));
         this.drawCells();
+        this.hasChanges = false;
         this.showLifeModal = false;
       },
       () => this.showLifeModal = false

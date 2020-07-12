@@ -38,6 +38,10 @@ export class PopupComponent implements OnInit {
       this.confirm.emit('new');
       return;
     }
+    if (this.type === 'load') {
+      this.confirm.emit('load');
+      return;
+    }
     if (this.type === 'speed') {
       if (!/^[0-9]*$/.test(this.popupForm.get('speed').value) || this.popupForm.get('speed').invalid) {
         return;
