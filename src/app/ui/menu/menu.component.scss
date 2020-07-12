@@ -11,13 +11,21 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 193px;
+    width: 382px;
+    .menu-item {
+      span {
+        font-family: monospace;
+        font-size: 12px;
+        font-style: italic;
+        color: $led-color;
+      }
+    }
   }
   .menu-right {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    width: 641px;
+    width: 452px;
   }
   .menu-item-container {
     display: flex;

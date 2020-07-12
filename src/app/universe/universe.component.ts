@@ -27,6 +27,7 @@ export class UniverseComponent implements OnInit {
   public playing: boolean;
   public hasChanges: boolean;
   public loadedId: string;
+  public loadedName: string;
   public infoDataIdx = 0;
 
   public showLifeModal: boolean;
@@ -377,6 +378,7 @@ export class UniverseComponent implements OnInit {
     this.drawCells();
     this.hasChanges = false;
     this.loadedId = null;
+    this.loadedName = null;
     this.showLifePopup = false;
   }
 
@@ -482,6 +484,7 @@ export class UniverseComponent implements OnInit {
         this.drawCells();
         this.hasChanges = false;
         this.loadedId = id;
+        this.loadedName = this.cfg.universes.find(uni => uni.id === id).name;
         this.showLifeModal = false;
       },
       () => this.showLifeModal = false
@@ -499,6 +502,8 @@ export class UniverseComponent implements OnInit {
     data.lastUpdate = time;
     this.saveUniverse(data);
     this.hasChanges = false;
+    this.loadedId = data.id;
+    this.loadedName = data.name;
     this.showLifeModal = false;
   }
 
@@ -510,6 +515,7 @@ export class UniverseComponent implements OnInit {
         this.data.updateConfig(this.cfg);
         if (id === this.loadedId) {
           this.loadedId = null;
+          this.loadedName = null;
           this.hasChanges = true;
         }
       },

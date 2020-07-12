@@ -23,6 +23,7 @@
         [playing]="playing"
         [config]="cfg"
         [disableQuickSave]="!loadedId || !hasChanges"
+        [loadedName]="loadedName"
         (gameMode)="gameMode($event)"
         (display)="toggleDisplay($event)"
         (zoom)="toggleZoom($event)"

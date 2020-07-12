@@ -94,13 +94,35 @@ export class ModalComponent implements OnInit {
     this.previewerCtx.fillRect(0, 180, 201, 1);
   }
 
-  resetColors(): void {
-    this.modalForm.patchValue({
-      alive: '#8bc34a',
-      dead: '#333333',
-      grid: '#404040',
-      lines: '#575757'
-    });
+  resetColors(theme: number): void {
+    let colors: ColorsModel;
+    switch (theme) {
+      case 0:
+        colors = {
+          alive: '#a98f26',
+          dead: '#333333',
+          grid: '#404040',
+          lines: '#575757'
+        };
+        break;
+      case 1:
+        colors = {
+          alive: '#000000',
+          dead: '#ffffff',
+          grid: '#cccccc',
+          lines: '#919191'
+        };
+        break;
+      case 2:
+        colors = {
+          alive: '#2ddf3d',
+          dead: '#000000',
+          grid: '#242424',
+          lines: '#424242'
+        };
+        break;
+    }
+    this.modalForm.patchValue(colors);
     this.updatePreviewer();
   }
 

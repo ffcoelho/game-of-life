@@ -26,7 +26,6 @@
   left: 0;
   width: 1040px;
   height: 40px;
-  background-color: $panel-color;
   .panel {
     display: flex;
     justify-content: space-between;
@@ -36,6 +35,7 @@
     padding: 3px 9px;
     border: 1px solid $led-color;
     border-radius: 5px;
+    background-color: $panel-color;
     .menu {
       width: 834px;
       height: 100%;

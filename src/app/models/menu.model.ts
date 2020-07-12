@@ -77,7 +77,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'folder',
-      tooltip: 'Open'
+      tooltip: 'Load'
     },
     {
       actionId: 'save',

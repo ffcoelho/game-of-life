@@ -146,6 +146,18 @@
             font-family: monospace;
             font-size: 14px;
           }
+          .theme-list {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-left: 20px;
+            app-button {
+              margin-right: 8px;
+            }
+          }
+          &:last-of-type {
+            margin-top: 22px;
+          }
         }
       }
       .preview {

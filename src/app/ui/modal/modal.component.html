@@ -46,7 +46,12 @@
           <input type="color" formControlName="lines" (change)="updatePreviewer()">
         </div>
         <div class="form-control">
-          <app-button label="RESET" (click)="resetColors()"></app-button>
+          <p>Themes</p>
+          <div class="theme-list">
+            <app-button icon="night" (click)="resetColors(0)" tooltip="Dark"></app-button>
+            <app-button icon="contrast" (click)="resetColors(1)" tooltip="B&W"></app-button>
+            <app-button icon="translate" (click)="resetColors(2)" tooltip="Matrix"></app-button>
+          </div>
         </div>
       </div>
       <div class="preview">
