@@ -85,6 +85,12 @@
         overflow-y: scroll;
         border-top: 1px solid #333333;
         border-bottom: 1px solid #333333;
+        .no-item {
+          margin: 42px auto;
+          p {
+            font-style: italic;;
+          }
+        }
         .item {
           display: flex;
           justify-content: space-between;

@@ -27,6 +27,7 @@ export class UniverseComponent implements OnInit {
   public playing: boolean;
   public hasChanges: boolean;
   public loadedId: string;
+  public infoDataIdx = 0;
 
   public showLifeModal: boolean;
   public showLifePopup: boolean;
@@ -44,6 +45,12 @@ export class UniverseComponent implements OnInit {
   public population = 0;
   public fps: number;
   public time: number;
+
+  public infoData = [
+    'Game / Avg. Speed',
+    'Generation',
+    'Screen Population'
+  ];
 
   constructor(private data: DataService,
               private life: LifeService) { }

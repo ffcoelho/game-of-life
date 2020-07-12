@@ -15,6 +15,9 @@
         <span>Last Update</span>
       </div>
       <div class="item-list" [ngClass]="{'load-h': type === 'load'}">
+        <div class="no-item" *ngIf="config.universes.length === 0">
+          <p>No Life</p>
+        </div>
         <div class="item" [ngClass]="{'highlight': selected === uniIdx}" (click)="selectFile(uniIdx)" *ngFor="let uni of config.universes; let uniIdx = index">
           <p class="name">{{ uni.name }}</p>
           <p class="pop">{{ uni.pop }}</p>

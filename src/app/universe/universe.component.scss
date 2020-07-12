@@ -41,6 +41,7 @@
       height: 100%;
     }
     .info {
+      position: relative;
       display: flex;
       justify-content: flex-end;
       align-items: center;
@@ -71,6 +72,31 @@
           fill: $led-off-color;
         }
       }
+      .info-tooltip {
+        position: absolute;
+        top: -25px;
+        left: 25px;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 136px;
+        height: 25px;
+        color: $led-on-color;
+        font-family: monospace;
+        font-size: 12px;
+        background-color: #000000;
+        border-radius: 5px;
+        box-shadow: 0px 0px 1px 1px $led-color;
+        opacity: 0;
+      }
+      &:hover {
+        .info-tooltip {
+          display: flex;
+          animation: fade-in 240ms ease-out;
+          animation-fill-mode: forwards;
+          animation-delay: 500ms;
+        }
+      }
       &.led {
         color: $led-dim-color;
         .disp {
@@ -81,5 +107,19 @@
         }
       }
     }
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    top: -25px;
+    opacity: 0;
+  }
+  70% {
+    top: -36px;
+  }
+  100% {
+    top: -36px;
+    opacity: 0.75;
   }
 }

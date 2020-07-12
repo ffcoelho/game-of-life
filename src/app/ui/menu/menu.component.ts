@@ -90,6 +90,7 @@ export class MenuComponent implements OnInit {
   }
 
   playingState(state: boolean): void {
+    this.menu.display[0].disabled = state;
     this.menu.game.forEach(sel => sel.disabled = state);
     this.menu.play[1].led = state;
     this.menu.selector.forEach(sel => sel.disabled = state);
