@@ -2,6 +2,7 @@ export interface MenuModel {
   display: MenuItemModel[];
   zoom: MenuItemModel[];
   edit: MenuItemModel[];
+  save: MenuItemModel;
   tools: MenuItemModel[];
   selector: MenuItemModel[];
   game: MenuItemModel[];
@@ -84,15 +85,15 @@ export const MENU: MenuModel = {
       led: false,
       icon: 'save2',
       tooltip: 'Save as'
-    },
-    {
-      actionId: 'quickSave',
-      disabled: false,
-      led: false,
-      icon: 'save',
-      tooltip: 'Save'
     }
   ],
+  save: {
+    actionId: 'quickSave',
+    disabled: false,
+    led: false,
+    icon: 'save',
+    tooltip: 'Save'
+  },
   tools: [
     {
       actionId: 'pan',

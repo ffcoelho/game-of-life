@@ -26,6 +26,7 @@ export class UniverseComponent implements OnInit {
   public cfg: ConfigModel;
   public playing: boolean;
   public hasChanges: boolean;
+  public loadedId: string;
 
   public showLifeModal: boolean;
   public showLifePopup: boolean;
@@ -225,21 +226,6 @@ export class UniverseComponent implements OnInit {
     this.control.nativeElement.style.cursor = 'grabbing';
   }
 
-  // formatSelectOrigin(): void {
-  //   if (this.select[0].x < this.select[1].x) {
-  //     this.sel.x = this.select[0].x;
-  //   } else {
-  //     this.sel.x = this.select[1].x;
-  //   }
-  //   if (this.select[0].y < this.select[1].y) {
-  //     this.sel.y = this.select[0].y;
-  //   } else {
-  //     this.sel.y = this.select[1].y;
-  //   }
-  //   this.selX = Math.abs(this.select[1].x - this.select[0].x);
-  //   this.selY = Math.abs(this.select[1].y - this.select[0].y);
-  // }
-
   releaseClick(ev: PointerEvent): void {
     this.clickPanMode = false;
     if (this.tool === 'pan') {
@@ -370,6 +356,11 @@ export class UniverseComponent implements OnInit {
         return;
       }
     }
+    if (id === 'quickSave') {
+      this.saveLife(this.cfg.universes.find(uni => uni.id === this.loadedId));
+      this.hasChanges = false;
+      return;
+    }
     this.modalType = id;
     this.showLifeModal = true;
   }
@@ -378,6 +369,7 @@ export class UniverseComponent implements OnInit {
     this.life.restartUniverse(true);
     this.drawCells();
     this.hasChanges = false;
+    this.loadedId = null;
     this.showLifePopup = false;
   }
 
@@ -482,6 +474,7 @@ export class UniverseComponent implements OnInit {
         }));
         this.drawCells();
         this.hasChanges = false;
+        this.loadedId = id;
         this.showLifeModal = false;
       },
       () => this.showLifeModal = false
@@ -498,6 +491,7 @@ export class UniverseComponent implements OnInit {
     data.size = info[1];
     data.lastUpdate = time;
     this.saveUniverse(data);
+    this.hasChanges = false;
     this.showLifeModal = false;
   }
 

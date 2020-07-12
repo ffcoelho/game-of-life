@@ -21,6 +21,7 @@ export class MenuComponent implements OnInit {
   }
 
   @Input() config: ConfigModel;
+  @Input() disableQuickSave: boolean;
 
   @Output() gameMode: EventEmitter<boolean> = new EventEmitter();
   @Output() display: EventEmitter<string> = new EventEmitter();

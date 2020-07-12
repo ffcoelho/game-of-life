@@ -22,6 +22,7 @@
       <app-menu
         [playing]="playing"
         [config]="cfg"
+        [disableQuickSave]="!loadedId || !hasChanges"
         (gameMode)="gameMode($event)"
         (display)="toggleDisplay($event)"
         (zoom)="toggleZoom($event)"
