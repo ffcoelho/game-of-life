@@ -42,6 +42,12 @@ export class ModalComponent implements OnInit {
       this.initPreviewer();
       return;
     }
+    if (this.type === 'RLE') {
+      this.modalForm = this.formBuilder.group({
+        rle: [ '' ]
+      });
+      return;
+    }
     this.modalForm = this.formBuilder.group({
       id: [ null ],
       name: [ 'New Life', Validators.required ],
@@ -128,5 +134,9 @@ export class ModalComponent implements OnInit {
 
   deleteFile(idx: number): void {
     this.lifeDelete.emit(idx);
+  }
+
+  testClipboard(): void {
+    console.log(this.modalForm.get('rle').value.length);
   }
 }

@@ -15,7 +15,8 @@ interface MenuItemModel {
   mode?: MenuMode;
   led?: boolean;
   disabled: boolean;
-  icon: string;
+  icon?: string;
+  label?: string;
   tooltip: string;
 }
 
@@ -65,6 +66,13 @@ export const MENU: MenuModel = {
     }
   ],
   edit: [
+    {
+      actionId: 'RLE',
+      disabled: false,
+      led: false,
+      label: 'RLE',
+      tooltip: 'Import/Export'
+    },
     {
       actionId: 'new',
       disabled: false,

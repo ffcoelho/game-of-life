@@ -21,7 +21,7 @@
   <div class="menu-right">
     <div class="menu-item-container">
       <div class="menu-item" *ngFor="let btn of menu.edit">
-        <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" [tooltip]="btn.tooltip" (action)="editAction(btn.actionId)"></app-button>
+        <app-button [icon]="btn.icon" [label]="btn.label" [led]="btn.led" [disabled]="btn.disabled" [tooltip]="btn.tooltip" (action)="editAction(btn.actionId)"></app-button>
       </div>
       <div class="menu-item">
         <app-button [icon]="menu.save.icon" [led]="menu.save.led" [disabled]="disableQuickSave || menu.save.disabled" [tooltip]="menu.save.tooltip" (action)="editAction(menu.save.actionId)"></app-button>

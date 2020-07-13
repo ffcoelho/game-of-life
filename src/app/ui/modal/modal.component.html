@@ -4,9 +4,9 @@
       <span class="title">{{ type | titlecase }}</span>
       <app-button icon="exit" (action)="exit.emit()"></app-button>
     </div>
-    <div class="modal-body" *ngIf="type !== 'colors'">
+    <div class="modal-body" *ngIf="type === 'load' || type === 'save'">
       <div class="new-item" *ngIf="type === 'save'">
-        <app-input type="text" [parentForm]="modalForm" controlName="name" maxLength="24" (click)="selectFile()"></app-input>
+        <app-input type="text" [parentForm]="modalForm" controlName="name" maxLength="20" (click)="selectFile()"></app-input>
         <span *ngIf="config.universes.length > 0">or choose one below to overwrite its data.</span>
       </div>
       <div class="list-header">
@@ -27,6 +27,10 @@
           <app-button icon="delete" (action)="deleteFile(uniIdx)"></app-button>
         </div>
       </div>
+    </div>
+    <div class="modal-body" *ngIf="type === 'RLE'">
+      <button (click)="testClipboard()">TEST</button>
+      <app-input type="text" [parentForm]="modalForm" controlName="rle"></app-input>
     </div>
     <div class="modal-body" [ngClass]="{'hide': type !== 'colors', 'colors': type === 'colors'}">
       <div class="control" [formGroup]="modalForm" *ngIf="type === 'colors'">
