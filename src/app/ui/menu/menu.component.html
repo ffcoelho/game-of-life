@@ -24,7 +24,7 @@
         <app-button [icon]="btn.icon" [led]="btn.led" [disabled]="btn.disabled" [tooltip]="btn.tooltip" (action)="editAction(btn.actionId)"></app-button>
       </div>
       <div class="menu-item">
-        <app-button [icon]="menu.save.icon" [led]="menu.save.led" [disabled]="disableQuickSave" [tooltip]="menu.save.tooltip" (action)="editAction(menu.save.actionId)"></app-button>
+        <app-button [icon]="menu.save.icon" [led]="menu.save.led" [disabled]="disableQuickSave || menu.save.disabled" [tooltip]="menu.save.tooltip" (action)="editAction(menu.save.actionId)"></app-button>
       </div>
     </div>
     <div class="menu-separator"></div>

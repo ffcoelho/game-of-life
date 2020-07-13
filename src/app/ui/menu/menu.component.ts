@@ -101,12 +101,14 @@ export class MenuComponent implements OnInit {
     if (this.menu.mode === MenuMode.PLAY) {
       this.menu.tools.forEach(tool => tool.disabled = true);
       this.menu.edit.forEach(tool => tool.disabled = true);
+      this.menu.save.disabled = true;
       this.menu.game.forEach(tool => tool.disabled = false);
       this.menu.play[0].disabled = false;
       this.toolAction('pan');
     } else {
       this.menu.tools.forEach(tool => tool.disabled = false);
       this.menu.edit.forEach(tool => tool.disabled = false);
+      this.menu.save.disabled = false;
       this.menu.game.forEach(tool => tool.disabled = true);
       this.menu.play[0].disabled = true;
       this.toolAction('draw');
