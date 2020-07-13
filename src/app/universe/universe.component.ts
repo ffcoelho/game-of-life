@@ -365,7 +365,8 @@ export class UniverseComponent implements OnInit {
       }
     }
     if (id === 'quickSave') {
-      this.saveLife(this.cfg.universes.find(uni => uni.id === this.loadedId));
+      const data = this.cfg.universes.find(uni => uni.id === this.loadedId);
+      this.saveLife(data);
       this.hasChanges = false;
       return;
     }
@@ -481,14 +482,22 @@ export class UniverseComponent implements OnInit {
             this.life.universe[yi + data.y + LIFE.o][xi + data.x + LIFE.o] = 1;
           }
         }));
-        this.drawCells();
-        this.hasChanges = false;
-        this.loadedId = id;
-        this.loadedName = this.cfg.universes.find(uni => uni.id === id).name;
+        this.processOriginInfo(id);
+        this.data.updateConfig(this.cfg);
         this.showLifeModal = false;
       },
       () => this.showLifeModal = false
     );
+  }
+
+  processOriginInfo(id: string): void {
+    const loadedUniverse = this.cfg.universes.find(uni => uni.id === id);
+    this.loadedName = loadedUniverse.name;
+    this.cfg.origin.x = loadedUniverse.oX;
+    this.cfg.origin.y = loadedUniverse.oY;
+    this.cfg.grid = GRIDS[loadedUniverse.oGrid];
+    this.hasChanges = false;
+    this.loadedId = id;
   }
 
   saveLife(data: UniverseModel): void {
@@ -524,13 +533,17 @@ export class UniverseComponent implements OnInit {
   }
 
   saveUniverse(data: UniverseModel): void {
+    data.oX = this.cfg.origin.x;
+    data.oY = this.cfg.origin.y;
+    data.oGrid = this.cfg.grid.size;
     for (let i = 0; i < this.cfg.universes.length; i++) {
       if (data.id === this.cfg.universes[i].id) {
-        this.cfg.universes[i] = data;
+        this.cfg.universes[i] = {...data};
+        this.data.updateConfig(this.cfg);
         return;
       }
     }
-    this.cfg.universes.push(data);
+    this.cfg.universes.push({...data});
     this.data.updateConfig(this.cfg);
   }
 

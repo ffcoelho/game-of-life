@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ConfigModel, ColorsModel } from 'src/app/models/config.model';
+import { ConfigModel, ColorsModel, THEMES } from 'src/app/models/config.model';
 
 @Component({
   selector: 'app-modal',
@@ -46,8 +46,11 @@ export class ModalComponent implements OnInit {
       id: [ null ],
       name: [ 'New Life', Validators.required ],
       pop: [ null ],
-      area: [ null ],
+      size: [ null ],
       lastUpdate: [ null ],
+      oX: [ null ],
+      oY: [ null ],
+      oGrid: [ null ],
     });
   }
 
@@ -95,34 +98,7 @@ export class ModalComponent implements OnInit {
   }
 
   resetColors(theme: number): void {
-    let colors: ColorsModel;
-    switch (theme) {
-      case 0:
-        colors = {
-          alive: '#a98f26',
-          dead: '#333333',
-          grid: '#404040',
-          lines: '#575757'
-        };
-        break;
-      case 1:
-        colors = {
-          alive: '#000000',
-          dead: '#ffffff',
-          grid: '#cccccc',
-          lines: '#919191'
-        };
-        break;
-      case 2:
-        colors = {
-          alive: '#2ddf3d',
-          dead: '#000000',
-          grid: '#242424',
-          lines: '#424242'
-        };
-        break;
-    }
-    this.modalForm.patchValue(colors);
+    this.modalForm.patchValue(THEMES[theme]);
     this.updatePreviewer();
   }
 

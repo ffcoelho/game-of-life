@@ -18,6 +18,9 @@ export interface UniverseModel {
   pop: number;
   size: [number, number];
   lastUpdate: number;
+  oX: number;
+  oY: number;
+  oGrid: number;
 }
 
 export interface ColorsModel {
@@ -55,3 +58,24 @@ export const LIFE = {
   x: 500,
   y: 380
 };
+
+export const THEMES = [
+  {
+    alive: '#a98f26',
+    dead: '#202020',
+    grid: '#424242',
+    lines: '#666666'
+  },
+  {
+    alive: '#000000',
+    dead: '#ffffff',
+    grid: '#cccccc',
+    lines: '#919191'
+  },
+  {
+    alive: '#2ddf3d',
+    dead: '#000000',
+    grid: '#2b2b2b',
+    lines: '#3d3d3d'
+  }
+];

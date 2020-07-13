@@ -135,10 +135,10 @@ export class DataService {
   private generateConfig(): ConfigModel {
     return {
       colors: {
-        alive: '#8bc34a',
-        dead: '#333333',
-        grid: '#404040',
-        lines: '#575757'
+        alive: '#a98f26',
+        dead: '#202020',
+        grid: '#424242',
+        lines: '#666666'
       },
       display: {
         lines: true,
