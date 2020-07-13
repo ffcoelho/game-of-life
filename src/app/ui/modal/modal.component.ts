@@ -144,6 +144,9 @@ export class ModalComponent implements OnInit {
     if (this.selected !== -1) {
       this.modalForm.patchValue(this.config.universes[this.selected]);
     }
+    if (this.modalForm.invalid) {
+      return;
+    }
     this.lifeSave.emit(this.modalForm.value);
   }
 

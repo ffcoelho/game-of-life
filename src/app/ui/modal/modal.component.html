@@ -7,6 +7,7 @@
     <div class="modal-body" *ngIf="type !== 'colors'">
       <div class="new-item" *ngIf="type === 'save'">
         <app-input type="text" [parentForm]="modalForm" controlName="name" maxLength="24" (click)="selectFile()"></app-input>
+        <span *ngIf="config.universes.length > 0">or choose one below to overwrite its data.</span>
       </div>
       <div class="list-header">
         <span>Name</span>
