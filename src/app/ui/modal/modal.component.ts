@@ -25,6 +25,11 @@ export class ModalComponent implements OnInit {
   modalForm: FormGroup;
   selected: number;
 
+  rleX: number;
+  rleY: number;
+  rleCode: string;
+  rlePop: number;
+
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
@@ -44,7 +49,7 @@ export class ModalComponent implements OnInit {
     }
     if (this.type === 'RLE') {
       this.modalForm = this.formBuilder.group({
-        rle: [ '' ]
+        rle: [ '', Validators.required ]
       });
       return;
     }
@@ -136,7 +141,53 @@ export class ModalComponent implements OnInit {
     this.lifeDelete.emit(idx);
   }
 
-  testClipboard(): void {
-    console.log(this.modalForm.get('rle').value.length);
+  splitAndPreValidateRle() {
+    if (this.modalForm.invalid) {
+      return false;
+    }
+    const rle: string[] = this.modalForm.get('rle').value.replace(/ /g, '').split(',');
+    if (rle[0].slice(0, 2) !== 'x=' || rle[1].slice(0, 2) !== 'y=') {
+      return false;
+    }
+    let onlyRle = rle[2];
+    if (rle[2].slice(0, 6).toLowerCase() === 'rule=') {
+      if (rle[2].slice(5, 11).toLowerCase() !== 'b3/s23') {
+        return false;
+      }
+      onlyRle = rle[2].slice(11);
+    }
   }
+
+
+
+  testClipboard(): void {
+    const rleInput: string[] = this.modalForm.get('rle').value.replace(/ /g, '').split(',');
+    const x = parseInt(rleInput[0].slice(2), 10);
+    const y = parseInt(rleInput[1].slice(2), 10);
+    const rle = rleInput[2].slice(11).split('$');
+    console.log(rle);
+    const decodedRle: string[] = [];
+    rle.forEach(code => {
+      let decoded = '';
+      let numString = '';
+      for (let i = 0; i < code.length; i++) {
+        if (/^[0-9]*$/.test(code.charAt(i))) {
+          numString = `${numString}${code.charAt(i)}`;
+        } else {
+          let parsedNum = 1;
+          if (numString.length > 0) {
+            parsedNum = parseInt(numString, 10);
+            numString = '';
+          }
+          for (let j = 0; j < parsedNum; j ++) {
+            decoded = `${decoded}${code.charAt(i) === '!' ? '' : (code.charAt(i) === 'o') ? '1' : '0'}`;
+          }
+        }
+      }
+      decodedRle.push(decoded);
+      decoded = '';
+    });
+    console.log(decodedRle);
+  }
+
 }
