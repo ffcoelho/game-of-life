@@ -10,14 +10,22 @@ import { ConfigModel } from 'src/app/models/config.model';
 })
 export class MenuComponent implements OnInit {
 
-  private playOn: boolean;
+  private menuMode: string;
   @Input()
-  set playing(playing: boolean) {
-    this.playOn = playing;
-    this.playingState(playing);
+  set mode(value: string) {
+    this.menuMode = value;
+    if (value === 'rle') {
+      this.rleState();
+      return;
+    }
+    if (value === 'playOn') {
+      this.playingState(true);
+    } else {
+      this.playingState(false);
+    }
   }
-  get playing(): boolean {
-    return this.playOn;
+  get mode(): string {
+    return this.menuMode;
   }
 
   @Input() config: ConfigModel;
@@ -90,11 +98,31 @@ export class MenuComponent implements OnInit {
     this.playback.emit(id);
   }
 
+  rleState(): void {
+    this.toolAction('draw');
+    this.menu.display.forEach(sel => sel.disabled = true);
+    this.menu.edit.forEach(sel => sel.disabled = true);
+    this.menu.edit[0].led = true;
+    this.menu.edit[0].disabled = false;
+    this.menu.edit[0].tooltip = 'Stop RLE';
+    this.menu.game.forEach(sel => sel.disabled = true);
+    this.menu.play.forEach(sel => sel.disabled = true);
+    this.menu.save.disabled = true;
+    this.menu.selector.forEach(sel => sel.disabled = true);
+    this.menu.tools.forEach(sel => sel.disabled = true);
+    this.menu.zoom.forEach(sel => sel.disabled = true);
+  }
+
   playingState(state: boolean): void {
     this.menu.display[0].disabled = state;
     this.menu.game.forEach(sel => sel.disabled = state);
+    this.menu.play[1].disabled = false;
     this.menu.play[1].led = state;
     this.menu.selector.forEach(sel => sel.disabled = state);
+    this.menu.edit[0].tooltip = 'Import/Export';
+    if (this.menu.mode === MenuMode.BUILD) {
+      this.toggleButtonsState();
+    }
   }
 
   toggleButtonsState(): void {

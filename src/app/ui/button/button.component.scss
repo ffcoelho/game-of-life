@@ -21,6 +21,10 @@
     }
     &.disabled {
       cursor: default;
+      color: $led-off-color;
+    }
+    &.led {
+      color: $led-on-color;
     }
   }
   .tooltip {

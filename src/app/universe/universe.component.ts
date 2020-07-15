@@ -3,6 +3,7 @@ import { DataService } from '../services/data.service';
 import { LifeService } from '../services/life.service';
 import { ConfigModel, PointModel, GRIDS, LIFE, UniverseModel, ColorsModel } from '../models/config.model';
 import { UniverseDataModel } from '../models/data.model';
+import { RLEModel } from '../models/menu.model';
 
 @Component({
   selector: 'app-universe',
@@ -24,7 +25,7 @@ export class UniverseComponent implements OnInit {
   private cellsCtx: CanvasRenderingContext2D;
 
   public cfg: ConfigModel;
-  public playing: boolean;
+  public gameState: string;
   public hasChanges: boolean;
   public loadedId: string;
   public loadedName: string;
@@ -38,6 +39,7 @@ export class UniverseComponent implements OnInit {
   public clickPanMode = false;
   public pan: PointModel = { x: 0, y: 0 };
   public tool: string;
+  public rle: RLEModel;
 
   public infoLeds: boolean;
   public timer: any;
@@ -216,7 +218,11 @@ export class UniverseComponent implements OnInit {
     ev.preventDefault();
     if (ev.buttons === 1) {
       if (this.tool === 'draw') {
-        this.toggleCell(ev);
+        if (this.gameState === 'rle') {
+          this.insertRle(ev);
+        } else {
+          this.toggleCell(ev);
+        }
         return;
       }
       if (this.tool === 'pan') {
@@ -226,6 +232,19 @@ export class UniverseComponent implements OnInit {
     } else if (ev.buttons === 4) {
       this.clickPan(ev);
     }
+  }
+
+  insertRle(ev: PointerEvent): void {
+    const uX = Math.round((ev.clientX - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x + LIFE.o;
+    const uY = Math.round((ev.clientY - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y + LIFE.o;
+    this.rle.code.forEach((line, lineIdx) => {
+      for (let i = 0; i < line.length; i++) {
+        this.life.universe[uY + lineIdx][uX + i] = line.charAt(i) === '1' ? 1 : 0;
+      }
+    });
+    this.life.setZeroState();
+    this.drawCells();
+    this.hasChanges = true;
   }
 
   clickPan(ev: PointerEvent): void {
@@ -348,6 +367,11 @@ export class UniverseComponent implements OnInit {
   }
 
   selectEdit(id: string): void {
+    if (id === 'RLE' && this.gameState === 'rle') {
+      this.gameState = 'playOff';
+      this.gameMode(false);
+      return;
+    }
     if (id === 'new') {
       if (!this.hasChanges) {
         this.newUniverse();
@@ -403,6 +427,12 @@ export class UniverseComponent implements OnInit {
     this.life.setZeroState();
   }
 
+  rleMode(rle: RLEModel): void {
+    this.rle = rle;
+    this.gameState = 'rle';
+    this.showLifeModal = false;
+  }
+
   playback(id: string): void {
     switch (id) {
       case 'speed': {
@@ -424,13 +454,13 @@ export class UniverseComponent implements OnInit {
         break;
       }
       case 'play': {
-        if (this.playing) {
+        if (this.gameState === 'playOn') {
           this.stopLoop();
           this.fps = null;
-          this.playing = false;
+          this.gameState = 'playOff';
         } else {
           this.startLoop();
-          this.playing = true;
+          this.gameState = 'playOn';
         }
         break;
       }

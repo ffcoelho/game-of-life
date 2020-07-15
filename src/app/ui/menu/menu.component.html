@@ -41,10 +41,10 @@
     </div>
     <div class="menu-separator"></div>
     <div class="menu-item-container">
-      <div class="menu-item" *ngIf="!playing">
+      <div class="menu-item" *ngIf="mode === 'playOff' || mode === 'rle'">
         <app-button [icon]="menu.play[0].icon" [led]="menu.play[0].led" [disabled]="menu.play[0].disabled" [tooltip]="menu.play[0].tooltip" (action)="gameAction(menu.play[0].actionId)"></app-button>
       </div>
-      <div class="menu-item" *ngIf="playing">
+      <div class="menu-item" *ngIf="mode === 'playOn'">
         <app-button [icon]="menu.play[1].icon" [led]="menu.play[1].led" [disabled]="menu.play[1].disabled" [tooltip]="menu.play[1].tooltip" (action)="gameAction(menu.play[1].actionId)"></app-button>
       </div>
     </div>

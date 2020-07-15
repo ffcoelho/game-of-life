@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConfigModel, ColorsModel, THEMES } from 'src/app/models/config.model';
+import { RLEModel } from 'src/app/models/menu.model';
 
 @Component({
   selector: 'app-modal',
@@ -18,6 +19,7 @@ export class ModalComponent implements OnInit {
 
   @Output() exit: EventEmitter<null> = new EventEmitter();
   @Output() colorsUpdate: EventEmitter<ColorsModel> = new EventEmitter();
+  @Output() lifeRle: EventEmitter<RLEModel> = new EventEmitter();
   @Output() lifeLoad: EventEmitter<string> = new EventEmitter();
   @Output() lifeSave: EventEmitter<string> = new EventEmitter();
   @Output() lifeDelete: EventEmitter<number> = new EventEmitter();
@@ -25,10 +27,7 @@ export class ModalComponent implements OnInit {
   modalForm: FormGroup;
   selected: number;
 
-  rleX: number;
-  rleY: number;
-  rleCode: string;
-  rlePop: number;
+  rle: RLEModel;
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -49,7 +48,7 @@ export class ModalComponent implements OnInit {
     }
     if (this.type === 'RLE') {
       this.modalForm = this.formBuilder.group({
-        rle: [ '', Validators.required ]
+        rle: [ '', Validators.minLength(0) ]
       });
       return;
     }
@@ -141,38 +140,71 @@ export class ModalComponent implements OnInit {
     this.lifeDelete.emit(idx);
   }
 
-  splitAndPreValidateRle() {
+  validateRleCodeAndProcess(): void {
     if (this.modalForm.invalid) {
-      return false;
+      return;
     }
-    const rle: string[] = this.modalForm.get('rle').value.replace(/ /g, '').split(',');
-    if (rle[0].slice(0, 2) !== 'x=' || rle[1].slice(0, 2) !== 'y=') {
-      return false;
+    const rleInput: string = this.modalForm.get('rle').value;
+    if (!this.validChars(rleInput)) {
+      this.modalForm.get('rle').setErrors({ minLength: true });
+      return;
     }
-    let onlyRle = rle[2];
-    if (rle[2].slice(0, 6).toLowerCase() === 'rule=') {
-      if (rle[2].slice(5, 11).toLowerCase() !== 'b3/s23') {
-        return false;
+    const rleEntries: string[] = rleInput.replace(/ /g, '').split(',');
+    if (!this.validEntries(rleEntries)) {
+      this.modalForm.get('rle').setErrors({ minLength: true });
+      return;
+    }
+    let code = rleEntries[2];
+    const x: number = parseInt(rleEntries[0].slice(2), 10);
+    const y: number = parseInt(rleEntries[1].slice(2), 10);
+    if (rleEntries[2].slice(0, 5).toLowerCase() === 'rule=') {
+      if (rleEntries[2].slice(5, 11).toLowerCase() !== 'b3/s23') {
+        this.modalForm.get('rle').setErrors({ required: true });
+        return;
       }
-      onlyRle = rle[2].slice(11);
+      code = rleEntries[2].slice(11);
     }
+    this.processCode(x, y, code);
   }
 
+  validChars(inputString: string): boolean {
+    const invalidChars: string = inputString.toLowerCase()
+      .replace(/ /g, '')
+      .replace(/,/g, '')
+      .replace('rule=b3/s23', '')
+      .replace('x=', '')
+      .replace('y=', '')
+      .replace(/b/g, '')
+      .replace(/o/g, '')
+      .replace(/\$/g, '')
+      .replace('!', '')
+      .replace(/^[0-9]*$/, '');
 
+    if (invalidChars.length > 0) {
+      return false;
+    }
+    return true;
+  }
 
-  testClipboard(): void {
-    const rleInput: string[] = this.modalForm.get('rle').value.replace(/ /g, '').split(',');
-    const x = parseInt(rleInput[0].slice(2), 10);
-    const y = parseInt(rleInput[1].slice(2), 10);
-    const rle = rleInput[2].slice(11).split('$');
-    console.log(rle);
+  validEntries(entries: string[]): boolean {
+    if (entries[0].slice(0, 2) !== 'x=' || entries[1].slice(0, 2) !== 'y=') {
+      return false;
+    }
+    if (!/^[0-9]*$/.test(entries[0].slice(2)) || !/^[0-9]*$/.test(entries[1].slice(2))) {
+      return false;
+    }
+    return true;
+  }
+
+  processCode(x: number, y: number, code: string): void {
+    const splitLines: string[] = code.split('$');
     const decodedRle: string[] = [];
-    rle.forEach(code => {
+    splitLines.forEach(line => {
       let decoded = '';
       let numString = '';
-      for (let i = 0; i < code.length; i++) {
-        if (/^[0-9]*$/.test(code.charAt(i))) {
-          numString = `${numString}${code.charAt(i)}`;
+      for (let i = 0; i < line.length; i++) {
+        if (/^[0-9]*$/.test(line.charAt(i))) {
+          numString = `${numString}${line.charAt(i)}`;
         } else {
           let parsedNum = 1;
           if (numString.length > 0) {
@@ -180,14 +212,36 @@ export class ModalComponent implements OnInit {
             numString = '';
           }
           for (let j = 0; j < parsedNum; j ++) {
-            decoded = `${decoded}${code.charAt(i) === '!' ? '' : (code.charAt(i) === 'o') ? '1' : '0'}`;
+            decoded = `${decoded}${line.charAt(i) === '!' ? '' : (line.charAt(i) === 'o') ? '1' : '0'}`;
           }
+        }
+      }
+      if (decoded.length < x) {
+        const zLen = decoded.length;
+        for (let i = zLen; i < x; i++) {
+          decoded = `${decoded}0`;
         }
       }
       decodedRle.push(decoded);
       decoded = '';
     });
-    console.log(decodedRle);
+    if (decodedRle.length > y) {
+      this.rle = null;
+      return;
+    }
+    decodedRle.forEach(line => {
+      if (line.length > x) {
+        this.rle = null;
+        return;
+      }
+    });
+    this.rle = {
+      x, y,
+      code: decodedRle
+    };
   }
 
+  startRle(): void {
+    this.lifeRle.emit(this.rle);
+  }
 }

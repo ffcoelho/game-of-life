@@ -20,7 +20,7 @@
   <div class="panel">
     <div class="menu">
       <app-menu
-        [playing]="playing"
+        [mode]="gameState"
         [config]="cfg"
         [disableQuickSave]="!loadedId || !hasChanges"
         [loadedName]="loadedName"
@@ -60,6 +60,7 @@
       [config]="cfg"
       (exit)="showLifeModal = false"
       (colorsUpdate)="updateColors($event)"
+      (lifeRle)="rleMode($event)"
       (lifeLoad)="loadLife($event)"
       (lifeSave)="saveLife($event)"
       (lifeDelete)="deleteLife($event)"

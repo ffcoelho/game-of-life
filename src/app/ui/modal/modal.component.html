@@ -29,7 +29,10 @@
       </div>
     </div>
     <div class="modal-body" *ngIf="type === 'RLE'">
-      <button (click)="testClipboard()">TEST</button>
+      <div>
+        <button (click)="validateRleCodeAndProcess()">TEST</button>&nbsp;
+        <button (click)="startRle()">GO</button>
+      </div>
       <app-input type="text" [parentForm]="modalForm" controlName="rle"></app-input>
     </div>
     <div class="modal-body" [ngClass]="{'hide': type !== 'colors', 'colors': type === 'colors'}">

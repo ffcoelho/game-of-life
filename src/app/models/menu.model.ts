@@ -20,6 +20,12 @@ interface MenuItemModel {
   tooltip: string;
 }
 
+export interface RLEModel {
+  x: number;
+  y: number;
+  code: string[];
+}
+
 export enum MenuMode {
   PLAY = 0,
   BUILD = 1
@@ -78,7 +84,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'new',
-      tooltip: 'New life'
+      tooltip: 'New'
     },
     {
       actionId: 'load',

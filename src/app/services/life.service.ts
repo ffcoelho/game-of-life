@@ -29,35 +29,6 @@ export class LifeService {
     for (let y = 0; y < LIFE.y; y++) {
       this.universe[y] = Array.from(this.nextGen[y]);
     }
-    this.clearLines();
-  }
-
-  clearLines(): void {
-    if (this.alt < 5) {
-      this.alt++;
-      return;
-    }
-    for (let i = 0; i < LIFE.x; i++) {
-      this.universe[1][i] = 0;
-      this.universe[2][i] = 0;
-      this.universe[3][i] = 0;
-      this.universe[4][i] = 0;
-      this.universe[LIFE.y - 2][i] = 0;
-      this.universe[LIFE.y - 3][i] = 0;
-      this.universe[LIFE.y - 4][i] = 0;
-      this.universe[LIFE.y - 5][i] = 0;
-    }
-    for (let i = 0; i < LIFE.y; i++) {
-      this.universe[i][1] = 0;
-      this.universe[i][2] = 0;
-      this.universe[i][3] = 0;
-      this.universe[i][4] = 0;
-      this.universe[i][LIFE.x - 2] = 0;
-      this.universe[i][LIFE.x - 3] = 0;
-      this.universe[i][LIFE.x - 4] = 0;
-      this.universe[i][LIFE.x - 5] = 0;
-    }
-    this.alt = 0;
   }
 
   checkCell(yU: number, xU: number, state: number): number {
