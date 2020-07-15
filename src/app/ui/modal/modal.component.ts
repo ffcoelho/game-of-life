@@ -140,7 +140,7 @@ export class ModalComponent implements OnInit {
     this.lifeDelete.emit(idx);
   }
 
-  validateRleCodeAndProcess(): void {
+  startRle(): void {
     if (this.modalForm.invalid) {
       return;
     }
@@ -164,7 +164,11 @@ export class ModalComponent implements OnInit {
       }
       code = rleEntries[2].slice(11);
     }
-    this.processCode(x, y, code);
+    if (!this.validCode(x, y, code)) {
+      this.modalForm.get('rle').setErrors({ minLength: true });
+      return;
+    }
+    this.lifeRle.emit(this.rle);
   }
 
   validChars(inputString: string): boolean {
@@ -196,7 +200,7 @@ export class ModalComponent implements OnInit {
     return true;
   }
 
-  processCode(x: number, y: number, code: string): void {
+  validCode(x: number, y: number, code: string): boolean {
     const splitLines: string[] = code.split('$');
     const decodedRle: string[] = [];
     splitLines.forEach(line => {
@@ -226,22 +230,20 @@ export class ModalComponent implements OnInit {
       decoded = '';
     });
     if (decodedRle.length > y) {
+      this.modalForm.get('rle').setErrors({ required: true });
       this.rle = null;
-      return;
+      return false;
     }
-    decodedRle.forEach(line => {
+    for (const line of decodedRle) {
       if (line.length > x) {
         this.rle = null;
-        return;
+        return false;
       }
-    });
+    }
     this.rle = {
       x, y,
       code: decodedRle
     };
-  }
-
-  startRle(): void {
-    this.lifeRle.emit(this.rle);
+    return true;
   }
 }

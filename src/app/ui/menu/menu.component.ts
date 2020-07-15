@@ -120,6 +120,7 @@ export class MenuComponent implements OnInit {
     this.menu.play[1].led = state;
     this.menu.selector.forEach(sel => sel.disabled = state);
     this.menu.edit[0].tooltip = 'Import/Export';
+    this.menu.edit[0].led = false;
     if (this.menu.mode === MenuMode.BUILD) {
       this.toggleButtonsState();
     }

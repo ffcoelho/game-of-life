@@ -1,7 +1,7 @@
 <div class="modal-container">
   <div class="modal-content">
     <div class="modal-header">
-      <span class="title">{{ type | titlecase }}</span>
+      <span class="title">{{ type === 'RLE' ? type : type | titlecase }}</span>
       <app-button icon="exit" (action)="exit.emit()"></app-button>
     </div>
     <div class="modal-body" *ngIf="type === 'load' || type === 'save'">
@@ -29,11 +29,10 @@
       </div>
     </div>
     <div class="modal-body" *ngIf="type === 'RLE'">
-      <div>
-        <button (click)="validateRleCodeAndProcess()">TEST</button>&nbsp;
-        <button (click)="startRle()">GO</button>
+      <div class="rle-form">
+        <app-input type="text" [parentForm]="modalForm" controlName="rle"></app-input>
+        <app-button icon="draw" (click)="startRle()"></app-button>
       </div>
-      <app-input type="text" [parentForm]="modalForm" controlName="rle"></app-input>
     </div>
     <div class="modal-body" [ngClass]="{'hide': type !== 'colors', 'colors': type === 'colors'}">
       <div class="control" [formGroup]="modalForm" *ngIf="type === 'colors'">

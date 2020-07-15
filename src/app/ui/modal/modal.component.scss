@@ -41,6 +41,12 @@
         font-family: monospace;
         font-size: 14px;
       }
+      .rle-form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 200px;
+      }
       .new-item {
         display: flex;
         justify-content: flex-start;
