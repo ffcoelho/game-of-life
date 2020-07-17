@@ -31,6 +31,9 @@
     <div class="modal-body" *ngIf="type === 'RLE'">
       <div class="rle-form">
         <app-input type="text" [parentForm]="modalForm" controlName="rle"></app-input>
+        <app-button icon="play" (click)="validateRleAndProcess()"></app-button>
+        <app-button icon="pause" (click)="rotatePattern()"></app-button>
+        <app-button icon="night" (click)="flipPatternY()"></app-button>
         <app-button icon="draw" (click)="startRle()"></app-button>
       </div>
     </div>

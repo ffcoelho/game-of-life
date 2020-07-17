@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ConfigModel, ColorsModel, THEMES } from 'src/app/models/config.model';
+import { ConfigModel, ColorsModel, THEMES, LIFE } from 'src/app/models/config.model';
 import { RLEModel } from 'src/app/models/menu.model';
 
 @Component({
@@ -140,7 +140,7 @@ export class ModalComponent implements OnInit {
     this.lifeDelete.emit(idx);
   }
 
-  startRle(): void {
+  validateRleAndProcess(): void {
     if (this.modalForm.invalid) {
       return;
     }
@@ -164,11 +164,10 @@ export class ModalComponent implements OnInit {
       }
       code = rleEntries[2].slice(11);
     }
-    if (!this.validCode(x, y, code)) {
+    if (!this.validCode(x, y, code) || this.rle.x > LIFE.x - 2 * LIFE.o || this.rle.y > LIFE.y - 2 * LIFE.o) {
       this.modalForm.get('rle').setErrors({ minLength: true });
       return;
     }
-    this.lifeRle.emit(this.rle);
   }
 
   validChars(inputString: string): boolean {
@@ -245,5 +244,62 @@ export class ModalComponent implements OnInit {
       code: decodedRle
     };
     return true;
+  }
+
+  rotatePattern(): void {
+    const pattern: RLEModel = {
+      x: this.rle.x,
+      y: this.rle.x,
+      code: this.rle.code
+    };
+    let rounds = 1;
+    if (pattern.x > LIFE.y - 2 * LIFE.o || pattern.y > LIFE.x - 2 * LIFE.o) {
+      rounds = 2;
+    }
+    for (let round = 0; round < rounds; round++) {
+      const rotatedPattern: string[] = Array.from({length: pattern.x}).map(v => '');
+      for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
+        for (let xi = 0; xi < pattern.x; xi++) {
+          rotatedPattern[xi] = `${rotatedPattern[xi]}${pattern.code[yi].charAt(xi)}`;
+        }
+      }
+      const aux = this.rle.x;
+      pattern.x = this.rle.y;
+      pattern.y = aux;
+      pattern.code = rotatedPattern;
+    }
+    this.rle = pattern;
+  }
+
+  flipPatternX(): void {
+    const pattern: RLEModel = {
+      x: this.rle.x,
+      y: this.rle.y,
+      code: Array.from({length: this.rle.y}).map(v => '')
+    };
+    for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
+      for (let xi = 0; xi < pattern.x; xi++) {
+        pattern.code[pattern.y - 1 - yi] = `${pattern.code[pattern.y - 1 - yi]}${this.rle.code[yi].charAt(xi)}`;
+      }
+    }
+    this.rle = pattern;
+  }
+
+  flipPatternY(): void {
+    const pattern: RLEModel = {
+      x: this.rle.x,
+      y: this.rle.y,
+      code: Array.from({length: this.rle.y}).map(v => '')
+    };
+    for (let xi = pattern.x - 1; xi >= 0 ; xi--) {
+      for (let yi = 0; yi < pattern.y; yi++) {
+        pattern.code[yi] = `${pattern.code[yi]}${this.rle.code[yi].charAt(xi)}`;
+      }
+    }
+    this.rle = pattern;
+  }
+
+  startRle(): void {
+    this.lifeRle.emit(this.rle);
   }
 }
