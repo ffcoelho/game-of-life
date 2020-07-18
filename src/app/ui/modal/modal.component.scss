@@ -52,16 +52,16 @@
           justify-content: center;
           align-items: center;
           width: calc(100% - 40px);
-          margin-bottom: 44px;
+          margin-bottom: 36px;
           padding: 0 20px;
           font-family: monospace;
           p {
             color: $led-dim-color;
             &.info {
-              font-size: 16px;
+              font-size: 12px;
             }
             &.eg {
-              margin: 7px 0;
+              margin: 14px 0;
               font-size: 11px;
               font-style: italic;
             }

@@ -349,6 +349,10 @@ export class ModalComponent implements OnInit {
     this.lifeRle.emit(this.rle);
   }
 
+  exportRle(): void {
+    return;
+  }
+
   initPreviewer(): void {
     this.previewer.nativeElement.width = 201;
     this.previewer.nativeElement.height = 201;
