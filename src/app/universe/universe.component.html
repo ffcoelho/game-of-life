@@ -58,6 +58,7 @@
     <app-modal
       [type]="modalType"
       [config]="cfg"
+      [exportRle]="rleCode"
       (exit)="showLifeModal = false"
       (colorsUpdate)="updateColors($event)"
       (lifeRle)="rleMode($event)"

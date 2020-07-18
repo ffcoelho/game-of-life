@@ -40,6 +40,7 @@ export class UniverseComponent implements OnInit {
   public pan: PointModel = { x: 0, y: 0 };
   public tool: string;
   public rle: RLEModel;
+  public rleCode: string;
 
   public infoLeds: boolean;
   public timer: any;
@@ -367,10 +368,13 @@ export class UniverseComponent implements OnInit {
   }
 
   selectEdit(id: string): void {
-    if (id === 'RLE' && this.gameState === 'rle') {
-      this.gameState = 'playOff';
-      this.gameMode(false);
-      return;
+    if (id === 'RLE') {
+      if (this.gameState === 'rle') {
+        this.gameState = 'playOff';
+        this.gameMode(false);
+        return;
+      }
+      this.generateRle();
     }
     if (id === 'new') {
       if (!this.hasChanges) {
@@ -528,6 +532,49 @@ export class UniverseComponent implements OnInit {
     this.cfg.grid = GRIDS[loadedUniverse.oGrid];
     this.hasChanges = false;
     this.loadedId = id;
+  }
+
+  generateRle(): void {
+    const b = this.getUniverseBorders();
+    const croppedGrid = Array.from({length: b[1] - b[0] + 1}).map(value => Array.from({length: b[3] - b[2] + 1}).map(v => 0));
+    for (let y = b[0]; y <= b[1] ; y++) {
+      for (let x = b[2]; x <= b[3]; x++) {
+        if (this.life.universe[y][x] === 1) {
+          croppedGrid[y - b[0]][x - b[2]] = 1;
+        }
+      }
+    }
+    let rle = `x = ${croppedGrid[0].length}, y = ${croppedGrid.length}, rule = B3/S23 `;
+    croppedGrid.forEach((line, yi) => {
+      let counter = 0;
+      let type = -1;
+      line.forEach((value, xi) => {
+        if (type === -1) {
+          type = value;
+          counter++;
+        } else if (type === value) {
+          counter++;
+        } else {
+          rle = `${rle}${counter > 1 ? counter : ''}${type === 1 ? 'o' : 'b'}`;
+          type = value;
+          counter = 1;
+        }
+        if (xi === line.length - 1 && yi === croppedGrid.length - 1) {
+          if (counter > 0) {
+            rle = `${rle}${counter > 1 ? counter : ''}${type === 1 ? 'o' : 'b'}`;
+          }
+          rle = `${rle}!`;
+          return;
+        }
+        if (xi === line.length - 1) {
+          if (counter > 0) {
+            rle = `${rle}${counter > 1 ? counter : ''}${type === 1 ? 'o' : 'b'}`;
+          }
+          rle = `${rle}$`;
+        }
+      });
+    });
+    this.rleCode = rle;
   }
 
   saveLife(data: UniverseModel): void {

@@ -16,6 +16,9 @@ export class ModalComponent implements OnInit {
 
   @Input() type: string;
   @Input() config: ConfigModel;
+  @Input() exportRle: string;
+  data: Blob;
+  url: string;
 
   @Output() exit: EventEmitter<null> = new EventEmitter();
   @Output() colorsUpdate: EventEmitter<ColorsModel> = new EventEmitter();
@@ -45,6 +48,11 @@ export class ModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initModal();
+    setTimeout(() => {
+      this.data = new Blob([this.exportRle], {type: 'text/plain'});
+      this. url = window.URL.createObjectURL(this.data);
+      (document.getElementById('share') as HTMLAnchorElement).href = this.url;
+    }, 25);
   }
 
   initModal(): void {
@@ -347,10 +355,6 @@ export class ModalComponent implements OnInit {
 
   startRle(): void {
     this.lifeRle.emit(this.rle);
-  }
-
-  exportRle(): void {
-    return;
   }
 
   initPreviewer(): void {
