@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConfigModel, ColorsModel, THEMES, LIFE } from 'src/app/models/config.model';
-import { RLEModel } from 'src/app/models/menu.model';
+import { RLEModel, RLEPreviewModel } from 'src/app/models/menu.model';
 
 @Component({
   selector: 'app-modal',
@@ -28,6 +28,18 @@ export class ModalComponent implements OnInit {
   selected: number;
 
   rle: RLEModel;
+  shouldValidate = true;
+  rlePreview: RLEPreviewModel = {
+    rleReady: false,
+    flippedX: false,
+    flippedY: false,
+    rotation: 0,
+    pre: {
+      x: 20,
+      y: 20,
+      code: this.startRlePreviewCode()
+    }
+  };
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -48,7 +60,21 @@ export class ModalComponent implements OnInit {
     }
     if (this.type === 'RLE') {
       this.modalForm = this.formBuilder.group({
-        rle: [ '', Validators.minLength(0) ]
+        rle: [ '' ]
+      });
+      this.initPreviewer();
+      this.modalForm.get('rle').valueChanges.subscribe(v => {
+        if (this.shouldValidate) {
+          this.shouldValidate = false;
+          this.rlePreview.rleReady = this.validateRleAndProcess();
+          if (this.rlePreview.rleReady) {
+            this.modalForm.get('rle').patchValue('Success');
+          } else {
+            this.modalForm.get('rle').patchValue('Error');
+          }
+        } else {
+          this.shouldValidate = true;
+        }
       });
       return;
     }
@@ -64,6 +90,31 @@ export class ModalComponent implements OnInit {
     });
   }
 
+  startRlePreviewCode(): string[] {
+    return [
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00100001001110011100',
+      '00100001001000010000',
+      '00100001001100011000',
+      '00100001001000010000',
+      '00111001001000011100',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000'
+    ];
+  }
+
   selectFile(idx?: number): void {
     if (idx == null) {
       this.selected = -1;
@@ -71,40 +122,6 @@ export class ModalComponent implements OnInit {
     }
     this.selected = idx;
     this.modalForm.get('name').patchValue('New Life');
-  }
-
-  initPreviewer(): void {
-    this.previewer.nativeElement.width = 201;
-    this.previewer.nativeElement.height = 201;
-    this.previewerCtx = this.previewer.nativeElement.getContext('2d');
-    this.updatePreviewer();
-  }
-
-  updatePreviewer(): void {
-    this.previewerCtx.fillStyle = this.modalForm.get('dead').value;
-    this.previewerCtx.fillRect(0, 0, 201, 201);
-    this.previewerCtx.fillStyle = this.modalForm.get('alive').value;
-    this.previewerCtx.fillRect(91, 91, 10, 10);
-    this.previewerCtx.fillRect(101, 101, 10, 10);
-    this.previewerCtx.fillRect(101, 111, 10, 10);
-    this.previewerCtx.fillRect(91, 111, 10, 10);
-    this.previewerCtx.fillRect(81, 111, 10, 10);
-    this.previewerCtx.fillStyle = this.modalForm.get('grid').value;
-    this.previewerCtx.fillRect(0, 0, 1, 200);
-    this.previewerCtx.fillRect(0, 0, 200, 1);
-    for (let i = 10; i <= 200; i += 10) {
-      this.previewerCtx.fillRect(i, 0, 1, 200);
-      this.previewerCtx.fillRect(0, i, 201, 1);
-    }
-    this.previewerCtx.fillStyle = this.modalForm.get('lines').value;
-    this.previewerCtx.fillRect(20, 0, 1, 200);
-    this.previewerCtx.fillRect(70, 0, 1, 200);
-    this.previewerCtx.fillRect(120, 0, 1, 200);
-    this.previewerCtx.fillRect(170, 0, 1, 200);
-    this.previewerCtx.fillRect(0, 30, 201, 1);
-    this.previewerCtx.fillRect(0, 80, 201, 1);
-    this.previewerCtx.fillRect(0, 130, 201, 1);
-    this.previewerCtx.fillRect(0, 180, 201, 1);
   }
 
   resetColors(theme: number): void {
@@ -140,34 +157,37 @@ export class ModalComponent implements OnInit {
     this.lifeDelete.emit(idx);
   }
 
-  validateRleAndProcess(): void {
+  validateRleAndProcess(): boolean {
+    this.rlePreview.flippedX = false;
+    this.rlePreview.flippedY = false;
+    this.rlePreview.rotation = 0;
+    this.rlePreview.pre.code = this.startRlePreviewCode();
+    this.updatePreviewer();
+
     if (this.modalForm.invalid) {
-      return;
+      return false;
     }
     const rleInput: string = this.modalForm.get('rle').value;
     if (!this.validChars(rleInput)) {
-      this.modalForm.get('rle').setErrors({ minLength: true });
-      return;
+      return false;
     }
-    const rleEntries: string[] = rleInput.replace(/ /g, '').split(',');
+    const rleEntries: string[] = rleInput.replace(/2\$/g, '$b$').replace(/ /g, '').split(',');
     if (!this.validEntries(rleEntries)) {
-      this.modalForm.get('rle').setErrors({ minLength: true });
-      return;
+      return false;
     }
     let code = rleEntries[2];
     const x: number = parseInt(rleEntries[0].slice(2), 10);
     const y: number = parseInt(rleEntries[1].slice(2), 10);
     if (rleEntries[2].slice(0, 5).toLowerCase() === 'rule=') {
       if (rleEntries[2].slice(5, 11).toLowerCase() !== 'b3/s23') {
-        this.modalForm.get('rle').setErrors({ required: true });
-        return;
+        return false;
       }
       code = rleEntries[2].slice(11);
     }
     if (!this.validCode(x, y, code) || this.rle.x > LIFE.x - 2 * LIFE.o || this.rle.y > LIFE.y - 2 * LIFE.o) {
-      this.modalForm.get('rle').setErrors({ minLength: true });
-      return;
+      return false;
     }
+    return true;
   }
 
   validChars(inputString: string): boolean {
@@ -229,7 +249,6 @@ export class ModalComponent implements OnInit {
       decoded = '';
     });
     if (decodedRle.length > y) {
-      this.modalForm.get('rle').setErrors({ required: true });
       this.rle = null;
       return false;
     }
@@ -249,7 +268,7 @@ export class ModalComponent implements OnInit {
   rotatePattern(): void {
     const pattern: RLEModel = {
       x: this.rle.x,
-      y: this.rle.x,
+      y: this.rle.y,
       code: this.rle.code
     };
     let rounds = 1;
@@ -258,17 +277,26 @@ export class ModalComponent implements OnInit {
     }
     for (let round = 0; round < rounds; round++) {
       const rotatedPattern: string[] = Array.from({length: pattern.x}).map(v => '');
+      const rotatedPreCode: string[] = Array.from({length: this.rlePreview.pre.x}).map(v => '');
       for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
         for (let xi = 0; xi < pattern.x; xi++) {
           rotatedPattern[xi] = `${rotatedPattern[xi]}${pattern.code[yi].charAt(xi)}`;
+        }
+      }
+      for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
+        for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
+          rotatedPreCode[xi] = `${rotatedPreCode[xi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
         }
       }
       const aux = this.rle.x;
       pattern.x = this.rle.y;
       pattern.y = aux;
       pattern.code = rotatedPattern;
+      this.rlePreview.pre.code = rotatedPreCode;
+      this.rlePreview.rotation = this.rlePreview.rotation === 3 ? 0 : this.rlePreview.rotation++;
     }
     this.rle = pattern;
+    this.updatePreviewer();
   }
 
   flipPatternX(): void {
@@ -277,12 +305,21 @@ export class ModalComponent implements OnInit {
       y: this.rle.y,
       code: Array.from({length: this.rle.y}).map(v => '')
     };
+    const preCode = Array.from({length: this.rlePreview.pre.y}).map(v => '');
     for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
       for (let xi = 0; xi < pattern.x; xi++) {
         pattern.code[pattern.y - 1 - yi] = `${pattern.code[pattern.y - 1 - yi]}${this.rle.code[yi].charAt(xi)}`;
       }
     }
+    for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
+      for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
+        preCode[this.rlePreview.pre.y - 1 - yi] = `${preCode[this.rlePreview.pre.y - 1 - yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
+      }
+    }
     this.rle = pattern;
+    this.rlePreview.pre.code = preCode;
+    this.rlePreview.flippedX = !this.rlePreview.flippedX;
+    this.updatePreviewer();
   }
 
   flipPatternY(): void {
@@ -291,15 +328,95 @@ export class ModalComponent implements OnInit {
       y: this.rle.y,
       code: Array.from({length: this.rle.y}).map(v => '')
     };
+    const preCode = Array.from({length: this.rlePreview.pre.y}).map(v => '');
     for (let xi = pattern.x - 1; xi >= 0 ; xi--) {
       for (let yi = 0; yi < pattern.y; yi++) {
         pattern.code[yi] = `${pattern.code[yi]}${this.rle.code[yi].charAt(xi)}`;
       }
     }
+    for (let xi = this.rlePreview.pre.x - 1; xi >= 0 ; xi--) {
+      for (let yi = 0; yi < this.rlePreview.pre.y; yi++) {
+        preCode[yi] = `${preCode[yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
+      }
+    }
     this.rle = pattern;
+    this.rlePreview.pre.code = preCode;
+    this.rlePreview.flippedY = !this.rlePreview.flippedY;
+    this.updatePreviewer();
   }
 
   startRle(): void {
     this.lifeRle.emit(this.rle);
+  }
+
+  initPreviewer(): void {
+    this.previewer.nativeElement.width = 201;
+    this.previewer.nativeElement.height = 201;
+    this.previewerCtx = this.previewer.nativeElement.getContext('2d');
+    this.updatePreviewer();
+  }
+
+  updatePreviewer(): void {
+    if (this.type !== 'RLE') {
+      this.drawColorPreviewer();
+      return;
+    }
+    this.drawRLEPreviewer();
+  }
+
+  drawRLEPreviewer(): void {
+    this.previewerCtx.fillStyle = this.config.colors.dead;
+    this.previewerCtx.fillRect(0, 0, 201, 201);
+    this.previewerCtx.fillStyle = this.config.colors.alive;
+    for (let yi = 0; yi < this.rlePreview.pre.y; yi++) {
+      for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
+        if (this.rlePreview.pre.code[yi].charAt(xi) === '1') {
+          this.previewerCtx.fillRect(xi * 10 + 1, yi * 10 + 1, 10, 10);
+        }
+      }
+    }
+    this.previewerCtx.fillStyle = this.config.colors.grid;
+    this.previewerCtx.fillRect(0, 0, 1, 200);
+    this.previewerCtx.fillRect(0, 0, 200, 1);
+    for (let i = 10; i <= 200; i += 10) {
+      this.previewerCtx.fillRect(i, 0, 1, 200);
+      this.previewerCtx.fillRect(0, i, 201, 1);
+    }
+    this.previewerCtx.fillStyle = this.config.colors.lines;
+    this.previewerCtx.fillRect(20, 0, 1, 200);
+    this.previewerCtx.fillRect(70, 0, 1, 200);
+    this.previewerCtx.fillRect(120, 0, 1, 200);
+    this.previewerCtx.fillRect(170, 0, 1, 200);
+    this.previewerCtx.fillRect(0, 30, 201, 1);
+    this.previewerCtx.fillRect(0, 80, 201, 1);
+    this.previewerCtx.fillRect(0, 130, 201, 1);
+    this.previewerCtx.fillRect(0, 180, 201, 1);
+  }
+
+  drawColorPreviewer(): void {
+    this.previewerCtx.fillStyle = this.modalForm.get('dead').value;
+    this.previewerCtx.fillRect(0, 0, 201, 201);
+    this.previewerCtx.fillStyle = this.modalForm.get('alive').value;
+    this.previewerCtx.fillRect(91, 91, 10, 10);
+    this.previewerCtx.fillRect(101, 101, 10, 10);
+    this.previewerCtx.fillRect(101, 111, 10, 10);
+    this.previewerCtx.fillRect(91, 111, 10, 10);
+    this.previewerCtx.fillRect(81, 111, 10, 10);
+    this.previewerCtx.fillStyle = this.modalForm.get('grid').value;
+    this.previewerCtx.fillRect(0, 0, 1, 200);
+    this.previewerCtx.fillRect(0, 0, 200, 1);
+    for (let i = 10; i <= 200; i += 10) {
+      this.previewerCtx.fillRect(i, 0, 1, 200);
+      this.previewerCtx.fillRect(0, i, 201, 1);
+    }
+    this.previewerCtx.fillStyle = this.modalForm.get('lines').value;
+    this.previewerCtx.fillRect(20, 0, 1, 200);
+    this.previewerCtx.fillRect(70, 0, 1, 200);
+    this.previewerCtx.fillRect(120, 0, 1, 200);
+    this.previewerCtx.fillRect(170, 0, 1, 200);
+    this.previewerCtx.fillRect(0, 30, 201, 1);
+    this.previewerCtx.fillRect(0, 80, 201, 1);
+    this.previewerCtx.fillRect(0, 130, 201, 1);
+    this.previewerCtx.fillRect(0, 180, 201, 1);
   }
 }

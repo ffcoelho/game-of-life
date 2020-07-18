@@ -26,6 +26,19 @@ export interface RLEModel {
   code: string[];
 }
 
+export interface RLEPatternModel {
+  name: string;
+  rle: RLEModel;
+}
+
+export interface RLEPreviewModel {
+  rleReady: boolean;
+  flippedX: boolean;
+  flippedY: boolean;
+  rotation: number;
+  pre: RLEModel;
+}
+
 export enum MenuMode {
   PLAY = 0,
   BUILD = 1
@@ -179,3 +192,35 @@ export const MENU: MenuModel = {
   ],
   mode: MenuMode.BUILD
 };
+
+export const PATTERNS: RLEPatternModel[] = [
+  {
+    name: '',
+    rle: {
+      x: 20,
+      y: 20,
+      code: [
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00100001001110011100',
+        '00100001001000010000',
+        '00100001001100011000',
+        '00100001001000010000',
+        '00111001001000011100',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000',
+        '00000000000000000000'
+      ]
+    }
+  }
+];

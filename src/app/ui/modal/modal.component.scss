@@ -41,11 +41,75 @@
         font-family: monospace;
         font-size: 14px;
       }
-      .rle-form {
+      .rle {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
-        width: 200px;
+        width: 100%;
+        .rle-form {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: calc(100% - 40px);
+          margin-bottom: 44px;
+          padding: 0 20px;
+          font-family: monospace;
+          p {
+            color: $led-dim-color;
+            &.info {
+              font-size: 16px;
+            }
+            &.eg {
+              margin: 7px 0;
+              font-size: 11px;
+              font-style: italic;
+            }
+          }
+          span {
+            font-size: 20px;
+            color: $led-off-color;
+          }
+          app-input {
+            width: 52px;
+          }
+          app-button {
+            margin-top: 2px;
+            &:nth-of-type(1) {
+              margin-left: 12px;
+            }
+            &:nth-of-type(4) {
+              margin-left: 36px;
+            }
+          }
+          .rotated {
+            transform: rotate(90deg);
+          }
+          &.mini-header {
+            justify-content: flex-start;
+            margin-bottom: 7px;
+            p {
+              font-size: 12px;
+              &:nth-of-type(1) {
+                margin-left: 38px
+              }
+              &:nth-of-type(2) {
+                margin-left: 58px
+              }
+              &:nth-of-type(3) {
+                margin-left: 65px
+              }
+            }
+          }
+          &.column {
+            flex-direction: column;
+          }
+          &.view {
+            width: 20px;
+            margin: 14px 0;
+            padding: 0;
+          }
+        }
       }
       .new-item {
         display: flex;
@@ -179,7 +243,7 @@
       &.hide {
         display: none;
       }
-      &.colors {
+      &.row {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
