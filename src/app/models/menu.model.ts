@@ -97,7 +97,7 @@ export const MENU: MenuModel = {
       disabled: false,
       led: false,
       icon: 'new',
-      tooltip: 'New'
+      tooltip: 'New Pattern'
     },
     {
       actionId: 'load',

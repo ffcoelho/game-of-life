@@ -16,7 +16,7 @@ export class ModalComponent implements OnInit {
 
   @Input() type: string;
   @Input() config: ConfigModel;
-  @Input() exportRle: string;
+  @Input() exportRle: any;
   data: Blob;
   url: string;
 
@@ -49,10 +49,13 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this.initModal();
     setTimeout(() => {
-      this.data = new Blob([this.exportRle], {type: 'text/plain'});
-      this. url = window.URL.createObjectURL(this.data);
-      (document.getElementById('share') as HTMLAnchorElement).href = this.url;
-    }, 25);
+      if (this.type === 'RLE') {
+        this.data = new Blob([this.exportRle.code], {type: 'text/plain'});
+        this. url = window.URL.createObjectURL(this.data);
+        (document.getElementById('downloadRle') as HTMLAnchorElement).href = this.url;
+        (document.getElementById('downloadTxt') as HTMLAnchorElement).href = this.url;
+      }
+    });
   }
 
   initModal(): void {
@@ -78,8 +81,10 @@ export class ModalComponent implements OnInit {
           if (this.rlePreview.rleReady) {
             this.modalForm.get('rle').patchValue('Success');
           } else {
+            this.rle = null;
             this.modalForm.get('rle').patchValue('Error');
           }
+          this.updatePreviewer();
         } else {
           this.shouldValidate = true;
         }
@@ -88,7 +93,7 @@ export class ModalComponent implements OnInit {
     }
     this.modalForm = this.formBuilder.group({
       id: [ null ],
-      name: [ 'New Life', Validators.required ],
+      name: [ 'New Pattern', Validators.required ],
       pop: [ null ],
       size: [ null ],
       lastUpdate: [ null ],
@@ -257,12 +262,10 @@ export class ModalComponent implements OnInit {
       decoded = '';
     });
     if (decodedRle.length > y) {
-      this.rle = null;
       return false;
     }
     for (const line of decodedRle) {
       if (line.length > x) {
-        this.rle = null;
         return false;
       }
     }
@@ -279,13 +282,23 @@ export class ModalComponent implements OnInit {
       y: this.rle.y,
       code: this.rle.code
     };
-    let rounds = 1;
+    const rotatedPattern: string[] = Array.from({length: pattern.x}).map(v => '');
+    const rotatedPreCode: string[] = Array.from({length: this.rlePreview.pre.x}).map(v => '');
     if (pattern.x > LIFE.y - 2 * LIFE.o || pattern.y > LIFE.x - 2 * LIFE.o) {
-      rounds = 2;
-    }
-    for (let round = 0; round < rounds; round++) {
-      const rotatedPattern: string[] = Array.from({length: pattern.x}).map(v => '');
-      const rotatedPreCode: string[] = Array.from({length: this.rlePreview.pre.x}).map(v => '');
+      for (let xi = pattern.x - 1; xi >= 0 ; xi--) {
+        for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
+          rotatedPattern[pattern.y - 1 - yi] = `${rotatedPattern[pattern.y - 1 - yi]}${pattern.code[yi].charAt(xi)}`;
+        }
+      }
+      for (let xi = this.rlePreview.pre.x - 1; xi >= 0 ; xi--) {
+        for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
+          rotatedPreCode[this.rlePreview.pre.y - 1 - yi] = `${rotatedPreCode[this.rlePreview.pre.y - 1 - yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
+        }
+      }
+      pattern.code = rotatedPattern;
+      this.rlePreview.pre.code = rotatedPreCode;
+      this.rlePreview.rotation = this.rlePreview.rotation === 3 ? 1 : this.rlePreview.rotation === 2 ? 0 : this.rlePreview.rotation += 2;
+    } else {
       for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
         for (let xi = 0; xi < pattern.x; xi++) {
           rotatedPattern[xi] = `${rotatedPattern[xi]}${pattern.code[yi].charAt(xi)}`;
@@ -375,11 +388,13 @@ export class ModalComponent implements OnInit {
   drawRLEPreviewer(): void {
     this.previewerCtx.fillStyle = this.config.colors.dead;
     this.previewerCtx.fillRect(0, 0, 201, 201);
-    this.previewerCtx.fillStyle = this.config.colors.alive;
-    for (let yi = 0; yi < this.rlePreview.pre.y; yi++) {
-      for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
-        if (this.rlePreview.pre.code[yi].charAt(xi) === '1') {
-          this.previewerCtx.fillRect(xi * 10 + 1, yi * 10 + 1, 10, 10);
+    if (this.rle) {
+      this.previewerCtx.fillStyle = this.config.colors.alive;
+      for (let yi = 0; yi < this.rlePreview.pre.y; yi++) {
+        for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
+          if (this.rlePreview.pre.code[yi].charAt(xi) === '1') {
+            this.previewerCtx.fillRect(xi * 10 + 1, yi * 10 + 1, 10, 10);
+          }
         }
       }
     }

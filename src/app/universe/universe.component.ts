@@ -40,7 +40,7 @@ export class UniverseComponent implements OnInit {
   public pan: PointModel = { x: 0, y: 0 };
   public tool: string;
   public rle: RLEModel;
-  public rleCode: string;
+  public rleExport = { name: '', code: '' };
 
   public infoLeds: boolean;
   public timer: any;
@@ -574,7 +574,10 @@ export class UniverseComponent implements OnInit {
         }
       });
     });
-    this.rleCode = rle;
+    this.rleExport = {
+      name: this.loadedName ? this.loadedName : 'New Pattern',
+      code: rle
+    };
   }
 
   saveLife(data: UniverseModel): void {

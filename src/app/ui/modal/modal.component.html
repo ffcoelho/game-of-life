@@ -1,7 +1,7 @@
 <div class="modal-container">
   <div class="modal-content">
     <div class="modal-header">
-      <span class="title">{{ type === 'RLE' ? type : type | titlecase }}</span>
+      <span class="title">{{ type === 'RLE' ? type : type | titlecase }}{{ type === 'save' ? ' as' : '' }}</span>
       <app-button icon="exit" (action)="exit.emit()"></app-button>
     </div>
     <div class="modal-body" *ngIf="type === 'load' || type === 'save'">
@@ -17,7 +17,7 @@
       </div>
       <div class="item-list" [ngClass]="{'load-h': type === 'load'}">
         <div class="no-item" *ngIf="config.universes.length === 0">
-          <p>No Life</p>
+          <p>No Patterns</p>
         </div>
         <div class="item" [ngClass]="{'highlight': selected === uniIdx}" (click)="selectFile(uniIdx)" *ngFor="let uni of config.universes; let uniIdx = index">
           <p class="name">{{ uni.name }}</p>
@@ -49,9 +49,9 @@
         <div class="form-control">
           <p>Themes</p>
           <div class="theme-list">
-            <app-button icon="night" (click)="resetColors(0)" tooltip="Dark"></app-button>
-            <app-button icon="contrast" (click)="resetColors(1)" tooltip="B&W"></app-button>
-            <app-button icon="translate" (click)="resetColors(2)" tooltip="Matrix"></app-button>
+            <app-button icon="night" (click)="resetColors(0)"></app-button>
+            <app-button icon="contrast" (click)="resetColors(1)"></app-button>
+            <app-button icon="translate" (click)="resetColors(2)"></app-button>
           </div>
         </div>
       </div>
@@ -73,8 +73,9 @@
           <app-button icon="draw" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="startRle()"></app-button>
         </div>
         <div class="rle-form mini-header">
-          <p>Export pattern RLE:</p>
-          <a id="share" download="pattern-rle.txt">download</a>
+          <p>Export {{ exportRle.name }}:</p>
+          <a id="downloadRle" download="{{ exportRle.name }}.rle">RLE</a>
+          <a id="downloadTxt" download="{{ exportRle.name }}.txt">TXT</a>
         </div>
       </div>
       <div class="preview">
