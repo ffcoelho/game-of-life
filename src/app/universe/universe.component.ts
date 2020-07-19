@@ -544,7 +544,7 @@ export class UniverseComponent implements OnInit {
         }
       }
     }
-    let rle = `x = ${croppedGrid[0].length}, y = ${croppedGrid.length}, rule = B3/S23 `;
+    let rle = '';
     croppedGrid.forEach((line, yi) => {
       let counter = 0;
       let type = -1;
@@ -574,6 +574,11 @@ export class UniverseComponent implements OnInit {
         }
       });
     });
+    if (rle === 'b!') {
+      this.rleExport = null;
+      return;
+    }
+    rle = `#N ${this.loadedName ? this.loadedName : 'New Pattern'}\nx = ${croppedGrid[0].length}, y = ${croppedGrid.length}, rule = B3/S23\n${rle}`;
     this.rleExport = {
       name: this.loadedName ? this.loadedName : 'New Pattern',
       code: rle
@@ -683,5 +688,9 @@ export class UniverseComponent implements OnInit {
       }
     }
     return borders;
+  }
+
+  updateStartScreenCfg(show: boolean): void {
+    console.log(show);
   }
 }

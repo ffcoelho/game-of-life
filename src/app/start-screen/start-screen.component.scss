@@ -1,0 +1,32 @@
+@import '../../assets/styles/variables';
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-top: 1px solid $led-dim-color;
+  border-bottom: 1px solid $led-dim-color;
+  font-family: monospace;
+  font-size: 14px;
+  color: $led-dim-color;
+  a, a:visited {
+    text-decoration: none;
+    color: $led-dim-color;
+  }
+  .header {
+    margin-top: 20px;
+    span {
+      margin-right: 8px;
+      font-size: 24px;
+    }
+  }
+  .section {
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+
+

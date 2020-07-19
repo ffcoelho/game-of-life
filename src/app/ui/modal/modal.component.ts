@@ -49,7 +49,7 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this.initModal();
     setTimeout(() => {
-      if (this.type === 'RLE') {
+      if (this.type === 'RLE' && this.exportRle) {
         this.data = new Blob([this.exportRle.code], {type: 'text/plain'});
         this. url = window.URL.createObjectURL(this.data);
         (document.getElementById('downloadRle') as HTMLAnchorElement).href = this.url;
@@ -101,31 +101,6 @@ export class ModalComponent implements OnInit {
       oY: [ null ],
       oGrid: [ null ],
     });
-  }
-
-  startRlePreviewCode(): string[] {
-    return [
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00100001001110011100',
-      '00100001001000010000',
-      '00100001001100011000',
-      '00100001001000010000',
-      '00111001001000011100',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000',
-      '00000000000000000000'
-    ];
   }
 
   selectFile(idx?: number): void {
@@ -276,50 +251,6 @@ export class ModalComponent implements OnInit {
     return true;
   }
 
-  rotatePattern(): void {
-    const pattern: RLEModel = {
-      x: this.rle.x,
-      y: this.rle.y,
-      code: this.rle.code
-    };
-    const rotatedPattern: string[] = Array.from({length: pattern.x}).map(v => '');
-    const rotatedPreCode: string[] = Array.from({length: this.rlePreview.pre.x}).map(v => '');
-    if (pattern.x > LIFE.y - 2 * LIFE.o || pattern.y > LIFE.x - 2 * LIFE.o) {
-      for (let xi = pattern.x - 1; xi >= 0 ; xi--) {
-        for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
-          rotatedPattern[pattern.y - 1 - yi] = `${rotatedPattern[pattern.y - 1 - yi]}${pattern.code[yi].charAt(xi)}`;
-        }
-      }
-      for (let xi = this.rlePreview.pre.x - 1; xi >= 0 ; xi--) {
-        for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
-          rotatedPreCode[this.rlePreview.pre.y - 1 - yi] = `${rotatedPreCode[this.rlePreview.pre.y - 1 - yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
-        }
-      }
-      pattern.code = rotatedPattern;
-      this.rlePreview.pre.code = rotatedPreCode;
-      this.rlePreview.rotation = this.rlePreview.rotation === 3 ? 1 : this.rlePreview.rotation === 2 ? 0 : this.rlePreview.rotation += 2;
-    } else {
-      for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
-        for (let xi = 0; xi < pattern.x; xi++) {
-          rotatedPattern[xi] = `${rotatedPattern[xi]}${pattern.code[yi].charAt(xi)}`;
-        }
-      }
-      for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
-        for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
-          rotatedPreCode[xi] = `${rotatedPreCode[xi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
-        }
-      }
-      const aux = this.rle.x;
-      pattern.x = this.rle.y;
-      pattern.y = aux;
-      pattern.code = rotatedPattern;
-      this.rlePreview.pre.code = rotatedPreCode;
-      this.rlePreview.rotation = this.rlePreview.rotation === 3 ? 0 : this.rlePreview.rotation++;
-    }
-    this.rle = pattern;
-    this.updatePreviewer();
-  }
-
   flipPatternX(): void {
     const pattern: RLEModel = {
       x: this.rle.x,
@@ -329,12 +260,12 @@ export class ModalComponent implements OnInit {
     const preCode = Array.from({length: this.rlePreview.pre.y}).map(v => '');
     for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
       for (let xi = 0; xi < pattern.x; xi++) {
-        pattern.code[pattern.y - 1 - yi] = `${pattern.code[pattern.y - 1 - yi]}${this.rle.code[yi].charAt(xi)}`;
+        pattern.code[pattern.y - yi] = `${pattern.code[pattern.y - yi]}${this.rle.code[yi].charAt(xi)}`;
       }
     }
     for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
       for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
-        preCode[this.rlePreview.pre.y - 1 - yi] = `${preCode[this.rlePreview.pre.y - 1 - yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
+        preCode[this.rlePreview.pre.y - yi] = `${preCode[this.rlePreview.pre.y - yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
       }
     }
     this.rle = pattern;
@@ -441,5 +372,30 @@ export class ModalComponent implements OnInit {
     this.previewerCtx.fillRect(0, 80, 201, 1);
     this.previewerCtx.fillRect(0, 130, 201, 1);
     this.previewerCtx.fillRect(0, 180, 201, 1);
+  }
+
+  startRlePreviewCode(): string[] {
+    return [
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00100001001110011100',
+      '00100001001000010000',
+      '00100001001100011000',
+      '00100001001000010000',
+      '00111001001000011100',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000',
+      '00000000000000000000'
+    ];
   }
 }

@@ -110,6 +110,22 @@
   }
 }
 
+.start-screen {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 1040px;
+  height: 840px;
+  background-color: #0d0d0d;
+  .content {
+    width: 980px;
+    height: 720px;
+  }
+}
+
 @keyframes fade-in {
   0% {
     top: -25px;

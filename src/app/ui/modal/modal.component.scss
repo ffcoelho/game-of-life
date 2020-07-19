@@ -28,6 +28,23 @@
       .title {
         font-family: monospace;
         font-size: 16px;
+        color: $led-dim-color;
+        a, a:visited {
+          color: $led-dim-color;
+          text-decoration: none;
+          &.help-link {
+            border: 1px solid $led-off-color;
+            border-radius: 50%;
+            padding: 0 4px;
+            font-size: 12px;
+            color: $led-off-color;
+            margin-bottom: 4px;
+            &:hover {
+              border: 1px solid $led-dim-color;
+              color: $led-dim-color;
+            }
+          }
+        }
       }
     }
     .modal-body {
@@ -39,36 +56,33 @@
       height: 280px;
       p {
         font-family: monospace;
-        font-size: 14px;
       }
       .rle {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        width: 100%;
+        width: 328px;
         .rle-form {
           display: flex;
           justify-content: center;
           align-items: center;
           width: calc(100% - 40px);
-          margin-bottom: 36px;
+          margin-bottom: 12px;
           padding: 0 20px;
           font-family: monospace;
+          a, a:visited {
+            color: $led-dim-color;
+          }
           p {
             color: $led-dim-color;
             &.info {
               font-size: 12px;
             }
-            &.eg {
-              margin: 14px 0;
-              font-size: 11px;
-              font-style: italic;
-            }
           }
           span {
-            font-size: 20px;
-            color: $led-off-color;
+            font-size: 12px;
+            color: $led-dim-color;
           }
           app-input {
             width: 52px;
@@ -76,10 +90,23 @@
           app-button {
             margin-top: 2px;
             &:nth-of-type(1) {
+              margin-left: 24px;
+            }
+            &:nth-of-type(2) {
               margin-left: 36px;
             }
-            &:nth-of-type(4) {
-              margin-left: 36px;
+          }
+          .links {
+            margin-top: 14px;
+            a {
+              margin-left: 4px;
+              font-family: monospace;
+              font-size: 12px;
+              color: $led-dim-color;
+            }
+            span {
+              color: $led-dim-color;
+              margin-right: 12px;
             }
           }
           .rotated {
@@ -88,27 +115,51 @@
           &.mini-header {
             justify-content: flex-start;
             margin-bottom: 7px;
-            a {
-              margin-left: 4px;
-              font-family: monospace;
-              font-size: 12px;
-              color: $led-dim-color;
-            }
             p {
               font-size: 12px;
               &:nth-of-type(1) {
-                margin-left: 25px
+                margin-left: 42px
               }
               &:nth-of-type(2) {
-                margin-left: 84px
+                margin-left: 45px
               }
               &:nth-of-type(3) {
-                margin-left: 65px
+                margin-left: 51px
               }
             }
           }
           &.column {
             flex-direction: column;
+            padding-top: 10px;
+            border-top: 1px solid $led-dim-color;
+            p {
+              font-style: 14px;
+            }
+            span {
+              margin-top: 10px;
+              font-style: italic;
+              color: $led-off-color;
+            }
+            &.no-b-t {
+              padding-top: 0;
+              border: none;
+            }
+          }
+          &.eg {
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            font-size: 11px;
+            font-style: italic;
+            p {
+              &:nth-of-type(1) {
+                margin-left: 42px;
+              }
+              &:nth-of-type(2) {
+                margin-top: 3px;
+                margin-left: 96px;
+              }
+            }
           }
           &.view {
             width: 20px;
@@ -219,6 +270,9 @@
           align-items: center;
           width: 80px;
           height: 40px;
+          font-family: monospace;
+          font-style: 14px;
+          color: $led-dim-color;
           input {
             cursor: pointer;
           }
@@ -244,7 +298,6 @@
         width: 201px;
         height: 201px;
         margin-right: 36px;
-        background-color: rgba(0,0,100,0.2);
       }
       &.hide {
         display: none;

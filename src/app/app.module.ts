@@ -10,6 +10,7 @@ import { InputComponent } from './ui/input/input.component';
 import { ButtonComponent } from './ui/button/button.component';
 import { ModalComponent } from './ui/modal/modal.component';
 import { PopupComponent } from './ui/popup/popup.component';
+import { StartScreenComponent } from './start-screen/start-screen.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { PopupComponent } from './ui/popup/popup.component';
     InputComponent,
     ButtonComponent,
     ModalComponent,
-    PopupComponent
+    PopupComponent,
+    StartScreenComponent
   ],
   imports: [
     BrowserModule,

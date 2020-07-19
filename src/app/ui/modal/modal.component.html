@@ -1,7 +1,10 @@
 <div class="modal-container">
   <div class="modal-content">
     <div class="modal-header">
-      <span class="title">{{ type === 'RLE' ? type : type | titlecase }}{{ type === 'save' ? ' as' : '' }}</span>
+      <span class="title">
+        {{ type === 'RLE' ? type + ' - Import/Export ' : type | titlecase }}{{ type === 'save' ? ' as' : '' }}
+        <a class="help-link" href="https://www.conwaylife.com/wiki/Run_Length_Encoded" target="_blank" title="LifeWiki - Run Length Encoded">?</a>
+      </span>
       <app-button icon="exit" (action)="exit.emit()"></app-button>
     </div>
     <div class="modal-body" *ngIf="type === 'load' || type === 'save'">
@@ -50,32 +53,41 @@
           <p>Themes</p>
           <div class="theme-list">
             <app-button icon="night" (click)="resetColors(0)"></app-button>
-            <app-button icon="contrast" (click)="resetColors(1)"></app-button>
+            <app-button icon="day" (click)="resetColors(1)"></app-button>
             <app-button icon="translate" (click)="resetColors(2)"></app-button>
           </div>
         </div>
       </div>
       <div class="rle" *ngIf="type === 'RLE'">
-        <div class="rle-form column">
+        <div class="rle-form">
           <p class="info">Import Pattern RLE</p>
-          <p class='eg'>e.g.: x = 3, y = 3, rule = B3/S23 3o$2bo$bo!</p>
         </div>
         <div class="rle-form mini-header">
           <p>Paste</p>
-          <p>Modify</p>
           <p>Draw</p>
+          <p>Mirror</p>
         </div>
         <div class="rle-form">
-          <app-input type="text" [parentForm]="modalForm" controlName="rle"></app-input>
-          <app-button icon="rotate" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="rotatePattern()"></app-button>
+          <app-input type="text" [parentForm]="modalForm" controlName="rle" title="Paste only"></app-input>
+          <app-button icon="draw" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="startRle()"></app-button>
           <app-button icon="flip" [led]="rlePreview.rleReady" class="rotated" [disabled]="!rlePreview.rleReady" (click)="flipPatternX()"></app-button>
           <app-button icon="flip" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="flipPatternY()"></app-button>
-          <app-button icon="draw" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="startRle()"></app-button>
         </div>
-        <div class="rle-form mini-header">
-          <p>Export {{ exportRle.name }}:</p>
-          <a id="downloadRle" download="{{ exportRle.name }}.rle">RLE</a>
-          <a id="downloadTxt" download="{{ exportRle.name }}.txt">TXT</a>
+        <div class="rle-form eg">
+          <p>e.g.:&nbsp;&nbsp;&nbsp;&nbsp;x = 3, y = 3, rule = B3/S23</p>
+          <p>3o$2bo$bo!</p>
+        </div>
+        <div class="rle-form column" *ngIf="exportRle">
+          <p class="info">Export Pattern RLE</p>
+          <div class="links">
+            <span>{{ exportRle.name }}</span>
+            <a id="downloadRle" download="{{ exportRle.name }}.rle" title="Download '{{ exportRle.name }}.rle'">RLE</a>
+            <a id="downloadTxt" download="{{ exportRle.name }}.txt" title="Download '{{ exportRle.name }}.txt'">TXT</a>
+          </div>
+        </div>
+        <div class="rle-form column" *ngIf="!exportRle">
+          <p class="info">Export Pattern RLE</p>
+          <span>no pattern</span>
         </div>
       </div>
       <div class="preview">

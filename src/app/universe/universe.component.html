@@ -76,3 +76,8 @@
     ></app-popup>
   </div>
 </div>
+<div class="start-screen" *ngIf="cfg">
+  <div class="content">
+    <app-start-screen [showOnStart]="cfg.startScreen" (updateCfg)="updateStartScreenCfg($event)"></app-start-screen>
+  </div>
+</div>

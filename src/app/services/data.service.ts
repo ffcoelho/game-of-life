@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as localforage from 'localforage';
 import { ThemeService } from './theme.service';
-import { ConfigModel, GRIDS } from '../models/config.model';
+import { ConfigModel, GRIDS, THEMES } from '../models/config.model';
 import { UniverseDataModel } from '../models/data.model';
 
 @Injectable({
@@ -134,20 +134,16 @@ export class DataService {
 
   private generateConfig(): ConfigModel {
     return {
-      colors: {
-        alive: '#a98f26',
-        dead: '#202020',
-        grid: '#424242',
-        lines: '#666666'
-      },
+      colors: THEMES[0],
       display: {
         lines: true,
         ruler: true
       },
       grid: GRIDS[2],
-      origin: { x: 0, y: 0 },
+      origin: { x: 180, y: 135 },
       speed: 60,
-      universes: []
+      universes: [],
+      startScreen: true
     };
   }
 }

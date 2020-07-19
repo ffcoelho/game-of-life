@@ -104,7 +104,7 @@ export class MenuComponent implements OnInit {
     this.menu.edit.forEach(sel => sel.disabled = true);
     this.menu.edit[0].led = true;
     this.menu.edit[0].disabled = false;
-    this.menu.edit[0].tooltip = 'Finish RLE';
+    this.menu.edit[0].tooltip = 'Finish Draw';
     this.menu.game.forEach(sel => sel.disabled = true);
     this.menu.play.forEach(sel => sel.disabled = true);
     this.menu.save.disabled = true;

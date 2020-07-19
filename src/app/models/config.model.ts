@@ -5,6 +5,7 @@ export interface ConfigModel {
   origin: PointModel;
   speed: number;
   universes: UniverseModel[];
+  startScreen: boolean;
 }
 
 export interface PointModel {
@@ -53,7 +54,7 @@ export const GRIDS: GridModel[] = [
 ];
 
 export const LIFE = {
-  r: 40,  // ruler size (px)
+  r: 40,  // offset from origin - x and y [px]
   o: 10,  // cells offset
   x: 500,
   y: 380
@@ -61,20 +62,20 @@ export const LIFE = {
 
 export const THEMES = [
   {
-    alive: '#a98f26',
+    alive: '#ffd633',
     dead: '#202020',
     grid: '#424242',
     lines: '#666666'
   },
   {
-    alive: '#000000',
-    dead: '#ffffff',
-    grid: '#cccccc',
-    lines: '#919191'
+    alive: '#0d0d0d',
+    dead: '#d4d4d4',
+    grid: '#adadad',
+    lines: '#858585'
   },
   {
     alive: '#2ddf3d',
-    dead: '#000000',
+    dead: '#0d0d0d',
     grid: '#2b2b2b',
     lines: '#3d3d3d'
   }
