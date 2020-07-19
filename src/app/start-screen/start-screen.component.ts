@@ -18,5 +18,4 @@ export class StartScreenComponent implements OnInit {
   toggleShow(): void {
     this.showOnStart = !this.showOnStart;
   }
-
 }

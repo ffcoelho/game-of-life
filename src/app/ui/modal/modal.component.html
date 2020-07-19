@@ -73,10 +73,6 @@
           <app-button icon="flip" [led]="rlePreview.rleReady" class="rotated" [disabled]="!rlePreview.rleReady" (click)="flipPatternX()"></app-button>
           <app-button icon="flip" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="flipPatternY()"></app-button>
         </div>
-        <div class="rle-form eg">
-          <p>e.g.:&nbsp;&nbsp;&nbsp;&nbsp;x = 3, y = 3, rule = B3/S23</p>
-          <p>3o$2bo$bo!</p>
-        </div>
         <div class="rle-form column" *ngIf="exportRle">
           <p class="info">Export Pattern RLE</p>
           <div class="links">

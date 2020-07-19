@@ -2,8 +2,86 @@
   <div class="header">
     <span>John Conway's Game of Life</span>
   </div>
-  <div class="section">
-    
+  <div class="info">
+    <div class="section ani-1">
+      <p>Menu Buttons</p>
+      <span>Display & Tools</span>
+      <div class="side">
+        <div class="menu-buttons">
+          <app-icon icon="colors"></app-icon>
+          <app-icon icon="ruler"></app-icon>
+          <app-icon icon="lines"></app-icon>
+        </div>
+        <div class="menu-info">
+          <span>Customize view colors</span>
+          <span>Ruler on/off</span>
+          <span>Ruler lines on/off</span>
+        </div>
+      </div>
+      <span>Build mode</span>
+      <div class="side">
+        <div class="menu-buttons">
+          <app-icon icon="build"></app-icon>
+          <app-icon icon="new"></app-icon>
+          <app-icon icon="folder"></app-icon>
+          <app-icon icon="save"></app-icon>
+          <app-icon icon="save2"></app-icon>
+          <p class="icon">RLE</p>
+        </div>
+        <div class="menu-info">
+          <span>&nbsp;</span>
+          <span>Create new pattern</span>
+          <span>Load saved pattern</span>
+          <span>Quick save loaded pattern</span>
+          <span>Save/Overwrite pattern</span>
+          <span>Import/Export pattern RLE</span>
+        </div>
+      </div>
+      <span>Play mode</span>
+      <div class="side">
+        <div class="menu-buttons">
+          <app-icon icon="game"></app-icon>
+          <app-icon icon="play"></app-icon>
+          <app-icon icon="skip_fwd"></app-icon>
+          <app-icon icon="restart"></app-icon>
+          <app-icon icon="timer"></app-icon>
+        </div>
+        <div class="menu-info">
+          <span>&nbsp;</span>
+          <span>Start game</span>
+          <span>Skip forward one generation</span>
+          <span>Restart game</span>
+          <span>Change game speed</span>
+        </div>
+      </div>
+    </div>
+    <div class="section ani-1">
+      <p>Mouse</p>
+      <span>Wheel: zoom in/out</span>
+      <span>Middle button: pan</span>
+      <p class="mid-title">Game panel</p>
+      <img src="../../assets/images/game-panel.png" alt="panel">
+      <span>Game/Processing speed</span>
+      <span>Generation</span>
+      <span>Screen (visible) population</span>
+      <p class="mid-title">Storage</p>
+      <span>Game settings and patterns</span>
+      <span>are stored locally.</span>
+    </div>
+    <div class="section ani-1">
+      <div class="play-btn">
+        <button (click)="updateCfg.emit(showOnStart)">PLAY</button>
+      </div>
+      <div class="toggle-btn">
+        <app-icon icon="exit" [led]="true" (click)="toggleShow()" *ngIf="!showOnStart"></app-icon>
+        <app-icon icon="check" [led]="true" (click)="toggleShow()" *ngIf="showOnStart"></app-icon>
+        <span [ngClass]="{'on': showOnStart}">Show on startup</span>
+      </div>
+      <p class="bottom-title">More info</p>
+      <a href="https://plato.stanford.edu/entries/cellular-automata/" target="_blank">Cellular Automata</a>
+      <a href="https://conwaylife.com/wiki/Conway%27s_Game_of_Life" target="_blank">LifeWiki</a>
+      <a href="https://catagolue.appspot.com/census/b3s23" target="_blank">Catagolue</a>
+    </div>
   </div>
   <!-- <span>Cellular Automata</span><a href="https://plato.stanford.edu/entries/cellular-automata/" target="_blank">?</a> -->
   <!-- <p href="https://web.stanford.edu/class/sts145/Library/life.pdf">John Conway's Game of Life</p> -->

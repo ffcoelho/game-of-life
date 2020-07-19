@@ -15,6 +15,7 @@
     (pointerout)="releaseClick($event)"
     (wheel)="changeScale($event)"
   ></canvas>
+  <button class="start-screen-btn" (click)="showStartScreen = true">!</button>
 </div>
 <div class="universe-panel" *ngIf="cfg">
   <div class="panel">
@@ -76,7 +77,7 @@
     ></app-popup>
   </div>
 </div>
-<div class="start-screen" *ngIf="cfg">
+<div class="start-screen" *ngIf="cfg && showStartScreen">
   <div class="content">
     <app-start-screen [showOnStart]="cfg.startScreen" (updateCfg)="updateStartScreenCfg($event)"></app-start-screen>
   </div>

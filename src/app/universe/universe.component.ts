@@ -24,6 +24,8 @@ export class UniverseComponent implements OnInit {
   cells: ElementRef<HTMLCanvasElement>;
   private cellsCtx: CanvasRenderingContext2D;
 
+  public showStartScreen: boolean;
+
   public cfg: ConfigModel;
   public gameState: string;
   public hasChanges: boolean;
@@ -65,6 +67,7 @@ export class UniverseComponent implements OnInit {
 
   initialize(): void {
     this.life.create.subscribe(config => {
+      this.showStartScreen = config.startScreen;
       this.cfg = config;
       this.createUniverse();
       this.life.create.unsubscribe();
@@ -691,6 +694,8 @@ export class UniverseComponent implements OnInit {
   }
 
   updateStartScreenCfg(show: boolean): void {
-    console.log(show);
+    this.cfg.startScreen = show;
+    this.data.updateConfig(this.cfg);
+    this.showStartScreen = false;
   }
 }

@@ -19,6 +19,22 @@
     background-color: $grid-background;
   }
 }
+.start-screen-btn {
+  position: absolute;
+  top: 780px;
+  left: 1022px;
+  width: 10px;
+  height: 10px;
+  color: #0d0d0d;
+  border-radius: 50%;
+  background-color: $led-dim-color;
+  font-size: 10px;
+  outline: none;
+  cursor: pointer;
+  &:hover {
+    background-color: $led-on-color;
+  }
+}
 .universe-panel {
   @include user-select-none;
   position: absolute;
