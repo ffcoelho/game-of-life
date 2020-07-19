@@ -65,13 +65,10 @@
         <div class="rle-form mini-header">
           <p>Paste</p>
           <p>Draw</p>
-          <p>Mirror</p>
         </div>
         <div class="rle-form">
           <app-input type="text" [parentForm]="modalForm" controlName="rle" title="Paste only"></app-input>
           <app-button icon="draw" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="startRle()"></app-button>
-          <app-button icon="flip" [led]="rlePreview.rleReady" class="rotated" [disabled]="!rlePreview.rleReady" (click)="flipPatternX()"></app-button>
-          <app-button icon="flip" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="flipPatternY()"></app-button>
         </div>
         <div class="rle-form column" *ngIf="exportRle">
           <p class="info">Export Pattern RLE</p>

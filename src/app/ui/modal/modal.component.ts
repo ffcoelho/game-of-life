@@ -277,52 +277,6 @@ export class ModalComponent implements OnInit {
     return decoded;
   }
 
-  flipPatternX(): void {
-    const pattern: RLEModel = {
-      x: this.rle.x,
-      y: this.rle.y,
-      code: Array.from({length: this.rle.y}).map(v => '')
-    };
-    const preCode = Array.from({length: this.rlePreview.pre.y}).map(v => '');
-    for (let yi = pattern.y - 1; yi >= 0 ; yi--) {
-      for (let xi = 0; xi < pattern.x; xi++) {
-        pattern.code[pattern.y - yi] = `${pattern.code[pattern.y - yi]}${this.rle.code[yi].charAt(xi)}`;
-      }
-    }
-    for (let yi = this.rlePreview.pre.y - 1; yi >= 0 ; yi--) {
-      for (let xi = 0; xi < this.rlePreview.pre.x; xi++) {
-        preCode[this.rlePreview.pre.y - yi] = `${preCode[this.rlePreview.pre.y - yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
-      }
-    }
-    this.rle = pattern;
-    this.rlePreview.pre.code = preCode;
-    this.rlePreview.flippedX = !this.rlePreview.flippedX;
-    this.updatePreviewer();
-  }
-
-  flipPatternY(): void {
-    const pattern: RLEModel = {
-      x: this.rle.x,
-      y: this.rle.y,
-      code: Array.from({length: this.rle.y}).map(v => '')
-    };
-    const preCode = Array.from({length: this.rlePreview.pre.y}).map(v => '');
-    for (let xi = pattern.x - 1; xi >= 0 ; xi--) {
-      for (let yi = 0; yi < pattern.y; yi++) {
-        pattern.code[yi] = `${pattern.code[yi]}${this.rle.code[yi].charAt(xi)}`;
-      }
-    }
-    for (let xi = this.rlePreview.pre.x - 1; xi >= 0 ; xi--) {
-      for (let yi = 0; yi < this.rlePreview.pre.y; yi++) {
-        preCode[yi] = `${preCode[yi]}${this.rlePreview.pre.code[yi].charAt(xi)}`;
-      }
-    }
-    this.rle = pattern;
-    this.rlePreview.pre.code = preCode;
-    this.rlePreview.flippedY = !this.rlePreview.flippedY;
-    this.updatePreviewer();
-  }
-
   startRle(): void {
     this.lifeRle.emit(this.rle);
   }
