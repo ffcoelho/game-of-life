@@ -159,7 +159,7 @@ export class ModalComponent implements OnInit {
     if (!this.validChars(rleInput)) {
       return false;
     }
-    const rleEntries: string[] = rleInput.replace(/2\$/g, '$b$').replace(/ /g, '').split(',');
+    const rleEntries: string[] = rleInput.replace(/ /g, '').split(',');
     if (!this.validEntries(rleEntries)) {
       return false;
     }
@@ -208,7 +208,9 @@ export class ModalComponent implements OnInit {
   }
 
   validCode(x: number, y: number, code: string): boolean {
-    const splitLines: string[] = code.split('$');
+    const codeEmptyLines = this.insertEmptyLines(x, y, code);
+    console.log(codeEmptyLines);
+    const splitLines: string[] = codeEmptyLines.split('$');
     const decodedRle: string[] = [];
     splitLines.forEach(line => {
       let decoded = '';
@@ -249,6 +251,30 @@ export class ModalComponent implements OnInit {
       code: decodedRle
     };
     return true;
+  }
+
+  insertEmptyLines(x: number, y: number, code: string): string {
+    let decoded = '';
+    let numString = '';
+    for (let i = 0; i < code.length; i++) {
+      if (/^[0-9]*$/.test(code.charAt(i))) {
+        numString = `${numString}${code.charAt(i)}`;
+      } else {
+        let parsedNum = 1;
+        if (numString.length > 0) {
+          parsedNum = parseInt(numString, 10);
+          numString = '';
+        }
+        if (/\$/.test(code.charAt(i))) {
+          for (let yk = 0; yk < parsedNum; yk++) {
+            decoded = `${decoded}${parsedNum === 1 ? '$' : 'b$'}`;
+          }
+        } else {
+          decoded = `${decoded}${parsedNum > 1 ? parsedNum : ''}${code.charAt(i)}`;
+        }
+      }
+    }
+    return decoded;
   }
 
   flipPatternX(): void {
