@@ -11,6 +11,7 @@ import { ConfigModel } from 'src/app/models/config.model';
 export class MenuComponent implements OnInit {
 
   private menuMode: string;
+  private playingOn: string;
   @Input()
   set mode(value: string) {
     this.menuMode = value ? value : 'playOff';
@@ -20,8 +21,10 @@ export class MenuComponent implements OnInit {
     }
     if (value === 'playOn') {
       this.playingState(true);
+      this.playingOn = value;
     } else {
       this.playingState(false);
+      this.playingOn = value;
     }
   }
   get mode(): string {
@@ -118,7 +121,7 @@ export class MenuComponent implements OnInit {
     this.menu.game.forEach(sel => sel.disabled = state);
     this.menu.play[1].disabled = false;
     this.menu.play[1].led = state;
-    this.menu.selector.forEach(sel => sel.disabled = state);
+    this.menu.selector[0].disabled = state;
     this.menu.edit[0].tooltip = 'Import/Export';
     this.menu.edit[0].led = false;
     if (this.menu.mode === MenuMode.BUILD) {
@@ -133,6 +136,8 @@ export class MenuComponent implements OnInit {
       this.menu.save.disabled = true;
       this.menu.game.forEach(tool => tool.disabled = false);
       this.menu.play[0].disabled = false;
+      this.menu.selector[0].disabled = false;
+      this.menu.selector[1].disabled = true;
       this.toolAction('pan');
     } else {
       this.menu.display.forEach(sel => sel.disabled = false);
@@ -142,6 +147,8 @@ export class MenuComponent implements OnInit {
       this.menu.save.disabled = false;
       this.menu.game.forEach(tool => tool.disabled = true);
       this.menu.play[0].disabled = true;
+      this.menu.selector[0].disabled = true;
+      this.menu.selector[1].disabled = false;
       this.toolAction('draw');
     }
   }

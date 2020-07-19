@@ -109,9 +109,6 @@
         span {
           margin-top: 5px;
           margin-left: 9px;
-          &.on {
-            color: $led-on-color;
-          }
         }
         app-icon {
           cursor: pointer;
