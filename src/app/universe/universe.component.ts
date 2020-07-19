@@ -43,6 +43,7 @@ export class UniverseComponent implements OnInit {
   public tool: string;
   public rle: RLEModel;
   public rleExport = { name: '', code: '' };
+  public canInsertRle: boolean;
 
   public infoLeds: boolean;
   public timer: any;
@@ -63,6 +64,7 @@ export class UniverseComponent implements OnInit {
 
   ngOnInit(): void {
     this.initialize();
+    // setInterval(() => console.log(this.life.universe), 10000);
   }
 
   initialize(): void {
@@ -239,6 +241,9 @@ export class UniverseComponent implements OnInit {
   }
 
   insertRle(ev: PointerEvent): void {
+    if (!this.canInsertRle) {
+      return;
+    }
     const uX = Math.round((ev.clientX - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.x + LIFE.o;
     const uY = Math.round((ev.clientY - LIFE.r - this.cfg.grid.scale * 0.5) / this.cfg.grid.scale) + this.cfg.origin.y + LIFE.o;
     this.rle.code.forEach((line, lineIdx) => {
@@ -263,6 +268,14 @@ export class UniverseComponent implements OnInit {
       this.control.nativeElement.style.cursor = 'grab';
       return;
     }
+    if (this.gameState === 'rle') {
+      if (!this.canInsertRle) {
+        this.control.nativeElement.style.cursor = 'not-allowed';
+        return;
+      }
+      this.control.nativeElement.style.cursor = 'crosshair';
+      return;
+    }
     this.control.nativeElement.style.cursor = 'default';
   }
 
@@ -275,14 +288,24 @@ export class UniverseComponent implements OnInit {
   }
 
   panUniverse(ev: PointerEvent): void {
-    if (!this.clickPanMode) {
-      return;
-    }
     const cP = LIFE.r - this.cfg.grid.scale * 0.5;
-    const panY = Math.round((this.pan.y - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
-    const panX = Math.round((this.pan.x - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
     const nextY = Math.round((ev.clientY - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
     const nextX = Math.round((ev.clientX - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
+    if (!this.clickPanMode) {
+      if (this.gameState !== 'rle') {
+        return;
+      }
+      if (nextY + this.rle.y - 1 > LIFE.y - 2 * LIFE.o || nextX + this.rle.x - 1 > LIFE.x - 2 * LIFE.o) {
+        this.canInsertRle = false;
+        this.control.nativeElement.style.cursor = 'not-allowed';
+      } else {
+        this.canInsertRle = true;
+        this.control.nativeElement.style.cursor = 'crosshair';
+      }
+      return;
+    }
+    const panY = Math.round((this.pan.y - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
+    const panX = Math.round((this.pan.x - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
     if (panX !== nextX || panY !== nextY) {
       this.cfg.origin = { x: panX - nextX + this.cfg.origin.x, y: panY - nextY + this.cfg.origin.y };
       this.checkLimits();
