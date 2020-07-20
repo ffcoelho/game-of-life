@@ -97,7 +97,6 @@ export class DataService {
 
   private setItem(key: string, value: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      console.log(value);
       localforage.setItem(key, value)
       .then(
         (result) => resolve(result),
