@@ -1,3 +1,5 @@
+@import '../../../assets/styles/variables';
+
 .popup-container {
   position: absolute;
   top: -800px;
@@ -7,6 +9,8 @@
   width: 1040px;
   height: 840px;
   background-color: #00000067;
+  font-family: monospace;
+  color: $led-dim-color;
   .popup-content {
     display: flex;
     flex-direction: column;
