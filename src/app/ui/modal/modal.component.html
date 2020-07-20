@@ -3,12 +3,13 @@
     <div class="modal-header">
       <span class="title">
         {{ type === 'RLE' ? type + ' - Import/Export ' : type | titlecase }}{{ type === 'save' ? ' as' : '' }}
-        <a class="help-link" href="https://www.conwaylife.com/wiki/Run_Length_Encoded" target="_blank" title="LifeWiki - Run Length Encoded">?</a>
+        <a class="help-link" href="https://www.conwaylife.com/wiki/Run_Length_Encoded" target="_blank" title="LifeWiki - Run Length Encoded" *ngIf="type === 'RLE'">?</a>
       </span>
       <app-button icon="exit" (action)="exit.emit()"></app-button>
     </div>
     <div class="modal-body" *ngIf="type === 'load' || type === 'save'">
       <div class="new-item" *ngIf="type === 'save'">
+        <span>Pattern name:</span>
         <app-input type="text" [parentForm]="modalForm" controlName="name" maxLength="20" (click)="selectFile()"></app-input>
         <span *ngIf="config.universes.length > 0">or choose one below to overwrite its data.</span>
       </div>
@@ -89,8 +90,8 @@
     </div>
     <div class="modal-footer">
       <app-button icon="check" (action)="updateColors()" *ngIf="type === 'colors'"></app-button>
-      <app-button icon="check" (action)="loadFile()" *ngIf="type === 'load'"></app-button>
-      <app-button icon="check" (action)="saveFile()" *ngIf="type === 'save'"></app-button>
+      <app-button icon="check" (action)="loadFile()" [disabled]="selected == null" *ngIf="type === 'load'"></app-button>
+      <app-button icon="check" (action)="saveFile()" [disabled]="selected == null || (selected === -1 && modalForm.invalid)" *ngIf="type === 'save'"></app-button>
     </div>
   </div>
 </div>

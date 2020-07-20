@@ -16,7 +16,7 @@
     (wheel)="changeScale($event)"
   ></canvas>
   <button class="start-screen-btn" (click)="showStartScreen = true" title="Welcome" *ngIf="gameState !== 'playOn'">!</button>
-  <p class="grid-coords">{{ gridCoords }}</p>
+  <p class="grid-coords" *ngIf="!showStartScreen">{{ gridCoords }}</p>
 </div>
 <div class="universe-panel" *ngIf="cfg">
   <div class="panel">

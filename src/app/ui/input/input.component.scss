@@ -5,7 +5,6 @@
   @include custom-input;
   width: 100%;
   &.err {
-    // background-color: #cc0000;
     input {
       color: #cc0000;
       border-color: #cc0000;

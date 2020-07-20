@@ -93,7 +93,7 @@ export class ModalComponent implements OnInit {
     }
     this.modalForm = this.formBuilder.group({
       id: [ null ],
-      name: [ 'New Pattern', Validators.required ],
+      name: [ '', Validators.required ],
       pop: [ null ],
       size: [ null ],
       lastUpdate: [ null ],
@@ -109,7 +109,8 @@ export class ModalComponent implements OnInit {
       return;
     }
     this.selected = idx;
-    this.modalForm.get('name').patchValue('New Life');
+    this.modalForm.get('name').patchValue('');
+    this.modalForm.get('name').markAsUntouched();
   }
 
   resetColors(theme: number): void {

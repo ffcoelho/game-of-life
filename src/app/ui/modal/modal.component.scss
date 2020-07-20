@@ -172,6 +172,14 @@
         span {
           font-family: monospace;
           font-size: 12px;
+          color: $led-dim-color;
+          &:nth-of-type(1) {
+            margin-right: 7px;
+          }
+          &:nth-of-type(2) {
+            margin-left: 14px;
+            font-style: italic;
+          }
         }
         app-input {
           width: 138px;
@@ -189,13 +197,13 @@
             margin-left: 6px;
           }
           &:nth-child(2) {
-            margin-left: 170px;
+            margin-left: 167px;
           }
           &:nth-child(3) {
-            margin-left: 57px;
+            margin-left: 56px;
           }
           &:nth-child(4) {
-            margin-left: 123px;
+            margin-left: 114px;
           }
         }
       }
