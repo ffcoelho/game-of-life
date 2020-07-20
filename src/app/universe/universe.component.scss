@@ -21,19 +21,30 @@
 }
 .start-screen-btn {
   position: absolute;
-  top: 780px;
-  left: 1022px;
+  top: 7px;
+  left: 7px;
   width: 10px;
   height: 10px;
   color: #0d0d0d;
   border-radius: 50%;
-  background-color: $led-dim-color;
+  background-color: $led-color;
   font-size: 10px;
   outline: none;
   cursor: pointer;
   &:hover {
-    background-color: $led-on-color;
+    background-color: $led-dim-color;
   }
+}
+.grid-coords {z-index: 1;
+  position: absolute;
+  top: 806px;
+  left: 9px;
+  width: 33px;
+  height: 28px;
+  color: $led-color;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 14px;
 }
 .universe-panel {
   @include user-select-none;

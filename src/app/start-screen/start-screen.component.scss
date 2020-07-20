@@ -1,6 +1,9 @@
 @import '../../assets/styles/variables';
+@import '../../assets/styles/mixins';
 
 .screen {
+  @include user-select-none;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -29,6 +32,14 @@
       margin-right: 8px;
       font-size: 24px;
     }
+  }
+  .content-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 720px;
+    height: 100%;
+    background-color: transparent;
   }
   .info {
     display: flex;
@@ -70,7 +81,7 @@
           margin-top: 64px;
         }
         &.bottom-title {
-          margin-top: 299px;
+          margin-top: 298px;
         }
       }
       span {
@@ -109,8 +120,11 @@
         span {
           margin-top: 5px;
           margin-left: 9px;
+          font-size: 12px;
+          font-style: italic;
         }
         app-icon {
+          margin-top: 1px;
           cursor: pointer;
         }
       }

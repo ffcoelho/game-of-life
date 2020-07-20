@@ -61,7 +61,7 @@
       <span>Middle button: pan</span>
       <p class="mid-title">Game panel</p>
       <img src="../../assets/images/game-panel.png" alt="panel">
-      <span>Game/Processing speed</span>
+      <span>Game/Avg. speed</span>
       <span>Generation</span>
       <span>Screen (visible) population</span>
       <p class="mid-title">Storage</p>
@@ -73,8 +73,8 @@
         <button (click)="updateCfg.emit(showOnStart)">PLAY</button>
       </div>
       <div class="toggle-btn">
-        <app-icon icon="exit" [led]="true" (click)="toggleShow()" *ngIf="!showOnStart"></app-icon>
-        <app-icon icon="check" [led]="true" (click)="toggleShow()" *ngIf="showOnStart"></app-icon>
+        <app-icon icon="exit" (click)="toggleShow()" *ngIf="!showOnStart"></app-icon>
+        <app-icon icon="check" (click)="toggleShow()" *ngIf="showOnStart"></app-icon>
         <span>Show on startup</span>
       </div>
       <p class="bottom-title">More info</p>
@@ -83,4 +83,5 @@
       <a href="https://catagolue.appspot.com/census/b3s23" target="_blank">Catagolue</a>
     </div>
   </div>
+  <div class="content-mask"></div>
 </div>

@@ -32,6 +32,7 @@ export class UniverseComponent implements OnInit {
   public loadedId: string;
   public loadedName: string;
   public infoDataIdx = 0;
+  public gridCoords = 'x:000 y:000';
 
   public showLifeModal: boolean;
   public showLifePopup: boolean;
@@ -64,7 +65,6 @@ export class UniverseComponent implements OnInit {
 
   ngOnInit(): void {
     this.initialize();
-    // setInterval(() => console.log(this.life.universe), 10000);
   }
 
   initialize(): void {
@@ -105,7 +105,7 @@ export class UniverseComponent implements OnInit {
         clearInterval(this.timer);
       }
       this.ticks++;
-      this.fps = Math.floor((this.ticks - this.tickRef) / ((new Date().getTime() - this.time) / 1000));
+      this.fps = Math.round((this.ticks - this.tickRef) / ((new Date().getTime() - this.time) / 1000));
       this.life.calcNextGen();
       this.drawCells();
     }, 1000 / this.cfg.speed);
@@ -291,6 +291,7 @@ export class UniverseComponent implements OnInit {
     const cP = LIFE.r - this.cfg.grid.scale * 0.5;
     const nextY = Math.round((ev.clientY - cP) / this.cfg.grid.scale) + this.cfg.origin.y;
     const nextX = Math.round((ev.clientX - cP) / this.cfg.grid.scale) + this.cfg.origin.x;
+    this.gridCoords = `x:${nextX <= 10 ? '0' : ''}${nextX <= 100 ? '0' : ''}${nextX - 1} y:${nextY <= 10 ? '0' : ''}${nextY <= 100 ? '0' : ''}${nextY - 1}`;
     if (!this.clickPanMode) {
       if (this.gameState !== 'rle') {
         return;

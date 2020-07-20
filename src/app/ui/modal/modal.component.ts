@@ -209,7 +209,6 @@ export class ModalComponent implements OnInit {
 
   validCode(x: number, y: number, code: string): boolean {
     const codeEmptyLines = this.insertEmptyLines(x, y, code);
-    console.log(codeEmptyLines);
     const splitLines: string[] = codeEmptyLines.split('$');
     const decodedRle: string[] = [];
     splitLines.forEach(line => {

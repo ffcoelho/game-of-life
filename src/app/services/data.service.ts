@@ -58,6 +58,7 @@ export class DataService {
                 this.setItem('config', this.generateConfig()).then(
                   (newConfig) => {
                     this.localDb = true;
+                    this.storeSample(newConfig);
                     resolve(newConfig);
                   },
                   (error) => {
@@ -142,8 +143,13 @@ export class DataService {
       grid: GRIDS[2],
       origin: { x: 180, y: 135 },
       speed: 60,
-      universes: [],
+      universes: [
+      ],
       startScreen: true
     };
+  }
+
+  private storeSample(config: ConfigModel): void {
+    
   }
 }
