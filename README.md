@@ -1,8 +1,5 @@
 # GameOfLife
-
-Description
----
-John Conway's Game of Life - Angular
+[John Conway's Game of Life](https://b3s23-life.web.app/)
 
 Features
 ---
