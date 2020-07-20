@@ -44,6 +44,8 @@ export class ModalComponent implements OnInit {
     }
   };
 
+  rleInputTitle = `e.g.: x = 3, y = 3, rule = B3/S23 bob$2bo$3o!\n(no '#' lines)`;
+
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {

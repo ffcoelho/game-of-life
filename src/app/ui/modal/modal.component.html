@@ -68,7 +68,7 @@
           <p>Draw</p>
         </div>
         <div class="rle-form">
-          <app-input type="text" [parentForm]="modalForm" controlName="rle" title="Paste only"></app-input>
+          <app-input type="text" [parentForm]="modalForm" controlName="rle" [title]="rleInputTitle"></app-input>
           <app-button icon="draw" [led]="rlePreview.rleReady" [disabled]="!rlePreview.rleReady" (click)="startRle()"></app-button>
         </div>
         <div class="rle-form column" *ngIf="exportRle">
