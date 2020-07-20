@@ -71,6 +71,10 @@
         font-family: monospace;
         color: $led-dim-color;
         text-decoration: underline;
+        &.dev-link {
+          font-size: 11px;
+          font-style: italic;
+        }
       }
       img {
         margin-bottom: 24px;
@@ -79,10 +83,10 @@
         margin-bottom: 24px;
         font-size: 18px;
         &.mid-title {
-          margin-top: 64px;
+          margin-top: 75px;
         }
         &.bottom-title {
-          margin-top: 298px;
+          margin-top: 245px;
         }
       }
       span {
