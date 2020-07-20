@@ -58,8 +58,8 @@ export class DataService {
                 this.setItem('config', this.generateConfig()).then(
                   (newConfig) => {
                     this.localDb = true;
-                    this.storeSample(newConfig);
-                    resolve(newConfig);
+                    const config = this.storeSample(newConfig);
+                    resolve(config);
                   },
                   (error) => {
                     this.localDb = false;
@@ -97,6 +97,7 @@ export class DataService {
 
   private setItem(key: string, value: any): Promise<any> {
     return new Promise((resolve, reject) => {
+      console.log(value);
       localforage.setItem(key, value)
       .then(
         (result) => resolve(result),
@@ -149,7 +150,51 @@ export class DataService {
     };
   }
 
-  private storeSample(config: ConfigModel): void {
-    
+  private storeSample(config: ConfigModel): ConfigModel {
+    this.saveUniverse('r-pentomino', {
+      grid: [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 1, 0]
+      ],
+      x: 226,
+      y: 171
+    });
+    config.universes.push({
+      id: 'r-pentomino',
+      lastUpdate: new Date().getTime(),
+      name: 'R-Pentomino',
+      oGrid: 2,
+      oX: 180,
+      oY: 135,
+      pop: 5,
+      size: [ 3, 3 ]
+    });
+    this.saveUniverse('gosper-glider-gun', {
+      grid: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ],
+      x: 2,
+      y: 350
+    });
+    config.universes.push({
+      id: 'gosper-glider-gun',
+      lastUpdate: new Date().getTime(),
+      name: 'Gosper glider gun',
+      oGrid: 4,
+      oX: 0,
+      oY: 330,
+      pop: 36,
+      size: [ 36, 9 ]
+    });
+    return config;
   }
 }
