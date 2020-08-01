@@ -75,16 +75,19 @@
       <div class="toggle-btn">
         <app-icon icon="exit" (click)="toggleShow()" *ngIf="!showOnStart"></app-icon>
         <app-icon icon="check" (click)="toggleShow()" *ngIf="showOnStart"></app-icon>
-        <span>Show on startup</span>
+        <span>Show welcome on startup</span>
       </div>
-      <p class="bottom-title">More info</p>
+      <p class="mid-title">Rules - B3/S23</p>
+      <span>Any live cell with 2 or 3 live neighbours lives on to the next generation.</span>
+      <span>Any dead cell with exactly 3 live neighbours becomes alive (reproduction).</span>
+      <span>Any live cell with fewer than 2 live neighbours dies (underpopulation).</span>
+      <span>Any live cell with more than 3 live neighbours dies (overpopulation).</span>
+      <p class="mid-title">More info</p>
       <a href="https://plato.stanford.edu/entries/cellular-automata/" target="_blank">Cellular Automata</a>
       <a href="https://www.conwaylife.com/" target="_blank">ConwayLife</a>
       <a href="https://conwaylife.com/wiki/Conway%27s_Game_of_Life" target="_blank">LifeWiki</a>
       <a href="https://catagolue.appspot.com/census/b3s23" target="_blank">Catagolue</a>
-      <p class="mid-title">&nbsp;</p>
-      <span>Development</span>
-      <a class="dev-link" href="https://ffcoelho-dev.web.app" target="_blank">ffcoelho</a>
+      <p class="dev-link"><a href="https://ffcoelho-dev.web.app" target="_blank">Fernando Coelho</a> - 2020</p>
     </div>
   </div>
   <div class="content-mask"></div>
